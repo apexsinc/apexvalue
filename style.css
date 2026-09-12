@@ -4,7 +4,7 @@ Theme URI:    https://www.apexvalue.com
 Description:  Apex Value child theme of Storefront. Modern, refined evolution of the default look: cleaner typography, tighter header, card-based product grids and accessible interactions.
 Author:       Apex Value
 Template:     storefront
-Version:      1.3.0
+Version:      1.3.1
 License:      GNU General Public License v2 or later
 License URI:  http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain:  apexvalue
@@ -997,6 +997,43 @@ span.onsale,
 	letter-spacing: 0.12em;
 	color: var(--apx-footer-ink);
 	margin: 0.35em 0 1.1em;
+}
+
+/* Customizer hardening: the inline Customizer sheet colours footer links
+   #333 and headings #333 via high-specificity :not() chains. Re-assert the
+   adaptive tokens with equal-or-higher specificity — our stylesheet loads
+   after the inline sheet, so ties resolve in our favour. */
+.site-footer a:not(.button):not(.components-button),
+.site-footer .storefront-handheld-footer-bar a:not(.button):not(.components-button) {
+	color: var(--apx-footer-muted);
+}
+
+.site-footer a:not(.button):not(.components-button):hover,
+.site-footer a:not(.button):not(.components-button):focus-visible {
+	color: var(--apx-footer-link);
+}
+
+.site-footer h1.apex-footer__heading,
+.site-footer h2.apex-footer__heading,
+.site-footer h3.apex-footer__heading,
+.site-footer h4.apex-footer__heading,
+.site-footer h5.apex-footer__heading,
+.site-footer h6.apex-footer__heading {
+	color: var(--apx-footer-ink);
+}
+
+.site-footer .apex-footer__logo,
+.site-footer .apex-footer__social-icon {
+	color: var(--apx-footer-ink);
+}
+
+.apex-footer__social {
+	color: var(--apx-footer-muted);
+}
+
+.apex-footer__social:hover,
+.apex-footer__social:focus-visible {
+	color: var(--apx-footer-link);
 }
 
 .apex-footer__menu,
