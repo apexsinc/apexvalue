@@ -98,6 +98,22 @@ Every CTA in that path defaults to `/inquiry/` (the Airtable inquiry form) or th
   carded page header. Reviews, the cookie bar and the empty quote-basket
   state follow the same tokens.
 
+## Recent updates
+
+- **1.7.2** — Legacy `/contact/` requests now 301-redirect to `/contact-us/`.
+- **1.7.1** — Search results polished (SiteSEO product hits cardified via
+  `post_class`), review list/form, cookie bar, empty quote-basket badge
+  (Customizer-driven), fixed a `radius:` typo in the stylesheet.
+- **1.7.0** — Quotation experience: header "Request a Quote" pill, mobile
+  Quote item, "Quotation" badge replacing the empty price hole, basket +
+  checkout reassurance notes, hero/CTA defaults point at `/inquiry/`.
+- **1.6.x** — Motion layer: header elevation, scroll reveals with staggered
+  cascades, hero entrance, cart bump, tactile buttons, footer
+  micro-interactions (all reduced-motion & no-JS safe).
+- **1.5.0** — Source Sans Pro self-hosted (`assets/fonts/`), Google Fonts
+  request removed; weights 500/800 corrected to shipped 600/900.
+- **1.4.0** — Sidebar cleanup + font preconnect/display-swap.
+
 ## Development notes
 
 - Bump `Version:` in `style.css` **and** `APEXVALUE_VERSION` in

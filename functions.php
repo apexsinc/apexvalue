@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'APEXVALUE_VERSION', '1.7.1' );
+define( 'APEXVALUE_VERSION', '1.7.2' );
 
 /**
  * Pluggable Storefront overrides (cart icon + header cart markup).

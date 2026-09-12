@@ -236,6 +236,7 @@ function apexvalue_quote_cart_note() {
 }
 add_action( 'storefront_before_content', 'apexvalue_quote_cart_note', 30 );
 
+
 /**
  * Publish the Customizer quote-badge label as a CSS custom property.
  *

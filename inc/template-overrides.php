@@ -113,3 +113,17 @@ if ( ! function_exists( 'storefront_header_cart' ) ) {
 		<?php
 	}
 }
+
+/**
+ * Legacy URL redirect: /contact/ → /contact-us/ (the live contact page).
+ * 301 so search engines and stale bookmarks resolve to the real page.
+ *
+ * @return void
+ */
+function apexvalue_legacy_contact_redirect() {
+	if ( is_404() && '/contact/' === trailingslashit( strtok( $_SERVER['REQUEST_URI'] ?? '', '?' ) ) ) {
+		wp_safe_redirect( home_url( '/contact-us/' ), 301 );
+		exit;
+	}
+}
+add_action( 'template_redirect', 'apexvalue_legacy_contact_redirect' );
