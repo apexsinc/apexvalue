@@ -1,0 +1,32 @@
+#!/bin/sh
+# commit-msg hook — enforces the rules in AGENTS.md:
+#   1. Single contributor: janasco <jaymaranasco@gmail.com>
+#   2. No AI/machine attribution in commit messages.
+
+msg="$(cat "$1")"
+
+# --- Rule 2: reject AI attribution patterns anywhere in the message ---------
+if printf '%s\n' "$msg" | grep -iqE 'co-authored-by:|generated (with|by)|assisted (with|by)|claude|copilot|chatgpt|openai|codebuff|anthropic'; then
+	echo "" >&2
+	echo "COMMIT REJECTED: AI/machine attribution found in commit message." >&2
+	echo "This repository forbids AI attribution — see AGENTS.md rule 2." >&2
+	exit 1
+fi
+
+# --- Skip identity check while a rebase is in progress ----------------------
+gitdir="$(git rev-parse --git-dir 2>/dev/null)"
+if [ -d "$gitdir/rebase-merge" ] || [ -d "$gitdir/rebase-apply" ]; then
+	exit 0
+fi
+
+# --- Rule 1: the author must be janasco <jaymaranasco@gmail.com> ------------
+ident="$(git var GIT_AUTHOR_IDENT 2>/dev/null | sed 's/ [0-9][0-9]* [+-][0-9]\{4\}$//')"
+if [ "$ident" != "janasco <jaymaranasco@gmail.com>" ]; then
+	echo "" >&2
+	echo "COMMIT REJECTED: author identity is '$ident'." >&2
+	echo "This repository allows only janasco <jaymaranasco@gmail.com> — see AGENTS.md rule 1." >&2
+	echo "Fix with: git commit --amend --reset-author --no-edit" >&2
+	exit 1
+fi
+
+exit 0
