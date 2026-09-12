@@ -4,7 +4,7 @@ Theme URI:    https://www.apexvalue.com
 Description:  Apex Value child theme of Storefront. Modern, refined evolution of the default look: cleaner typography, tighter header, card-based product grids and accessible interactions.
 Author:       Apex Value
 Template:     storefront
-Version:      1.3.1
+Version:      1.3.2
 License:      GNU General Public License v2 or later
 License URI:  http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain:  apexvalue
@@ -1133,6 +1133,13 @@ span.onsale,
 /* ---------------------------------------------------------------------
    10. Homepage refinements
    --------------------------------------------------------------------- */
+
+/* Collection card labels: headings were upgraded h4 → h2 for a correct
+   document outline; keep the compact card-label size they had before. */
+.apex-collection-title {
+	font-size: 1.618em;
+	letter-spacing: -0.01em;
+}
 
 /* Hero title (the page title is the hero headline) */
 .page-template-template-homepage .site-main { padding-top: 1.5rem; }
