@@ -4,7 +4,7 @@ Theme URI:    https://www.apexvalue.com
 Description:  Apex Value child theme of Storefront. Modern, refined evolution of the default look: cleaner typography, tighter header, card-based product grids and accessible interactions.
 Author:       Apex Value
 Template:     storefront
-Version:      1.1.1
+Version:      1.2.0
 License:      GNU General Public License v2 or later
 License URI:  http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain:  apexvalue
@@ -822,19 +822,267 @@ span.onsale,
 }
 
 /* ---------------------------------------------------------------------
-   9. Footer
+   9. Hero
+   --------------------------------------------------------------------- */
+
+.apex-hero {
+	background: var(--apx-hero-bg);
+	color: #f4f7fa;
+	padding: clamp(3rem, 7vw, 5.5rem) 0 clamp(3.5rem, 8vw, 6.5rem);
+	position: relative;
+	overflow: hidden;
+}
+
+/* Subtle depth: one soft light pool, no gradient banding */
+.apex-hero::before {
+	content: "";
+	position: absolute;
+	inset: 0;
+	background:
+		radial-gradient(60rem 30rem at 85% -10%, rgba(255, 255, 255, 0.09), transparent 60%);
+	pointer-events: none;
+}
+
+.apex-hero__inner {
+	position: relative;
+	max-width: 46rem;
+}
+
+.apex-hero__kicker {
+	display: inline-block;
+	font-size: 0.8125rem;
+	font-weight: 700;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	color: #9fc4e2;
+	border: 1px solid rgba(159, 196, 226, 0.35);
+	padding: 0.4em 1em;
+	border-radius: 999px;
+	margin-bottom: 1.25rem;
+}
+
+.apex-hero__title {
+	font-size: clamp(1.9rem, 4.5vw, 3rem);
+	line-height: 1.12;
+	letter-spacing: -0.02em;
+	margin: 0 0 1rem;
+	color: #ffffff;
+}
+
+.apex-hero__text {
+	font-size: 1.0625rem;
+	line-height: 1.7;
+	color: rgba(244, 247, 250, 0.85);
+	max-width: 40rem;
+	margin: 0 0 1.75rem;
+}
+
+.apex-hero__actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.75rem;
+}
+
+.apex-hero__btn {
+	display: inline-block;
+	padding: 0.85em 1.9em;
+	border-radius: var(--apx-radius-sm);
+	font-weight: 600;
+	letter-spacing: 0.01em;
+	transition: background-color var(--apx-speed) var(--apx-ease),
+		border-color var(--apx-speed) var(--apx-ease),
+		transform var(--apx-speed) var(--apx-ease),
+		box-shadow var(--apx-speed) var(--apx-ease);
+}
+
+.apex-hero__btn--primary {
+	background: var(--apx-accent);
+	color: #fff;
+}
+
+.apex-hero__btn--primary:hover,
+.apex-hero__btn--primary:focus-visible {
+	background: #2e6da4;
+	color: #fff;
+	transform: translateY(-1px);
+	box-shadow: var(--apx-shadow-md);
+}
+
+.apex-hero__btn--ghost {
+	border: 1px solid rgba(255, 255, 255, 0.4);
+	color: #fff;
+}
+
+.apex-hero__btn--ghost:hover,
+.apex-hero__btn--ghost:focus-visible {
+	background: rgba(255, 255, 255, 0.12);
+	border-color: rgba(255, 255, 255, 0.7);
+	color: #fff;
+}
+
+/* Hero owns the visible H1 — hide the a11y fallback one. */
+.apex-has-hero .apx-h1 { display: none; }
+
+@media (prefers-reduced-motion: reduce) {
+	.apex-hero__btn {
+		transition: none;
+	}
+
+	.apex-hero__btn--primary:hover {
+		transform: none;
+	}
+}
+
+/* ---------------------------------------------------------------------
+   10. Footer
    --------------------------------------------------------------------- */
 
 .site-footer {
 	border-top: 1px solid var(--apx-line);
-	background: var(--apx-tint);
+}
+
+.apex-footer {
+	padding: 3.5rem 0 3rem;
+	border-bottom: 0;
+	color: var(--apx-footer-muted);
+}
+
+.apex-footer__logo {
+	display: inline-block;
+	font-size: 1.125rem;
+	font-weight: 700;
+	letter-spacing: 0.02em;
+	color: var(--apx-footer-ink);
+	margin-bottom: 0.9rem;
+}
+
+.apex-footer__about {
+	line-height: 1.7;
+	max-width: 36ch;
+	margin: 0 0 1.4rem;
+	font-size: 0.9375rem;
+}
+
+.apex-footer__social {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 2.5em;
+	height: 2.5em;
+	border: 1px solid var(--apx-footer-line);
+	border-radius: 999px;
+	color: var(--apx-footer-muted);
+	transition: color var(--apx-speed) var(--apx-ease),
+		border-color var(--apx-speed) var(--apx-ease),
+		background-color var(--apx-speed) var(--apx-ease);
+}
+
+.apex-footer__social:hover,
+.apex-footer__social:focus-visible {
+	color: var(--apx-footer-link);
+	border-color: var(--apx-footer-link);
+	background: rgba(127, 127, 127, 0.08);
+}
+
+.apex-footer__social-icon::before {
+	font-family: "Font Awesome 5 Brands";
+	font-weight: 400;
+	content: "\f39e"; /* facebook-f */
+}
+
+.apex-footer__heading {
+	font-size: 0.875rem;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.12em;
+	color: var(--apx-footer-ink);
+	margin: 0.35em 0 1.1em;
+}
+
+.apex-footer__menu,
+.apex-footer__contact-list {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.apex-footer__menu li,
+.apex-footer__contact-list li {
+	padding: 0;
+	margin: 0 0 0.55em;
+}
+
+.apex-footer__menu a {
+	color: var(--apx-footer-muted);
+	text-decoration: none;
+	transition: color var(--apx-speed) var(--apx-ease);
+}
+
+.apex-footer__menu a:hover,
+.apex-footer__menu a:focus-visible {
+	color: var(--apx-footer-link);
+	text-decoration: underline;
+}
+
+.apex-footer__contact-item {
+	position: relative;
+	padding-left: 1.7em;
+	font-size: 0.9375rem;
+}
+
+.apex-footer__contact-item::before {
+	font-family: "Font Awesome 5 Free";
+	font-weight: 900;
+	font-size: 0.85em;
+	position: absolute;
+	left: 0;
+	top: 0.15em;
+	opacity: 0.6;
+}
+
+.apex-footer__contact-item--email::before { content: "\f0e0"; } /* envelope */
+.apex-footer__contact-item--phone::before { content: "\f095"; } /* phone */
+.apex-footer__contact-item--address::before { content: "\f3c5"; } /* map-marker-alt */
+
+.apex-footer__contact-item a {
+	color: var(--apx-footer-muted);
+	text-decoration: none;
+}
+
+.apex-footer__contact-item a:hover,
+.apex-footer__contact-item a:focus-visible {
+	color: var(--apx-footer-link);
+	text-decoration: underline;
+}
+
+/* Stack gracefully below the desktop grid breakpoint */
+@media (max-width: 767px) {
+	.apex-footer .block {
+		margin-bottom: 2.25rem;
+		float: none;
+		width: 100%;
+	}
+
+	.apex-footer .block:last-child {
+		margin-bottom: 0;
+	}
 }
 
 .site-footer .site-info {
-	padding: 2rem 0;
-	color: var(--apx-muted);
-	font-size: 0.9375rem;
+	padding: 1.5rem 0;
+	border-top: 1px solid var(--apx-footer-line);
+	color: var(--apx-footer-muted);
+	font-size: 0.875rem;
 	text-align: center;
+}
+
+.site-footer .site-info a {
+	color: var(--apx-footer-muted);
+}
+
+.site-footer .site-info a:hover,
+.site-footer .site-info a:focus-visible {
+	color: var(--apx-footer-link);
 }
 
 /* Handheld bottom bar — cleaner chips */

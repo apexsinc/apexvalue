@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'APEXVALUE_VERSION', '1.1.1' );
+define( 'APEXVALUE_VERSION', '1.2.0' );
 
 /**
  * Pluggable Storefront overrides (cart icon + header cart markup).
@@ -35,6 +35,16 @@ require get_stylesheet_directory() . '/inc/design-tokens.php';
  * Pre-footer CTA band (Customizer-editable).
  */
 require get_stylesheet_directory() . '/inc/cta-band.php';
+
+/**
+ * Homepage hero (Customizer-editable).
+ */
+require get_stylesheet_directory() . '/inc/hero.php';
+
+/**
+ * Three-column footer (pluggable storefront_footer_widgets override).
+ */
+require get_stylesheet_directory() . '/inc/footer.php';
 
 /**
  * Theme customizations.
