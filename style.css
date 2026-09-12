@@ -1,0 +1,807 @@
+/*
+Theme Name:   Apex Value
+Theme URI:    https://www.apexvalue.com
+Description:  Apex Value child theme of Storefront. Modern, refined evolution of the default look: cleaner typography, tighter header, card-based product grids and accessible interactions.
+Author:       Apex Value
+Template:     storefront
+Version:      1.0.0
+License:      GNU General Public License v2 or later
+License URI:  http://www.gnu.org/licenses/gpl-2.0.html
+Text Domain:  apexvalue
+*/
+
+/* =====================================================================
+   APEX VALUE — DESIGN SYSTEM
+   Inherits Storefront Customizer colors (#8fa4bf header, green buttons,
+   #7f54b3 links) and refines typography, spacing and components.
+   ===================================================================== */
+
+:root {
+	/* Typography */
+	--apx-font: "Source Sans Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+	/* Brand colors (kept from Customizer) */
+	--apx-brand: #8fa4bf;            /* steel blue — header / footer */
+	--apx-brand-dark: #4a5a6e;       /* deep steel — text on brand */
+	--apx-accent: #7f54b3;           /* link purple (Customizer default) */
+	--apx-green: #81d742;            /* primary CTA green (Customizer) */
+	--apx-green-dark: #68be29;
+
+	/* Neutrals */
+	--apx-ink: #1a1c20;
+	--apx-body: #43454b;
+	--apx-muted: #6d6d6d;
+	--apx-line: rgba(0, 0, 0, 0.08);
+	--apx-paper: #ffffff;
+	--apx-tint: #f6f7f9;
+
+	/* Radii & shadows */
+	--apx-radius: 8px;
+	--apx-radius-sm: 5px;
+	--apx-shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.06), 0 1px 3px rgba(16, 24, 40, 0.08);
+	--apx-shadow-md: 0 4px 10px -2px rgba(16, 24, 40, 0.08), 0 12px 20px -6px rgba(16, 24, 40, 0.1);
+
+	/* Motion */
+	--apx-ease: cubic-bezier(0.4, 0, 0.2, 1);
+	--apx-speed: 180ms;
+}
+
+/* ---------------------------------------------------------------------
+   1. Foundations — typography & rhythm
+   --------------------------------------------------------------------- */
+
+body {
+	font-family: var(--apx-font);
+	font-size: 1.0625rem;              /* 17px base — calmer long-form */
+	line-height: 1.65;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	color: var(--apx-body);
+}
+
+h1, h2, h3, h4, h5, h6 {
+	color: var(--apx-ink);
+	font-weight: 700;
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+}
+
+h1, .alpha { font-weight: 800; letter-spacing: -0.02em; }
+
+h1 a, h2 a, h3 a, h4 a, h5 a, h6 a { font-weight: inherit; }
+
+/* Restore Storefront's lighter feel for component titles */
+.gamma, .delta,
+.widget .widget-title,
+.widget .widgettitle {
+	font-weight: 600;
+	letter-spacing: 0.01em;
+}
+
+p { line-height: 1.65; }
+
+a {
+	color: var(--apx-accent);
+	text-decoration-thickness: 1px;
+	text-underline-offset: 2px;
+	transition: color var(--apx-speed) var(--apx-ease);
+}
+
+a:hover { color: var(--apx-ink); }
+
+::selection {
+	background: var(--apx-brand);
+	color: #fff;
+}
+
+/* Consistent focus ring (keyboard visible, mouse subtle) */
+:focus { outline: none; }
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible,
+.wp-block-button__link:focus-visible {
+	outline: 2px solid var(--apx-accent);
+	outline-offset: 2px;
+	border-radius: 2px;
+}
+
+/* ---------------------------------------------------------------------
+   2. Buttons
+   --------------------------------------------------------------------- */
+
+button,
+input[type="button"],
+input[type="reset"],
+input[type="submit"],
+.button,
+.added_to_cart,
+.wc-block-grid__products .wc-block-grid__product .wp-block-button__link,
+.wp-block-button__link,
+.wc-block-components-button {
+	border-radius: var(--apx-radius-sm);
+	font-weight: 600;
+	letter-spacing: 0.01em;
+	transition: background-color var(--apx-speed) var(--apx-ease),
+		color var(--apx-speed) var(--apx-ease),
+		border-color var(--apx-speed) var(--apx-ease),
+		box-shadow var(--apx-speed) var(--apx-ease),
+		transform var(--apx-speed) var(--apx-ease);
+}
+
+button:hover,
+.button:hover,
+.added_to_cart:hover,
+.wc-block-grid__products .wc-block-grid__product .wp-block-button__link:hover {
+	box-shadow: var(--apx-shadow-sm);
+	transform: translateY(-1px);
+}
+
+button:active,
+.button:active { transform: translateY(0); box-shadow: none; }
+
+/* Primary CTA uses brand green; keep Storefront's alt (dark) untouched */
+button,
+input[type="submit"],
+.single-product .button:not(.alt):not(.wc-block-components-button),
+.button:not(.alt):not(.cta) {
+	background-color: var(--apx-green);
+	border-color: var(--apx-green);
+	color: var(--apx-ink);
+}
+
+button:hover,
+.button:not(.alt):not(.cta):hover {
+	background-color: var(--apx-green-dark);
+	border-color: var(--apx-green-dark);
+	color: var(--apx-ink);
+}
+
+/* Secondary / outline button for secondary actions */
+.button.alt {
+	background-color: var(--apx-ink);
+	border-color: var(--apx-ink);
+}
+
+.button.alt:hover { background-color: #000; border-color: #000; }
+
+/* ---------------------------------------------------------------------
+   3. Forms & inputs
+   --------------------------------------------------------------------- */
+
+input[type="text"],
+input[type="number"],
+input[type="email"],
+input[type="tel"],
+input[type="url"],
+input[type="password"],
+input[type="search"],
+textarea,
+.input-text,
+.select2-container--default .select2-selection--single {
+	border: 1px solid var(--apx-line);
+	background-color: var(--apx-paper);
+	border-radius: var(--apx-radius-sm);
+	box-shadow: none;
+	transition: border-color var(--apx-speed) var(--apx-ease),
+		box-shadow var(--apx-speed) var(--apx-ease);
+}
+
+input:focus,
+textarea:focus,
+.input-text:focus,
+.select2-container--default.select2-container--focus .select2-selection--single {
+	border-color: var(--apx-brand);
+	box-shadow: 0 0 0 3px rgba(143, 164, 191, 0.25);
+	background-color: #fff;
+	outline: none;
+}
+
+::placeholder { color: #9aa0a6; opacity: 1; }
+
+/* ---------------------------------------------------------------------
+   4. Header — single compact bar
+   --------------------------------------------------------------------- */
+
+.site-header {
+	padding-top: 0.75rem;
+	padding-bottom: 0.75rem;
+	border-bottom: 1px solid var(--apx-line);
+}
+
+/* Sticky header on tablet+ (whole header stays reachable while scrolling) */
+@media (min-width: 768px) {
+	.site-header {
+		position: sticky;
+		top: 0;
+		box-shadow: var(--apx-shadow-sm);
+	}
+
+	body.admin-bar .site-header { top: 32px; }
+}
+
+.site-header .col-full {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 0.5rem 1.5rem;
+}
+
+/* Beat Storefront's percentage-width floats with equal-or-higher specificity.
+   Header becomes: row 1 = logo + search, row 2 = nav + cart icon. */
+.woocommerce-active .site-header .site-branding,
+.woocommerce-active .site-header .site-search {
+	float: none;
+	clear: none;
+	width: auto;
+	margin: 0;
+}
+
+.woocommerce-active .site-header .site-branding {
+	flex: 0 1 auto;
+}
+
+.woocommerce-active .site-header .site-search {
+	flex: 1 1 220px;
+	max-width: 440px;
+	margin-left: auto;
+}
+
+.site-branding { margin: 0; }
+
+.site-header .custom-logo-link img {
+	width: auto;
+	max-width: 190px;
+	max-height: 56px;
+	height: auto;
+}
+
+.site-search {
+	text-align: left;
+}
+
+/* Product search field */
+.site-search .woocommerce-product-search {
+	position: relative;
+	display: flex;
+	margin: 0;
+}
+
+.site-search input.search-field {
+	width: 100%;
+	margin: 0;
+	border: 1px solid var(--apx-line);
+	background: var(--apx-paper);
+	border-radius: 999px;
+	padding: 0.55em 2.6em 0.55em 1.1em;
+	box-shadow: none;
+}
+
+.site-search input.search-field:focus {
+	border-color: var(--apx-brand);
+	box-shadow: 0 0 0 3px rgba(143, 164, 191, 0.25);
+}
+
+.site-search .woocommerce-product-search button[type="submit"] {
+	position: absolute;
+	right: 5px;
+	top: 50%;
+	transform: translateY(-50%);
+	width: 32px;
+	height: 32px;
+	padding: 0;
+	border: 0;
+	border-radius: 50%;
+	background: var(--apx-tint);
+	color: var(--apx-muted);
+	text-indent: -9999px;
+	overflow: hidden;
+	transition: background var(--apx-speed) var(--apx-ease), color var(--apx-speed) var(--apx-ease);
+}
+
+/* Magnifier glyph from Storefront's icon font */
+.site-search .woocommerce-product-search button[type="submit"]::before {
+	font-family: "Font Awesome 5 Free";
+	content: "\f002";
+	text-indent: 0;
+	position: absolute;
+	inset: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 13px;
+	font-weight: 900;
+}
+
+.site-search .woocommerce-product-search button[type="submit"]:hover {
+	background: var(--apx-brand);
+	color: #fff;
+}
+
+/* Secondary navigation (unused now, but styled if ever populated) */
+.secondary-navigation { margin: 0; }
+
+.secondary-navigation .menu a { color: inherit; }
+
+/* --- Primary nav row --- */
+
+.storefront-primary-navigation {
+	clear: both;
+	border-top: 1px solid var(--apx-line);
+	background: var(--apx-paper);
+}
+
+.storefront-primary-navigation .col-full {
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+}
+
+.woocommerce-active .storefront-primary-navigation .main-navigation {
+	float: none;
+	clear: none;
+	width: auto;
+	flex: 1 1 auto;
+	min-width: 0;
+}
+
+.woocommerce-active .storefront-primary-navigation .site-header-cart {
+	float: none;
+	width: auto;
+	margin: 0;
+	flex: 0 0 auto;
+}
+
+.main-navigation ul.menu,
+.main-navigation ul.nav-menu {
+	margin-left: -1em;
+}
+
+.main-navigation ul.menu > li > a,
+.main-navigation ul.nav-menu > li > a {
+	padding: 0.9em 1em;
+	font-weight: 600;
+	font-size: 0.9375rem;
+	letter-spacing: 0.01em;
+	color: var(--apx-ink);
+}
+
+.main-navigation ul.menu > li > a:hover,
+.main-navigation ul.nav-menu > li > a:hover {
+	color: var(--apx-accent);
+}
+
+/* Submenus: clean dropdown cards */
+.main-navigation ul.menu ul,
+.main-navigation ul.nav-menu ul {
+	background: #fff;
+	border: 1px solid var(--apx-line);
+	border-radius: var(--apx-radius);
+	box-shadow: var(--apx-shadow-md);
+	padding: 0.35rem;
+	min-width: 220px;
+}
+
+.main-navigation ul.menu ul li a,
+.main-navigation ul.nav-menu ul li a {
+	border-radius: var(--apx-radius-sm);
+	color: var(--apx-body);
+	font-weight: 400;
+}
+
+.main-navigation ul.menu ul li a:hover,
+.main-navigation ul.nav-menu ul li a:hover,
+.main-navigation ul.menu ul li:hover > a {
+	background: var(--apx-tint);
+	color: var(--apx-ink);
+}
+
+ul.menu li.current-menu-item > a {
+	color: var(--apx-accent);
+}
+
+/* --- Header cart icon (replaces old text link) --- */
+
+.site-header-cart {
+	flex: 0 0 auto;
+	width: auto;
+	margin: 0 !important;
+	position: relative;
+}
+
+.site-header-cart > li { margin: 0; }
+
+.site-header-cart .cart-contents {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.45rem;
+	padding: 0.5rem 0.75rem;
+	border-radius: 999px;
+	background: var(--apx-tint);
+	color: var(--apx-ink);
+	font-weight: 600;
+	font-size: 0.9375rem;
+	text-decoration: none;
+	transition: background var(--apx-speed) var(--apx-ease), color var(--apx-speed) var(--apx-ease);
+}
+
+.site-header-cart .cart-contents:hover {
+	background: var(--apx-brand);
+	color: #fff;
+}
+
+/* Storefront adds the cart glyph via a floated ::after; integrate it into
+   the chip's flex layout instead. */
+.site-header-cart .cart-contents::after {
+	font-family: "Font Awesome 5 Free";
+	font-weight: 900;
+	content: "\f291";
+	float: none;
+	line-height: 1;
+	height: auto;
+	font-size: 1rem;
+}
+
+.site-header-cart .cart-contents .count {
+	font-size: 0.8125rem;
+	background: var(--apx-green);
+	color: var(--apx-ink);
+	border-radius: 999px;
+	padding: 0.05em 0.55em;
+	font-weight: 700;
+}
+
+/* Dropdown mini-cart below the icon.
+   Storefront parks it at left:-999em and shows on hover — we pin it
+   under the icon instead. */
+.site-header-cart .widget_shopping_cart {
+	position: absolute;
+	right: 0;
+	left: auto;
+	top: calc(100% + 6px);
+	width: 300px;
+	background: #fff;
+	border: 1px solid var(--apx-line);
+	border-radius: var(--apx-radius);
+	box-shadow: var(--apx-shadow-md);
+	padding: 1rem;
+	display: none;
+}
+
+.site-header-cart:hover .widget_shopping_cart,
+.site-header-cart:focus-within .widget_shopping_cart {
+	display: block;
+	left: auto;
+}
+
+.site-header-cart .widget_shopping_cart .woocommerce-mini-cart__empty-message {
+	margin: 0;
+	color: var(--apx-muted);
+}
+
+/* --- Mobile menu --- */
+
+button.menu-toggle {
+	max-width: none;
+	border: 1px solid var(--apx-line);
+	background: var(--apx-paper);
+	border-radius: var(--apx-radius-sm);
+	padding: 0.5em 0.9em;
+	color: var(--apx-ink);
+	font-weight: 600;
+}
+
+/* Keep Storefront's right-aligned toggle on mobile; hidden on desktop */
+button.menu-toggle { float: right; }
+
+button.menu-toggle:hover { background: var(--apx-tint); }
+
+.handheld-navigation ul.menu li a {
+	padding: 0.9em 0.25em;
+	border-bottom: 1px solid var(--apx-line);
+	font-weight: 600;
+	color: var(--apx-ink);
+}
+
+.handheld-navigation ul.menu li:last-child a { border-bottom: 0; }
+
+/* ---------------------------------------------------------------------
+   5. Content layout — cards, grids, breadcrumbs
+   --------------------------------------------------------------------- */
+
+.woocommerce-breadcrumb {
+	font-size: 0.875rem;
+	color: var(--apx-muted);
+	padding-top: 1.25rem;
+}
+
+.woocommerce-breadcrumb a { color: var(--apx-muted); }
+.woocommerce-breadcrumb a:hover { color: var(--apx-accent); }
+
+/* Product & post cards */
+ul.products li.product,
+.wc-block-grid__products .wc-block-grid__product,
+.wc-block-product-template .wc-block-product {
+	background: var(--apx-paper);
+	border: 1px solid var(--apx-line);
+	border-radius: var(--apx-radius);
+	box-shadow: var(--apx-shadow-sm);
+	overflow: hidden;
+	transition: box-shadow var(--apx-speed) var(--apx-ease),
+		transform var(--apx-speed) var(--apx-ease),
+		border-color var(--apx-speed) var(--apx-ease);
+}
+
+ul.products li.product:hover,
+.wc-block-grid__products .wc-block-grid__product:hover,
+.wc-block-product-template .wc-block-product:hover {
+	box-shadow: var(--apx-shadow-md);
+	transform: translateY(-2px);
+	border-color: rgba(0, 0, 0, 0.14);
+}
+
+ul.products li.product img,
+.wc-block-grid__product img,
+.wc-block-product-template .wc-block-product img {
+	border-radius: 0;   /* images flush to card edges */
+}
+
+/* Card padding rhythm (Storefront legacy grids) */
+ul.products li.product .woocommerce-loop-product__title {
+	font-size: 1em;
+	font-weight: 600;
+	color: var(--apx-ink);
+}
+
+ul.products li.product .price,
+.wc-block-components-product-price {
+	font-weight: 600;
+	color: var(--apx-muted);
+}
+
+/* Keep hidden-price custom CSS behavior visually tidy */
+.wc-block-product-template .wc-block-product .wc-block-components-product-button {
+	margin-top: auto;
+}
+
+/* Star ratings */
+.star-rating span::before { color: #e8a33d; }
+
+/* Sale badge */
+span.onsale,
+.wc-block-grid__product-onsale,
+.wc-block-components-product-sale-badge {
+	background-color: var(--apx-green);
+	color: var(--apx-ink);
+	border-radius: 999px;
+	font-weight: 700;
+	min-height: auto;
+	min-width: auto;
+	padding: 0.3em 0.9em;
+	line-height: 1.6;
+}
+
+/* Pagination */
+.pagination .page-numbers li .page-numbers,
+.woocommerce-pagination .page-numbers li .page-numbers {
+	background: transparent;
+	border: 1px solid transparent;
+	border-radius: var(--apx-radius-sm);
+	transition: background var(--apx-speed) var(--apx-ease);
+}
+
+.pagination .page-numbers li .page-numbers:hover,
+.woocommerce-pagination .page-numbers li .page-numbers:hover {
+	background: var(--apx-tint);
+}
+
+.pagination .page-numbers li .page-numbers.current,
+.woocommerce-pagination .page-numbers li .page-numbers.current {
+	background: var(--apx-ink);
+	border-color: var(--apx-ink);
+	color: #fff;
+}
+
+/* Notices */
+.woocommerce-message,
+.woocommerce-info,
+.woocommerce-error,
+.wc-block-components-notice-banner {
+	border-radius: var(--apx-radius-sm);
+	border-top-color: var(--apx-brand);
+}
+
+/* ---------------------------------------------------------------------
+   6. Single product
+   --------------------------------------------------------------------- */
+
+.single-product div.product .woocommerce-product-gallery img {
+	border-radius: var(--apx-radius);
+}
+
+.single-product div.product .summary {
+	/* entry summary benefits from a touch of breathing room */
+	padding-left: 0.5rem;
+}
+
+@media (min-width: 768px) {
+	.single-product div.product .summary { padding-left: 2rem; }
+}
+
+.single-product div.product .product_title {
+	font-size: 1.8em;
+	letter-spacing: -0.015em;
+}
+
+.single-product div.product .price {
+	font-size: 1.41575em;
+	color: var(--apx-ink);
+	font-weight: 700;
+}
+
+/* Tabs (Description / Additional information) */
+.woocommerce-tabs ul.tabs li {
+	border-radius: var(--apx-radius-sm) var(--apx-radius-sm) 0 0;
+}
+
+.woocommerce-tabs ul.tabs li.active a { color: var(--apx-ink); }
+
+/* ---------------------------------------------------------------------
+   7. Widgets & sidebar
+   --------------------------------------------------------------------- */
+
+.widget .widget-title,
+.widget .widgettitle {
+	font-size: 1rem;
+	text-transform: uppercase;
+	letter-spacing: 0.06em;
+	color: var(--apx-ink);
+	border-bottom: 1px solid var(--apx-line);
+	padding-bottom: 0.6em;
+	margin-bottom: 1em;
+}
+
+.widget-area .widget a { font-weight: 500; }
+
+/* Sidebar product category / nav lists: tidy link rows */
+.widget-area .widget ul li {
+	border-bottom: 1px dashed rgba(0, 0, 0, 0.05);
+}
+
+.widget-area .widget ul li:last-child { border-bottom: 0; }
+
+.widget_product_categories ul li a,
+.widget_nav_menu ul li a,
+.widget_pages ul li a {
+	display: block;
+	padding: 0.35em 0;
+}
+
+/* ---------------------------------------------------------------------
+   8. Footer
+   --------------------------------------------------------------------- */
+
+.site-footer {
+	border-top: 1px solid var(--apx-line);
+	background: var(--apx-tint);
+}
+
+.site-footer .site-info {
+	padding: 2rem 0;
+	color: var(--apx-muted);
+	font-size: 0.9375rem;
+	text-align: center;
+}
+
+/* Handheld bottom bar — cleaner chips */
+.storefront-handheld-footer-bar ul li a,
+.storefront-handheld-footer-bar ul li .my-account::before,
+.storefront-handheld-footer-bar ul li .search::before,
+.storefront-handheld-footer-bar ul li .cart::before {
+	color: var(--apx-brand-dark);
+}
+
+/* ---------------------------------------------------------------------
+   9. Homepage refinements
+   --------------------------------------------------------------------- */
+
+/* Hero title (the page title is the hero headline) */
+.page-template-template-homepage .site-main { padding-top: 1.5rem; }
+
+.page-template-template-homepage .type-page { padding-top: 2.5rem; padding-bottom: 1rem; }
+
+/* Featured collection triple — let the grid breathe */
+.wp-block-columns .wp-block-image img { border-radius: var(--apx-radius); }
+
+/* Section headings get an accent underline */
+.home .entry-content h2,
+.home .entry-content h3 {
+	position: relative;
+}
+
+.home .entry-content h2::after {
+	content: "";
+	display: block;
+	width: 44px;
+	height: 3px;
+	border-radius: 2px;
+	background: var(--apx-green);
+	margin-top: 0.5em;
+}
+
+.home .entry-content h2.has-text-align-center::after { margin-left: auto; margin-right: auto; }
+
+/* FAQ / latest posts list */
+.home .entry-content ul.wp-block-latest-posts__list li {
+	border-bottom: 1px solid var(--apx-line);
+	padding: 0.75em 0;
+}
+
+.home .entry-content ul.wp-block-latest-posts__list li:last-child { border-bottom: 0; }
+
+/* ---------------------------------------------------------------------
+   10. Misc — tables, 404, misc utilities
+   --------------------------------------------------------------------- */
+
+table { border-radius: var(--apx-radius-sm); }
+
+table thead th {
+	border-bottom: 2px solid var(--apx-line);
+	font-weight: 700;
+}
+
+table tbody tr { border-bottom: 1px solid rgba(0, 0, 0, 0.04); }
+
+.error404 .site-content .widget_product_search {
+	background: var(--apx-tint);
+	border-radius: var(--apx-radius);
+}
+
+/* Screen-reader only helper (kept compatible with Storefront) */
+.apx-skip { position: absolute; left: -9999px; }
+
+/* ---------------------------------------------------------------------
+   11. Motion & reduced-motion
+   --------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+		scroll-behavior: auto !important;
+	}
+}
+
+/* ---------------------------------------------------------------------
+   12. Responsive — header behaviour
+   --------------------------------------------------------------------- */
+
+@media (max-width: 767px) {
+	.site-header .col-full { gap: 0.5rem 0.75rem; }
+
+	.site-branding img { max-width: 150px; max-height: 44px; }
+
+	/* The handheld bottom bar already provides search on mobile —
+	   keep the header to two clean rows (logo / menu+cart). */
+	.site-search { display: none; }
+
+	.site-header-cart .widget_shopping_cart {
+		display: none !important; /* avoid hover-drop on touch; cart page is one tap away */
+	}
+
+	.site-header-cart .cart-contents { padding: 0.5rem 0.65rem; }
+
+	.storefront-primary-navigation { border-top: 0; }
+
+	.page-template-template-homepage .type-page { padding-top: 1.25rem; }
+}
+
+@media (min-width: 768px) {
+	.site-header .col-full { align-items: center; }
+}
