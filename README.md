@@ -56,6 +56,13 @@ survives parent updates.
   `--wp--style--root--padding-*` / `--wp--custom--gap--horizontal` which
   Storefront doesn't define — the child theme provides them so section
   padding doesn't collapse to zero.
+- **Product page:** framed gallery with accent-highlighted thumbnails,
+  divider rhythm in the summary (short description → price → add-to-cart),
+  flexbox cart row (full-width CTA on mobile), quiet meta line, card-style
+  tab list and polished related-products heading.
+- **Blog:** archive cards with hover lift, scoped entry-title sizing,
+  accent blockquotes and links, card-styled prev/next navigation and
+  comment bubbles. Static page titles are untouched.
 - **AJAX cart:** the add-to-cart fragment handler keeps working because it
   calls the overridden `storefront_cart_link()` directly.
 

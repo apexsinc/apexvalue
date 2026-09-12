@@ -4,7 +4,7 @@ Theme URI:    https://www.apexvalue.com
 Description:  Apex Value child theme of Storefront. Modern, refined evolution of the default look: cleaner typography, tighter header, card-based product grids and accessible interactions.
 Author:       Apex Value
 Template:     storefront
-Version:      1.2.0
+Version:      1.2.1
 License:      GNU General Public License v2 or later
 License URI:  http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain:  apexvalue
@@ -1241,4 +1241,387 @@ table tbody tr { border-bottom: 1px solid rgba(0, 0, 0, 0.04); }
 
 @media (min-width: 768px) {
 	.site-header .col-full { align-items: center; }
+}
+
+/* ---------------------------------------------------------------------
+   14. Single product polish
+   --------------------------------------------------------------------- */
+
+/* Gallery */
+.single-product div.product .woocommerce-product-gallery {
+	border: 1px solid var(--apx-line);
+	border-radius: var(--apx-radius);
+	background: var(--apx-paper);
+	overflow: hidden;
+	transition: opacity 0.25s ease-in-out; /* keep theme's fade-in */
+}
+
+.single-product div.product .woocommerce-product-gallery .flex-control-thumbs {
+	margin-top: 0.75em;
+	padding: 0 0.75em 0.75em;
+}
+
+.single-product div.product .woocommerce-product-gallery .flex-control-thumbs li {
+	width: 23.5%;
+	margin-left: 2%;
+}
+
+.single-product div.product .woocommerce-product-gallery .flex-control-thumbs li:first-child {
+	margin-left: 0;
+}
+
+.single-product div.product .woocommerce-product-gallery .flex-control-thumbs img {
+	border-radius: var(--apx-radius-sm);
+	border: 2px solid transparent;
+	transition: border-color var(--apx-speed) var(--apx-ease),
+		opacity var(--apx-speed) var(--apx-ease);
+}
+
+.single-product div.product .woocommerce-product-gallery .flex-control-thumbs img:hover {
+	opacity: 0.85;
+}
+
+.single-product div.product .woocommerce-product-gallery .flex-control-thumbs img.flex-active {
+	border-color: var(--apx-accent);
+	opacity: 1;
+}
+
+/* Summary column */
+.single-product div.product .product_title {
+	margin-bottom: 0.4em;
+}
+
+.single-product div.product .woocommerce-product-details__short-description {
+	color: var(--apx-muted);
+	line-height: 1.7;
+	padding-bottom: 1.1em;
+	border-bottom: 1px solid var(--apx-line);
+	margin-bottom: 1.3em;
+}
+
+.single-product div.product p.price {
+	padding-bottom: 1.1em;
+}
+
+.single-product div.product p.price ins {
+	text-decoration: none;
+}
+
+.single-product div.product .stock {
+	font-weight: 600;
+}
+
+/* Cart row: quantity + button on one line, full-width button on mobile */
+.single-product div.product form.cart {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.6rem;
+	align-items: stretch;
+	margin-bottom: 1.4em;
+}
+
+.single-product div.product form.cart .quantity {
+	margin: 0;
+}
+
+.single-product div.product form.cart .single_add_to_cart_button {
+	flex: 1 1 auto;
+	padding: 0.85em 2em;
+}
+
+/* SKU / category / tags meta line */
+.single-product div.product .product_meta {
+	padding-top: 1.2em;
+	border-top: 1px solid var(--apx-line);
+	font-size: 0.875rem;
+	color: var(--apx-muted);
+}
+
+.single-product div.product .product_meta > span {
+	display: block;
+	margin-bottom: 0.35em;
+}
+
+.single-product div.product .product_meta a {
+	color: var(--apx-muted);
+	text-decoration: none;
+	border-bottom: 1px solid transparent;
+	transition: color var(--apx-speed) var(--apx-ease),
+		border-color var(--apx-speed) var(--apx-ease);
+}
+
+.single-product div.product .product_meta a:hover,
+.single-product div.product .product_meta a:focus-visible {
+	color: var(--apx-accent);
+	border-color: currentColor;
+}
+
+/* Tabs: quiet card-list style (Storefront stacks these on desktop) */
+.woocommerce-tabs {
+	padding-top: 0.5em;
+}
+
+.woocommerce-tabs ul.tabs li {
+	background: var(--apx-paper);
+	border: 1px solid var(--apx-line) !important;
+	border-radius: var(--apx-radius-sm);
+	margin-bottom: 0.45em;
+	transition: border-color var(--apx-speed) var(--apx-ease),
+		background-color var(--apx-speed) var(--apx-ease);
+}
+
+.woocommerce-tabs ul.tabs li a {
+	padding: 0.85em 1.1em !important;
+	font-weight: 600;
+	color: var(--apx-muted);
+	transition: color var(--apx-speed) var(--apx-ease);
+}
+
+.woocommerce-tabs ul.tabs li a:hover {
+	color: var(--apx-accent);
+}
+
+.woocommerce-tabs ul.tabs li.active {
+	background: var(--apx-tint);
+	border-color: rgba(0, 0, 0, 0.14) !important;
+}
+
+.woocommerce-tabs ul.tabs li.active a {
+	color: var(--apx-ink);
+}
+
+.woocommerce-tabs ul.tabs li.active::after {
+	display: none; /* remove Storefront's arrow marker */
+}
+
+.woocommerce-tabs .panel {
+	line-height: 1.75;
+}
+
+.woocommerce-tabs .panel h2:first-of-type {
+	font-size: 1.35em;
+	letter-spacing: -0.01em;
+}
+
+/* Related products */
+.single-product section.related > h2 {
+	font-size: 1.5em;
+	letter-spacing: -0.015em;
+	margin-bottom: 1em;
+}
+
+/* ---------------------------------------------------------------------
+   15. Blog — archive & single posts
+   --------------------------------------------------------------------- */
+
+/* Archive / category loops: card list */
+.site-main .hentry,
+.blog .site-main .hentry,
+.archive .site-main .hentry {
+	background: var(--apx-paper);
+	border: 1px solid var(--apx-line);
+	border-radius: var(--apx-radius);
+	box-shadow: var(--apx-shadow-sm);
+	padding: 1.75rem 1.9rem;
+	margin-bottom: 1.5rem;
+	transition: box-shadow var(--apx-speed) var(--apx-ease),
+		transform var(--apx-speed) var(--apx-ease);
+}
+
+@media (min-width: 768px) {
+	.site-main .hentry {
+		padding: 2.1rem 2.4rem;
+	}
+}
+
+.archive .site-main .hentry:hover {
+	box-shadow: var(--apx-shadow-md);
+	transform: translateY(-2px);
+}
+
+.posted-on,
+.byline,
+.post-author {
+	font-size: 0.8125rem;
+	color: var(--apx-muted);
+}
+
+.posted-on a,
+.byline a,
+.post-author a {
+	color: var(--apx-muted);
+}
+
+/* Scoped to loops & single posts so static page titles keep Storefront's size */
+.archive .entry-title,
+.blog .entry-title,
+.search .entry-title {
+	font-size: 1.5em;
+	letter-spacing: -0.015em;
+	line-height: 1.3;
+	margin-bottom: 0.5em;
+}
+
+.single-post .entry-title {
+	font-size: 1.9em;
+	letter-spacing: -0.015em;
+	line-height: 1.25;
+	margin-bottom: 0.4em;
+}
+
+.entry-title a {
+	color: var(--apx-ink);
+	text-decoration: none;
+	transition: color var(--apx-speed) var(--apx-ease);
+}
+
+.entry-title a:hover,
+.entry-title a:focus-visible {
+	color: var(--apx-accent);
+}
+
+.entry-content {
+	line-height: 1.75;
+	overflow-wrap: break-word;
+}
+
+.entry-content h2,
+.entry-content h3 {
+	letter-spacing: -0.01em;
+	margin-top: 1.6em;
+}
+
+.entry-content a {
+	color: var(--apx-accent);
+	text-decoration: underline;
+	text-decoration-color: rgba(127, 84, 179, 0.35);
+	text-underline-offset: 2px;
+}
+
+.entry-content a:hover,
+.entry-content a:focus-visible {
+	text-decoration-color: currentColor;
+}
+
+.entry-content blockquote {
+	border-left: 3px solid var(--apx-accent);
+	padding: 0.2em 1.2em;
+	font-style: italic;
+	color: var(--apx-muted);
+}
+
+.more-link {
+	display: inline-block;
+	margin-top: 0.9em;
+	font-weight: 600;
+	color: var(--apx-accent);
+}
+
+/* Prev / next post navigation */
+.site-main nav.navigation.post-navigation .nav-links::before,
+.site-main nav.navigation.post-navigation .nav-links::after {
+	content: "";
+	display: table;
+}
+
+.site-main nav.navigation.post-navigation .nav-links::after {
+	clear: both;
+}
+
+.site-main nav.navigation.post-navigation a {
+	display: block;
+	background: var(--apx-paper);
+	border: 1px solid var(--apx-line);
+	border-radius: var(--apx-radius-sm);
+	padding: 1em 1.3em;
+	color: var(--apx-ink);
+	font-weight: 600;
+	text-decoration: none;
+	transition: border-color var(--apx-speed) var(--apx-ease),
+		box-shadow var(--apx-speed) var(--apx-ease);
+}
+
+.site-main nav.navigation.post-navigation a:hover,
+.site-main nav.navigation.post-navigation a:focus-visible {
+	border-color: rgba(0, 0, 0, 0.16);
+	box-shadow: var(--apx-shadow-sm);
+}
+
+@media (min-width: 768px) {
+	.site-main nav.navigation.post-navigation .nav-previous {
+		float: left;
+		width: 48.5%;
+	}
+
+	.site-main nav.navigation.post-navigation .nav-next {
+		float: right;
+		width: 48.5%;
+		text-align: right;
+	}
+}
+
+/* Comments */
+.comment-list {
+	padding-left: 0;
+	list-style: none;
+}
+
+.comment-list .comment-body {
+	background: var(--apx-paper);
+	border: 1px solid var(--apx-line);
+	border-radius: var(--apx-radius);
+	padding: 1.2rem 1.4rem;
+	margin-bottom: 1.2rem;
+}
+
+.comment-list .comment-metadata {
+	font-size: 0.8125rem;
+	color: var(--apx-muted);
+}
+
+.comment-reply-link {
+	font-weight: 600;
+	color: var(--apx-accent);
+}
+
+/* Single post header breathing room */
+.single-post .site-main .entry-header {
+	margin-bottom: 1.6rem;
+}
+
+.single-post .site-main .entry-content {
+	max-width: 70ch;
+}
+
+/* ---------------------------------------------------------------------
+   16. Mobile — product, blog & overflow refinements
+   --------------------------------------------------------------------- */
+
+@media (max-width: 767px) {
+	/* Single product: let the CTA fill the row */
+	.single-product div.product form.cart .single_add_to_cart_button {
+		width: 100%;
+	}
+
+	.single-product div.product .summary {
+		padding-left: 0;
+	}
+
+	/* Long emails / SKUs must never push the footer wide */
+	.apex-footer__contact-item a,
+	.apex-footer__menu a,
+	.product_meta {
+		overflow-wrap: anywhere;
+	}
+
+	/* Touch-friendly pagination */
+	.pagination .page-numbers li .page-numbers,
+	.woocommerce-pagination .page-numbers li .page-numbers {
+		padding: 0.55em 0.9em;
+	}
+
+	/* Archive cards: slightly tighter padding */
+	.site-main .hentry {
+		padding: 1.35rem 1.2rem;
+	}
 }
