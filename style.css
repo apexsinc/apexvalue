@@ -4,7 +4,7 @@ Theme URI:    https://www.apexvalue.com
 Description:  Apex Value child theme of Storefront. Modern, refined evolution of the default look: cleaner typography, tighter header, card-based product grids and accessible interactions.
 Author:       Apex Value
 Template:     storefront
-Version:      1.1.0
+Version:      1.1.1
 License:      GNU General Public License v2 or later
 License URI:  http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain:  apexvalue
@@ -374,52 +374,61 @@ textarea:focus,
 	flex: 0 0 auto;
 }
 
-.main-navigation ul.menu,
-.main-navigation ul.nav-menu {
-	margin-left: -1em;
+/* Desktop-only nav link styling — the handheld menu's <ul> also carries
+   the .menu class, so these rules must NOT leak into the mobile view. */
+@media (min-width: 768px) {
+	.main-navigation ul.menu,
+	.main-navigation ul.nav-menu {
+		margin-left: -1em;
+	}
+
+	.main-navigation ul.menu > li > a,
+	.main-navigation ul.nav-menu > li > a {
+		padding: 0.9em 1em;
+		font-weight: 600;
+		font-size: 0.9375rem;
+		letter-spacing: 0.01em;
+		color: var(--apx-ink);
+	}
+
+	.main-navigation ul.menu > li > a:hover,
+	.main-navigation ul.nav-menu > li > a:hover {
+		color: var(--apx-accent);
+	}
 }
 
-.main-navigation ul.menu > li > a,
-.main-navigation ul.nav-menu > li > a {
-	padding: 0.9em 1em;
-	font-weight: 600;
-	font-size: 0.9375rem;
-	letter-spacing: 0.01em;
-	color: var(--apx-ink);
+/* Submenus: clean dropdown cards (desktop only — handheld renders
+   submenus inline and must keep its flat list styling) */
+@media (min-width: 768px) {
+	.main-navigation ul.menu ul,
+	.main-navigation ul.nav-menu ul {
+		background: #fff;
+		border: 1px solid var(--apx-line);
+		border-radius: var(--apx-radius);
+		box-shadow: var(--apx-shadow-md);
+		padding: 0.35rem;
+		min-width: 220px;
+	}
+
+	.main-navigation ul.menu ul li a,
+	.main-navigation ul.nav-menu ul li a {
+		border-radius: var(--apx-radius-sm);
+		color: var(--apx-body);
+		font-weight: 400;
+	}
+
+	.main-navigation ul.menu ul li a:hover,
+	.main-navigation ul.nav-menu ul li a:hover,
+	.main-navigation ul.menu ul li:hover > a {
+		background: var(--apx-tint);
+		color: var(--apx-ink);
+	}
 }
 
-.main-navigation ul.menu > li > a:hover,
-.main-navigation ul.nav-menu > li > a:hover {
-	color: var(--apx-accent);
-}
-
-/* Submenus: clean dropdown cards */
-.main-navigation ul.menu ul,
-.main-navigation ul.nav-menu ul {
-	background: #fff;
-	border: 1px solid var(--apx-line);
-	border-radius: var(--apx-radius);
-	box-shadow: var(--apx-shadow-md);
-	padding: 0.35rem;
-	min-width: 220px;
-}
-
-.main-navigation ul.menu ul li a,
-.main-navigation ul.nav-menu ul li a {
-	border-radius: var(--apx-radius-sm);
-	color: var(--apx-body);
-	font-weight: 400;
-}
-
-.main-navigation ul.menu ul li a:hover,
-.main-navigation ul.nav-menu ul li a:hover,
-.main-navigation ul.menu ul li:hover > a {
-	background: var(--apx-tint);
-	color: var(--apx-ink);
-}
-
-ul.menu li.current-menu-item > a {
-	color: var(--apx-accent);
+@media (min-width: 768px) {
+	ul.menu li.current-menu-item > a {
+		color: var(--apx-accent);
+	}
 }
 
 /* --- Header cart icon (replaces old text link) --- */
@@ -508,9 +517,18 @@ button.menu-toggle {
 	border: 1px solid var(--apx-line);
 	background: var(--apx-paper);
 	border-radius: var(--apx-radius-sm);
-	padding: 0.5em 0.9em;
+	/* Keep generous left padding: the hamburger lines sit at left:1em —
+	   a uniform padding would overlay them on the label text. */
+	padding: 0.55em 1em 0.55em 2.6em;
 	color: var(--apx-ink);
 	font-weight: 600;
+}
+
+/* Hamburger line color matches the label */
+button.menu-toggle::before,
+button.menu-toggle::after,
+button.menu-toggle span::before {
+	background-color: var(--apx-ink);
 }
 
 /* Keep Storefront's right-aligned toggle on mobile; hidden on desktop */
@@ -522,10 +540,20 @@ button.menu-toggle:hover { background: var(--apx-tint); }
 	padding: 0.9em 0.25em;
 	border-bottom: 1px solid var(--apx-line);
 	font-weight: 600;
+	font-size: 1rem;
 	color: var(--apx-ink);
 }
 
 .handheld-navigation ul.menu li:last-child a { border-bottom: 0; }
+
+/* Open mobile menu: quick, clean reveal */
+.handheld-navigation {
+	transition: max-height 320ms var(--apx-ease);
+}
+
+.main-navigation.toggled .handheld-navigation {
+	padding-bottom: 0.75rem;
+}
 
 /* ---------------------------------------------------------------------
    5. Content layout — cards, grids, breadcrumbs
