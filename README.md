@@ -28,6 +28,8 @@ survives parent updates.
 | `inc/footer.php` | Pluggable `storefront_footer_widgets()` override: three-column footer (brand + Facebook, Explore menu, contact details) editable in *Apex Value Footer*. If any `footer-*` widget area is ever activated, Storefront's original widget rendering is used instead |
 | `AGENTS.md` | Repository rules: single contributor identity (`janasco <jaymaranasco@gmail.com>`), no AI attribution |
 | `.githooks/commit-msg` | Enforces the AGENTS.md rules at commit time (run `git config core.hooksPath .githooks` after cloning) |
+| `404.php` | Custom 404: oversized 404 badge, friendly copy, homepage/products buttons, product search, explore pills, "New in store" grid (WooCommerce promoted products preserved) |
+| `inc/performance.php` | Image performance: single-product gallery main image gets `loading=eager` + `fetchpriority=high` (it's the LCP element); content images after the first are lazy-loaded (closes WP core's skip-first-N gap for block patterns) |
 
 ## Design decisions
 
@@ -63,6 +65,12 @@ survives parent updates.
 - **Blog:** archive cards with hover lift, scoped entry-title sizing,
   accent blockquotes and links, card-styled prev/next navigation and
   comment bubbles. Static page titles are untouched.
+- **Notices & account/checkout:** Storefront notices recoloured to
+  left-accent cards; My Account navigation as a soft card list with accent
+  active state; login/register forms carded; checkboxes/radios follow the
+  accent via `accent-color`.
+- **404:** custom `404.php` replaces Storefront's plain version while
+  keeping WooCommerce product search + recent products.
 - **AJAX cart:** the add-to-cart fragment handler keeps working because it
   calls the overridden `storefront_cart_link()` directly.
 

@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'APEXVALUE_VERSION', '1.2.1' );
+define( 'APEXVALUE_VERSION', '1.3.0' );
 
 /**
  * Pluggable Storefront overrides (cart icon + header cart markup).
@@ -45,6 +45,11 @@ require get_stylesheet_directory() . '/inc/hero.php';
  * Three-column footer (pluggable storefront_footer_widgets override).
  */
 require get_stylesheet_directory() . '/inc/footer.php';
+
+/**
+ * Image performance filters (LCP + lazy-loading gaps).
+ */
+require get_stylesheet_directory() . '/inc/performance.php';
 
 /**
  * Theme customizations.

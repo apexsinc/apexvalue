@@ -4,7 +4,7 @@ Theme URI:    https://www.apexvalue.com
 Description:  Apex Value child theme of Storefront. Modern, refined evolution of the default look: cleaner typography, tighter header, card-based product grids and accessible interactions.
 Author:       Apex Value
 Template:     storefront
-Version:      1.2.1
+Version:      1.3.0
 License:      GNU General Public License v2 or later
 License URI:  http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain:  apexvalue
@@ -1623,5 +1623,261 @@ table tbody tr { border-bottom: 1px solid rgba(0, 0, 0, 0.04); }
 	/* Archive cards: slightly tighter padding */
 	.site-main .hentry {
 		padding: 1.35rem 1.2rem;
+	}
+}
+
+/* ---------------------------------------------------------------------
+   17. 404 page
+   --------------------------------------------------------------------- */
+
+.apex-404 {
+	text-align: center;
+	padding: 2.5rem 0 4rem;
+}
+
+.apex-404__code {
+	font-size: clamp(4.5rem, 15vw, 8.5rem);
+	font-weight: 800;
+	line-height: 1;
+	letter-spacing: -0.04em;
+	color: rgba(29, 61, 92, 0.1);
+	margin: 0 0 0.5rem;
+}
+
+.apex-404__title {
+	font-size: clamp(1.5rem, 3.2vw, 2.1rem);
+	letter-spacing: -0.02em;
+	margin-bottom: 0.6em;
+}
+
+.apex-404__lead {
+	color: var(--apx-muted);
+	max-width: 46ch;
+	margin: 0 auto 1.75rem;
+	line-height: 1.7;
+}
+
+.apex-404__actions {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 0.7rem;
+	margin-bottom: 2.25rem;
+}
+
+.apex-404__btn {
+	display: inline-block;
+	padding: 0.8em 1.8em;
+	border-radius: var(--apx-radius-sm);
+	font-weight: 600;
+	transition: background-color var(--apx-speed) var(--apx-ease),
+		border-color var(--apx-speed) var(--apx-ease),
+		color var(--apx-speed) var(--apx-ease),
+		transform var(--apx-speed) var(--apx-ease);
+}
+
+.apex-404__btn--primary {
+	background: var(--apx-accent);
+	color: #fff;
+}
+
+.apex-404__btn--primary:hover,
+.apex-404__btn--primary:focus-visible {
+	background: #6d4799;
+	color: #fff;
+	transform: translateY(-1px);
+	box-shadow: var(--apx-shadow-sm);
+}
+
+.apex-404__btn--ghost {
+	border: 1px solid rgba(0, 0, 0, 0.16);
+	color: var(--apx-ink);
+}
+
+.apex-404__btn--ghost:hover,
+.apex-404__btn--ghost:focus-visible {
+	border-color: var(--apx-accent);
+	color: var(--apx-accent);
+}
+
+.apex-404__search {
+	max-width: 26rem;
+	margin: 0 auto 2.5rem;
+}
+
+.apex-404 .widget_product_search {
+	background: none;
+}
+
+.apex-404 .woocommerce-product-search {
+	display: flex;
+	gap: 0.5rem;
+}
+
+.apex-404 .woocommerce-product-search input[type="search"] {
+	flex: 1 1 auto;
+	margin: 0;
+}
+
+.apex-404 .woocommerce-product-search button {
+	padding: 0.6em 1.4em;
+	margin: 0;
+}
+
+.apex-404__explore ul {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 0.6rem;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.apex-404__explore li::before {
+	display: none; /* kill Storefront's widget arrow */
+}
+
+.apex-404__explore a {
+	display: inline-block;
+	padding: 0.5em 1.2em;
+	border: 1px solid var(--apx-line);
+	border-radius: 999px;
+	color: var(--apx-ink);
+	font-size: 0.9375rem;
+	font-weight: 500;
+	text-decoration: none;
+	transition: border-color var(--apx-speed) var(--apx-ease),
+		color var(--apx-speed) var(--apx-ease);
+}
+
+.apex-404__explore a:hover,
+.apex-404__explore a:focus-visible {
+	border-color: var(--apx-accent);
+	color: var(--apx-accent);
+}
+
+.apex-404__promoted {
+	margin-top: 3.5rem;
+	padding-top: 2.5rem;
+	border-top: 1px solid var(--apx-line);
+	text-align: left;
+}
+
+.apex-404__promoted h2 {
+	font-size: 1.35em;
+	letter-spacing: -0.015em;
+	margin-bottom: 1em;
+}
+
+@media (max-width: 767px) {
+	.apex-404 {
+		padding: 1.5rem 0 2.5rem;
+	}
+
+	.apex-404__btn {
+		width: 100%;
+	}
+}
+
+/* ---------------------------------------------------------------------
+   18. Notices, My Account, Cart & Checkout
+   --------------------------------------------------------------------- */
+
+/* Storefront notices: recolour to a left-accent card */
+.woocommerce-message,
+.woocommerce-info,
+.woocommerce-error {
+	border: 1px solid var(--apx-line);
+	border-left-width: 3px;
+	border-top-width: 1px;
+	border-radius: var(--apx-radius-sm);
+	background-color: var(--apx-paper);
+	box-shadow: var(--apx-shadow-sm);
+}
+
+.woocommerce-message { border-left-color: #0f834d; }
+.woocommerce-info { border-left-color: var(--apx-brand); }
+.woocommerce-error { border-left-color: #e2401c; }
+
+.woocommerce-message::before,
+.woocommerce-info::before,
+.woocommerce-error::before {
+	color: inherit;
+}
+
+/* My Account: navigation as a soft card list */
+.woocommerce-MyAccount-navigation ul {
+	border: 0;
+	border-radius: var(--apx-radius);
+	box-shadow: var(--apx-shadow-sm);
+}
+
+.woocommerce-MyAccount-navigation ul li {
+	border-bottom: 1px solid var(--apx-line);
+}
+
+.woocommerce-MyAccount-navigation ul li:last-child {
+	border-bottom: 0;
+}
+
+.woocommerce-MyAccount-navigation ul li a {
+	padding: 0.9em 1.2em;
+	font-weight: 500;
+	color: var(--apx-ink);
+	transition: background-color var(--apx-speed) var(--apx-ease),
+		color var(--apx-speed) var(--apx-ease);
+}
+
+.woocommerce-MyAccount-navigation ul li a:hover,
+.woocommerce-MyAccount-navigation ul li a:focus-visible {
+	background: var(--apx-tint);
+	color: var(--apx-accent);
+}
+
+.woocommerce-MyAccount-navigation ul li.is-active a {
+	background: var(--apx-tint);
+	font-weight: 600;
+	color: var(--apx-accent);
+}
+
+.woocommerce-MyAccount-navigation ul li a::before {
+	opacity: 0.35;
+}
+
+/* Account content headings */
+.woocommerce-MyAccount-content h2,
+.woocommerce-MyAccount-content h3 {
+	letter-spacing: -0.01em;
+}
+
+/* Login / register forms on the account page */
+.woocommerce-form-login,
+.woocommerce-form-register {
+	border: 1px solid var(--apx-line);
+	border-radius: var(--apx-radius);
+	background: var(--apx-paper);
+	box-shadow: var(--apx-shadow-sm);
+}
+
+/* Cart / checkout (classic + block components) */
+#payment {
+	border-radius: var(--apx-radius);
+}
+
+.wc-block-components-text-input input,
+.wc-block-components-combobox-control .components-combobox-control__input {
+	border-radius: var(--apx-radius-sm);
+}
+
+/* Native controls follow the accent color everywhere */
+input[type="checkbox"],
+input[type="radio"] {
+	accent-color: var(--apx-accent);
+}
+
+@media (max-width: 767px) {
+	.woocommerce-MyAccount-navigation ul {
+		margin-bottom: 1.5rem;
 	}
 }
