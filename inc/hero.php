@@ -85,7 +85,7 @@ function apexvalue_hero_customize_register( $wp_customize ) {
 	$wp_customize->add_setting(
 		'apexvalue_hero_cta_text',
 		array(
-			'default'           => __( 'Talk to an expert', 'apexvalue' ),
+			'default'           => __( 'Request a Quote', 'apexvalue' ),
 			'sanitize_callback' => 'sanitize_text_field',
 			'transport'         => 'postMessage',
 		)
@@ -103,7 +103,7 @@ function apexvalue_hero_customize_register( $wp_customize ) {
 	$wp_customize->add_setting(
 		'apexvalue_hero_cta_url',
 		array(
-			'default'           => home_url( '/contact-us/' ),
+			'default'           => home_url( '/inquiry/' ),
 			'sanitize_callback' => 'esc_url_raw',
 			'transport'         => 'postMessage',
 		)
@@ -201,8 +201,8 @@ function apexvalue_hero_render() {
 
 	$kicker = get_theme_mod( 'apexvalue_hero_kicker', __( 'Authorized Davis Instruments Distributor', 'apexvalue' ) );
 	$text   = get_theme_mod( 'apexvalue_hero_text', __( 'From Vantage Vue stations to complete EnviroMonitor networks — genuine hardware, expert advice and local support for homes, farms, coastlines and vessels.', 'apexvalue' ) );
-	$cta1_t = get_theme_mod( 'apexvalue_hero_cta_text', __( 'Talk to an expert', 'apexvalue' ) );
-	$cta1_u = get_theme_mod( 'apexvalue_hero_cta_url', home_url( '/contact-us/' ) );
+	$cta1_t = get_theme_mod( 'apexvalue_hero_cta_text', __( 'Request a Quote', 'apexvalue' ) );
+	$cta1_u = get_theme_mod( 'apexvalue_hero_cta_url', home_url( '/inquiry/' ) );
 	$cta2_t = get_theme_mod( 'apexvalue_hero_cta2_text', __( 'Browse products', 'apexvalue' ) );
 	$cta2_u = get_theme_mod( 'apexvalue_hero_cta2_url', home_url( '/products/' ) );
 	?>

@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'APEXVALUE_VERSION', '1.6.1' );
+define( 'APEXVALUE_VERSION', '1.7.0' );
 
 /**
  * Pluggable Storefront overrides (cart icon + header cart markup).
@@ -45,6 +45,12 @@ require get_stylesheet_directory() . '/inc/hero.php';
  * Three-column footer (pluggable storefront_footer_widgets override).
  */
 require get_stylesheet_directory() . '/inc/footer.php';
+
+/**
+ * Request-a-Quotation flow: header CTA, mobile quote link,
+ * quotation price badge and quote-basket note.
+ */
+require get_stylesheet_directory() . '/inc/quote-flow.php';
 
 /**
  * Image performance filters (LCP + lazy-loading gaps).

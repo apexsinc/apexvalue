@@ -26,11 +26,20 @@ survives parent updates.
 | `inc/hero.php` | Homepage hero — kicker/headline/text/2 buttons + background color, all editable in *Apex Value Hero* (empty headline hides it and restores the hidden H1; also removes the lone "Home" breadcrumb on the front page) |
 | `assets/js/hero-preview.js` | Customizer live-preview for the hero |
 | `inc/footer.php` | Pluggable `storefront_footer_widgets()` override: three-column footer (brand + Facebook, Explore menu, contact details) editable in *Apex Value Footer*. If any `footer-*` widget area is ever activated, Storefront's original widget rendering is used instead |
+| `inc/quote-flow.php` | **Request-a-Quotation flow** — header "Request a Quote" pill (desktop), Quote item in the mobile handheld bar, "Quotation" badge on quote-only products (replaces the empty price), reassurance note on the quote basket + checkout. Editable in *Apex Value Quote CTA* |
 | `AGENTS.md` | Repository rules: single contributor identity (`janasco <jaymaranasco@gmail.com>`), no AI attribution |
 | `UPDATING.md` | Checklist for updating the Storefront **parent** theme — lists every override and how to re-verify it |
 | `.githooks/commit-msg` | Enforces the AGENTS.md rules at commit time (run `git config core.hooksPath .githooks` after cloning) |
 | `404.php` | Custom 404: oversized 404 badge, friendly copy, homepage/products buttons, product search, explore pills, "New in store" grid (WooCommerce promoted products preserved) |
 | `inc/performance.php` | Image performance: single-product gallery main image gets `loading=eager` + `fetchpriority=high` (it's the LCP element); content images after the first are lazy-loaded (closes WP core's skip-first-N gap for block patterns) |
+
+## The quotation flow
+
+APEX Value sells via **quotation** (Quotes for WooCommerce): product buttons say "Request Quote", the cart is the quote basket, and checkout submits through the "Ask for Quotation" gateway. The theme's conversion path is therefore:
+
+**Header pill / hero / mobile bar → Products → "Request Quote" on a product → quote basket (reassurance note) → checkout ("no payment taken" note) → team replies with a formal quotation.**
+
+Every CTA in that path defaults to `/inquiry/` (the Airtable inquiry form) or the basket itself, and each label/URL is editable in the Customizer (*Apex Value Quote CTA*, *Apex Value Hero*, *Apex Value CTA Band*).
 
 ## Design decisions
 

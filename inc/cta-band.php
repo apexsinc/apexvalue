@@ -67,7 +67,7 @@ function apexvalue_cta_customize_register( $wp_customize ) {
 	$wp_customize->add_setting(
 		'apexvalue_cta_button_text',
 		array(
-			'default'           => __( 'Contact us', 'apexvalue' ),
+			'default'           => __( 'Request a Quote', 'apexvalue' ),
 			'sanitize_callback' => 'sanitize_text_field',
 			'transport'         => 'postMessage',
 		)
@@ -85,7 +85,7 @@ function apexvalue_cta_customize_register( $wp_customize ) {
 	$wp_customize->add_setting(
 		'apexvalue_cta_button_url',
 		array(
-			'default'           => home_url( '/contact-us/' ),
+			'default'           => home_url( '/inquiry/' ),
 			'sanitize_callback' => 'esc_url_raw',
 			'transport'         => 'postMessage',
 		)
@@ -114,8 +114,8 @@ function apexvalue_cta_band() {
 
 	$heading     = get_theme_mod( 'apexvalue_cta_heading', __( 'Need help choosing the right weather station?', 'apexvalue' ) );
 	$text        = get_theme_mod( 'apexvalue_cta_text', __( 'Talk to the Philippines’ authorized Davis Instruments distributor — we’ll point you to the right setup for your home, farm or vessel.', 'apexvalue' ) );
-	$button_text = get_theme_mod( 'apexvalue_cta_button_text', __( 'Contact us', 'apexvalue' ) );
-	$button_url  = get_theme_mod( 'apexvalue_cta_button_url', home_url( '/contact-us/' ) );
+	$button_text = get_theme_mod( 'apexvalue_cta_button_text', __( 'Request a Quote', 'apexvalue' ) );
+	$button_url  = get_theme_mod( 'apexvalue_cta_button_url', home_url( '/inquiry/' ) );
 
 	if ( '' === trim( (string) $heading ) ) {
 		return; // Hidden by choice.

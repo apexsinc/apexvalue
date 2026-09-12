@@ -4,7 +4,7 @@ Theme URI:    https://www.apexvalue.com
 Description:  Apex Value child theme of Storefront. Modern, refined evolution of the default look: cleaner typography, tighter header, card-based product grids and accessible interactions.
 Author:       Apex Value
 Template:     storefront
-Version:      1.6.1
+Version:      1.7.0
 License:      GNU General Public License v2 or later
 License URI:  http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain:  apexvalue
@@ -2258,5 +2258,149 @@ input[type="radio"] {
 @media (max-width: 767px) {
 	.woocommerce-MyAccount-navigation ul {
 		margin-bottom: 1.5rem;
+	}
+}
+
+/* ==========================================================================
+   19. Request-a-Quotation flow
+   ========================================================================== */
+
+/* --- Header "Request a Quote" pill (desktop) --- */
+
+.apex-quote-cta {
+	flex: 0 0 auto;
+	display: inline-flex;
+	align-items: center;
+	padding: 0.55rem 1.15rem;
+	border-radius: 999px;
+	background: var(--apx-accent);
+	color: #fff;
+	font-weight: 600;
+	font-size: 0.875rem;
+	letter-spacing: 0.01em;
+	text-decoration: none;
+	white-space: nowrap;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+	transition: background var(--apx-speed) var(--apx-ease), box-shadow var(--apx-speed) var(--apx-ease), transform 0.15s var(--apx-ease);
+}
+
+.apex-quote-cta:hover,
+.apex-quote-cta:focus-visible {
+	background: var(--apx-brand);
+	color: #fff;
+	box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+}
+
+.apex-quote-cta:active {
+	transform: translateY(1px);
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12);
+}
+
+/* Inside the primary-nav row, sit right after the cart chip. */
+@media (min-width: 768px) {
+	.apex-quote-cta {
+		margin-left: 0.75rem;
+	}
+}
+
+/* Under 768px the header bar is too crowded — the handheld footer
+   bar carries the quotation action on mobile instead. */
+@media (max-width: 767px) {
+	.apex-quote-cta {
+		display: none;
+	}
+}
+
+/* --- Handheld footer bar: Quote item (icon + label, framed) --- */
+
+.storefront-handheld-footer-bar ul li.quote > a {
+	text-indent: 0;
+	overflow: visible;
+	padding-top: 1.85em;
+	font-size: 0.5625rem;
+	font-weight: 600;
+	text-align: center;
+	color: #fff;
+}
+
+.storefront-handheld-footer-bar ul li.quote > a::before {
+	content: "\f15c";
+	font-family: "Font Awesome 5 Free";
+	font-weight: 900;
+	position: absolute;
+	top: 0.32em;
+	left: 0;
+	right: 0;
+	bottom: auto;
+	height: auto;
+	line-height: 1;
+	font-size: 1.1em;
+	text-indent: 0;
+}
+
+.storefront-handheld-footer-bar ul li.quote > a::after {
+	content: "";
+	position: absolute;
+	inset: 2px;
+	border: 1px solid rgba(255, 255, 255, 0.35);
+	border-radius: 6px;
+	pointer-events: none;
+}
+
+.storefront-handheld-footer-bar ul li.quote > a:hover::after,
+.storefront-handheld-footer-bar ul li.quote > a:focus-visible::after {
+	border-color: rgba(255, 255, 255, 0.75);
+}
+
+/* --- "Quotation" price badge (quote-only products) --- */
+
+.apex-quote-badge {
+	display: inline-flex;
+	align-items: center;
+	padding: 0.28em 0.8em;
+	border-radius: 999px;
+	background: var(--apx-tint);
+	color: var(--apx-ink);
+	border: 1px solid var(--apx-line);
+	font-size: 0.75rem;
+	font-weight: 600;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+}
+
+/* Single product: badge replaces the price line comfortably. */
+.single-product .summary .apex-quote-badge {
+	font-size: 0.8125rem;
+	padding: 0.4em 1em;
+}
+
+/* --- Quote basket reassurance note --- */
+
+.apex-quote-note {
+	margin: 0 auto 1.5rem;
+	padding: 0.85rem 1.25rem;
+	border-radius: var(--apx-radius);
+	background: var(--apx-tint);
+	border: 1px solid var(--apx-line);
+	border-left: 4px solid var(--apx-accent);
+	color: var(--apx-ink);
+}
+
+.apex-quote-note p {
+	margin: 0;
+	font-size: 0.9375rem;
+}
+
+@media (max-width: 767px) {
+	.apex-quote-note {
+		margin-bottom: 1rem;
+		padding: 0.75rem 1rem;
+	}
+}
+
+/* Reduced motion: pill keeps functional hover only. */
+@media (prefers-reduced-motion: reduce) {
+	.apex-quote-cta {
+		transition: none;
 	}
 }
