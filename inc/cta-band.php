@@ -121,7 +121,7 @@ function apexvalue_cta_band() {
 		return; // Hidden by choice.
 	}
 	?>
-	<section class="apexvalue-cta" aria-labelledby="apexvalue-cta-heading">
+	<section class="apexvalue-cta apex-reveal" aria-labelledby="apexvalue-cta-heading">
 		<div class="col-full apexvalue-cta__inner">
 			<div class="apexvalue-cta__copy">
 				<h2 class="apexvalue-cta__heading" id="apexvalue-cta-heading"><?php echo esc_html( $heading ); ?></h2>

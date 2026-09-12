@@ -4,7 +4,7 @@ Theme URI:    https://www.apexvalue.com
 Description:  Apex Value child theme of Storefront. Modern, refined evolution of the default look: cleaner typography, tighter header, card-based product grids and accessible interactions.
 Author:       Apex Value
 Template:     storefront
-Version:      1.5.0
+Version:      1.6.0
 License:      GNU General Public License v2 or later
 License URI:  http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain:  apexvalue
@@ -40,6 +40,9 @@ Text Domain:  apexvalue
 	--apx-radius-sm: 5px;
 	--apx-shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.06), 0 1px 3px rgba(16, 24, 40, 0.08);
 	--apx-shadow-md: 0 4px 10px -2px rgba(16, 24, 40, 0.08), 0 12px 20px -6px rgba(16, 24, 40, 0.1);
+	--apx-shadow-lg: 0 8px 18px -4px rgba(16, 24, 40, 0.1), 0 22px 40px -12px rgba(16, 24, 40, 0.16);
+	--apx-radius-lg: 12px;
+	--apx-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
 
 	/* Motion */
 	--apx-ease: cubic-bezier(0.4, 0, 0.2, 1);
@@ -961,6 +964,20 @@ span.onsale,
 	padding: clamp(3rem, 7vw, 5.5rem) 0 clamp(3.5rem, 8vw, 6.5rem);
 	position: relative;
 	overflow: hidden;
+	/* One gentle load entrance (CSS-only, no JS dependency); disabled
+       automatically under prefers-reduced-motion. */
+	animation: apex-hero-in 0.7s var(--apx-ease-out) both;
+}
+
+@keyframes apex-hero-in {
+	from {
+		opacity: 0;
+		transform: translateY(14px);
+	}
+	to {
+		opacity: 1;
+		transform: none;
+	}
 }
 
 /* Subtle depth: one soft light pool, no gradient banding */
@@ -1375,7 +1392,146 @@ table tbody tr { border-bottom: 1px solid rgba(0, 0, 0, 0.04); }
 .apx-skip { position: absolute; left: -9999px; }
 
 /* ---------------------------------------------------------------------
-   12. Motion & reduced-motion
+   12. Motion & interactions — sophisticated depth + life
+   --------------------------------------------------------------------- */
+
+/* --- Header: rests light, elevates on scroll (JS toggles the class) --- */
+.site-header {
+	transition: box-shadow var(--apx-speed) var(--apx-ease),
+		background-color var(--apx-speed) var(--apx-ease);
+}
+
+.apex-header--scrolled {
+	box-shadow: var(--apx-shadow-md);
+}
+
+/* --- Buttons: tactile press + subtle sheen sweep on primary CTAs --- */
+button:active,
+.button:active,
+.added_to_cart:active,
+.apex-hero__btn:active,
+.apex-404__btn:active,
+.apexvalue-cta__button:active {
+	transform: translateY(0) scale(0.985);
+}
+
+.apex-hero__btn--primary,
+.apexvalue-cta__button {
+	position: relative;
+	overflow: hidden;
+}
+
+.apex-hero__btn--primary::after,
+.apexvalue-cta__button::after {
+	content: "";
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: -80%;
+	width: 50%;
+	background: linear-gradient(
+		105deg,
+		transparent,
+		rgba(255, 255, 255, 0.28),
+		transparent
+	);
+	transform: skewX(-18deg);
+	transition: left 0.55s var(--apx-ease-out);
+	pointer-events: none;
+}
+
+.apex-hero__btn--primary:hover::after,
+.apex-hero__btn--primary:focus-visible::after,
+.apexvalue-cta__button:hover::after,
+.apexvalue-cta__button:focus-visible::after {
+	left: 130%;
+}
+
+/* --- Nav links: refined underline grow-in (desktop) --- */
+@media (min-width: 768px) {
+	.main-navigation ul.menu > li > a {
+		position: relative;
+	}
+
+	.main-navigation ul.menu > li > a::after {
+		content: "";
+		position: absolute;
+		left: 1em;
+		right: 1em;
+		bottom: 0.45em;
+		height: 2px;
+		border-radius: 2px;
+		background: var(--apx-accent);
+		transform: scaleX(0);
+		transform-origin: left center;
+		transition: transform var(--apx-speed) var(--apx-ease-out);
+	}
+
+	.main-navigation ul.menu > li > a:hover::after,
+	.main-navigation ul.menu > li > a:focus-visible::after {
+		transform: scaleX(1);
+	}
+}
+
+/* --- Product/blog cards: shadow bloom + image zoom --- */
+ul.products li.product,
+.wc-block-grid__products .wc-block-grid__product,
+.wc-block-product-template .wc-block-product {
+	transition: box-shadow 0.28s var(--apx-ease-out),
+		transform var(--apx-speed) var(--apx-ease),
+		border-color var(--apx-speed) var(--apx-ease);
+}
+
+ul.products li.product:hover,
+.wc-block-grid__products .wc-block-grid__product:hover,
+.wc-block-product-template .wc-block-product:hover {
+	box-shadow: var(--apx-shadow-lg);
+}
+
+ul.products li.product img,
+.wc-block-grid__product img,
+.wc-block-product-template .wc-block-product img {
+	transition: transform 0.45s var(--apx-ease-out);
+	will-change: transform;
+}
+
+ul.products li.product:hover img,
+.wc-block-grid__product:hover img,
+.wc-block-product-template .wc-block-product:hover img {
+	transform: scale(1.045);
+}
+
+/* --- Cart count bump (AJAX add-to-cart) --- */
+.site-header-cart .count.apex-bump {
+	animation: apex-bump 0.45s var(--apx-ease-out);
+}
+
+@keyframes apex-bump {
+	0% { transform: scale(1); }
+	35% { transform: scale(1.35); }
+	100% { transform: scale(1); }
+}
+
+/* --- Scroll-reveal system — only when JS is running (the script tags
+       <html> with .apex-js), so content can never be stuck hidden --- */
+.apex-js .apex-reveal {
+	opacity: 0;
+	transform: translateY(18px);
+}
+
+.apex-js .apex-reveal.is-visible {
+	opacity: 1;
+	transform: none;
+	transition: opacity 0.6s var(--apx-ease-out), transform 0.6s var(--apx-ease-out);
+}
+
+/* Stagger: containers can tag children with delays */
+.apex-reveal[data-reveal-delay="1"] { transition-delay: 0.08s; }
+.apex-reveal[data-reveal-delay="2"] { transition-delay: 0.16s; }
+.apex-reveal[data-reveal-delay="3"] { transition-delay: 0.24s; }
+
+/* ---------------------------------------------------------------------
+   12b. Reduced motion — every motion effect collapses gracefully
    --------------------------------------------------------------------- */
 
 @media (prefers-reduced-motion: reduce) {
@@ -1386,6 +1542,12 @@ table tbody tr { border-bottom: 1px solid rgba(0, 0, 0, 0.04); }
 		animation-iteration-count: 1 !important;
 		transition-duration: 0.01ms !important;
 		scroll-behavior: auto !important;
+	}
+
+	/* Reveals never hide content when motion is reduced */
+	.apex-js .apex-reveal {
+		opacity: 1;
+		transform: none;
 	}
 }
 

@@ -52,7 +52,16 @@ if ( ! class_exists( 'ApexValue_Theme' ) ) :
 		 * NOT enqueue style.css again here — that would load it twice.
 		 */
 		public function scripts() {
-			// Currently no extra front-end assets are needed.
+			// Tiny progressive-enhancement script (reveals, header shadow,
+			// cart bump, smooth anchors). Loaded in the header so the
+			// scrolled-header state applies before first paint.
+			wp_enqueue_script(
+				'apexvalue-js',
+				get_stylesheet_directory_uri() . '/assets/js/apexvalue.js',
+				array( 'jquery' ), // cart-bump binds to wc_fragments events.
+				APEXVALUE_VERSION,
+				false
+			);
 		}
 
 		/**
