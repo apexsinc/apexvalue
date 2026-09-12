@@ -102,51 +102,14 @@ function apexvalue_lazy_content_images( $content ) {
 add_filter( 'the_content', 'apexvalue_lazy_content_images', 50 );
 
 /**
- * Add font-display:swap to the Storefront Google Fonts request.
- *
- * The legacy CSS API defaults to font-display:auto (invisible text while
- * fonts load). swap shows the fallback immediately and swaps in when ready.
- *
- * @param string $tag    Link tag HTML.
- * @param string $handle Style handle.
- * @return string
+ * Fonts are self-hosted in the child stylesheet (assets/fonts/), so the
+ * render-blocking Google Fonts request is no longer needed. (The block
+ * editor in wp-admin keeps Storefront's editor styles, including its font
+ * request — admin-only, doesn't affect front-end performance.)
  */
-function apexvalue_font_display_swap( $tag, $handle ) {
-	if ( 'storefront-fonts' !== $handle || false === strpos( $tag, 'fonts.googleapis.com' ) ) {
-		return $tag;
-	}
-
-	if ( false !== strpos( $tag, 'display=swap' ) ) {
-		return $tag; // Already set (idempotency).
-	}
-
-	// Append display=swap inside the href attribute.
-	$tag = preg_replace( "/(fonts\\.googleapis\\.com[^'\"]*)'/", "\$1&#038;display=swap'", $tag );
-
-	return $tag;
+function apexvalue_dequeue_google_fonts() {
+	wp_dequeue_style( 'storefront-fonts' );
+	wp_deregister_style( 'storefront-fonts' );
 }
-add_filter( 'style_loader_tag', 'apexvalue_font_display_swap', 10, 2 );
+add_action( 'wp_enqueue_scripts', 'apexvalue_dequeue_google_fonts', 25 );
 
-/**
- * Preconnect to the Google Fonts hosts (CSS comes from googleapis, the
- * font files themselves from gstatic — both benefit from an early
- * connection on every template).
- *
- * @param array  $urls     URLs to print resources for.
- * @param string $relation Relation type.
- * @return array
- */
-function apexvalue_resource_hints( $urls, $relation ) {
-	if ( 'preconnect' === $relation ) {
-		$urls[] = array(
-			'href'        => 'https://fonts.gstatic.com',
-			'crossorigin' => 'anonymous',
-		);
-		$urls[] = array(
-			'href' => 'https://fonts.googleapis.com',
-		);
-	}
-
-	return $urls;
-}
-add_filter( 'wp_resource_hints', 'apexvalue_resource_hints', 10, 2 );

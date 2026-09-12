@@ -63,9 +63,15 @@ survives parent updates.
   divider rhythm in the summary (short description → price → add-to-cart),
   flexbox cart row (full-width CTA on mobile), quiet meta line, card-style
   tab list and polished related-products heading.
-- **Fonts & Web Vitals:** the Google Fonts request gets `display=swap` (no
-  invisible text), both fonts hosts are preconnected, and block-widget
-  sidebar headings/lists follow the design system.
+- **Self-hosted fonts:** Source Sans Pro (300/400/600/700/900, latin
+  subset, ~15 KB per face) ships in `assets/fonts/` with `font-display:
+  swap` and unicode-range. The render-blocking Google Fonts request and
+  third-party connections are gone (GDPR-friendlier too). CSS weights
+  match shipped faces exactly — no synthetic bolding.
+- **Sidebar:** block-widget headings follow the compact widget-title
+  treatment; latest-posts/archives/categories lists styled; an empty
+  widget was removed from the shop sidebar (recoverable in Inactive
+  Widgets).
 - **Blog:** archive cards with hover lift, scoped entry-title sizing,
   accent blockquotes and links, card-styled prev/next navigation and
   comment bubbles. Static page titles are untouched.

@@ -4,7 +4,7 @@ Theme URI:    https://www.apexvalue.com
 Description:  Apex Value child theme of Storefront. Modern, refined evolution of the default look: cleaner typography, tighter header, card-based product grids and accessible interactions.
 Author:       Apex Value
 Template:     storefront
-Version:      1.4.0
+Version:      1.5.0
 License:      GNU General Public License v2 or later
 License URI:  http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain:  apexvalue
@@ -69,6 +69,55 @@ Text Domain:  apexvalue
    1. Foundations — typography & rhythm
    --------------------------------------------------------------------- */
 
+/* Self-hosted Source Sans Pro — latin subset, the weights the theme uses.
+   Local files avoid the render-blocking Google Fonts request and the
+   third-party connection entirely (GDPR-friendlier, fewer moving parts).
+   Swap keeps text visible while each face loads. */
+@font-face {
+	font-family: "Source Sans Pro";
+	font-style: normal;
+	font-weight: 300;
+	font-display: swap;
+	src: url("assets/fonts/source-sans-pro-300.woff2") format("woff2");
+	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+	font-family: "Source Sans Pro";
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+	src: url("assets/fonts/source-sans-pro-400.woff2") format("woff2");
+	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+	font-family: "Source Sans Pro";
+	font-style: normal;
+	font-weight: 600;
+	font-display: swap;
+	src: url("assets/fonts/source-sans-pro-600.woff2") format("woff2");
+	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+	font-family: "Source Sans Pro";
+	font-style: normal;
+	font-weight: 700;
+	font-display: swap;
+	src: url("assets/fonts/source-sans-pro-700.woff2") format("woff2");
+	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+	font-family: "Source Sans Pro";
+	font-style: normal;
+	font-weight: 900;
+	font-display: swap;
+	src: url("assets/fonts/source-sans-pro-900.woff2") format("woff2");
+	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
 body {
 	font-family: var(--apx-font);
 	font-size: 1.0625rem;              /* 17px base — calmer long-form */
@@ -85,7 +134,7 @@ h1, h2, h3, h4, h5, h6 {
 	line-height: 1.2;
 }
 
-h1, .alpha { font-weight: 800; letter-spacing: -0.02em; }
+h1, .alpha { font-weight: 900; letter-spacing: -0.02em; }
 
 h1 a, h2 a, h3 a, h4 a, h5 a, h6 a { font-weight: inherit; }
 
@@ -685,7 +734,7 @@ span.onsale,
 	border-radius: var(--apx-radius-sm);
 	padding: 0.55em 1.8em 0.55em 0.8em;
 	box-shadow: none;
-	font-weight: 500;
+	font-weight: 600;
 }
 
 .storefront-sorting {
@@ -738,7 +787,7 @@ span.onsale,
 	margin-bottom: 1em;
 }
 
-.widget-area .widget a { font-weight: 500; }
+.widget-area .widget a { font-weight: 600; }
 
 /* Sidebar product category / nav lists: tidy link rows */
 .widget-area .widget ul li {
@@ -1762,7 +1811,7 @@ table tbody tr { border-bottom: 1px solid rgba(0, 0, 0, 0.04); }
 
 .apex-404__code {
 	font-size: clamp(4.5rem, 15vw, 8.5rem);
-	font-weight: 800;
+	font-weight: 900;
 	line-height: 1;
 	letter-spacing: -0.04em;
 	color: rgba(29, 61, 92, 0.1);
@@ -1870,7 +1919,7 @@ table tbody tr { border-bottom: 1px solid rgba(0, 0, 0, 0.04); }
 	border-radius: 999px;
 	color: var(--apx-ink);
 	font-size: 0.9375rem;
-	font-weight: 500;
+	font-weight: 600;
 	text-decoration: none;
 	transition: border-color var(--apx-speed) var(--apx-ease),
 		color var(--apx-speed) var(--apx-ease);
@@ -1948,7 +1997,7 @@ table tbody tr { border-bottom: 1px solid rgba(0, 0, 0, 0.04); }
 
 .woocommerce-MyAccount-navigation ul li a {
 	padding: 0.9em 1.2em;
-	font-weight: 500;
+	font-weight: 600;
 	color: var(--apx-ink);
 	transition: background-color var(--apx-speed) var(--apx-ease),
 		color var(--apx-speed) var(--apx-ease);
