@@ -4,7 +4,7 @@ Theme URI:    https://www.apexvalue.com
 Description:  Apex Value child theme of Storefront. Modern, refined evolution of the default look: cleaner typography, tighter header, card-based product grids and accessible interactions.
 Author:       Apex Value
 Template:     storefront
-Version:      1.6.0
+Version:      1.6.1
 License:      GNU General Public License v2 or later
 License URI:  http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain:  apexvalue
@@ -1121,7 +1121,9 @@ span.onsale,
 	color: var(--apx-footer-muted);
 	transition: color var(--apx-speed) var(--apx-ease),
 		border-color var(--apx-speed) var(--apx-ease),
-		background-color var(--apx-speed) var(--apx-ease);
+		background-color var(--apx-speed) var(--apx-ease),
+		transform var(--apx-speed) var(--apx-ease),
+		box-shadow var(--apx-speed) var(--apx-ease);
 }
 
 .apex-footer__social:hover,
@@ -1129,6 +1131,36 @@ span.onsale,
 	color: var(--apx-footer-link);
 	border-color: var(--apx-footer-link);
 	background: rgba(127, 127, 127, 0.08);
+	transform: translateY(-2px);
+	box-shadow: 0 6px 14px -6px rgba(0, 0, 0, 0.35);
+}
+
+.apex-footer__social:active {
+	transform: translateY(0);
+	box-shadow: none;
+}
+
+/* Footer menu links: sliding underline on hover */
+.apex-footer__menu a {
+	position: relative;
+}
+
+.apex-footer__menu a::after {
+	content: "";
+	position: absolute;
+	left: 0;
+	bottom: -2px;
+	width: 100%;
+	height: 1px;
+	background: var(--apx-footer-link);
+	transform: scaleX(0);
+	transform-origin: left center;
+	transition: transform var(--apx-speed) var(--apx-ease-out);
+}
+
+.apex-footer__menu a:hover::after,
+.apex-footer__menu a:focus-visible::after {
+	transform: scaleX(1);
 }
 
 .apex-footer__social-icon::before {
@@ -1525,10 +1557,12 @@ ul.products li.product:hover img,
 	transition: opacity 0.6s var(--apx-ease-out), transform 0.6s var(--apx-ease-out);
 }
 
-/* Stagger: containers can tag children with delays */
+/* Stagger: containers can tag children with delays. The JS clears the
+   delay once the cascade has landed so hover transitions stay snappy. */
 .apex-reveal[data-reveal-delay="1"] { transition-delay: 0.08s; }
 .apex-reveal[data-reveal-delay="2"] { transition-delay: 0.16s; }
 .apex-reveal[data-reveal-delay="3"] { transition-delay: 0.24s; }
+.apex-reveal[data-reveal-delay="4"] { transition-delay: 0.32s; }
 
 /* ---------------------------------------------------------------------
    12b. Reduced motion — every motion effect collapses gracefully
@@ -2091,6 +2125,15 @@ ul.products li.product:hover img,
 .apex-404__explore a:focus-visible {
 	border-color: var(--apx-accent);
 	color: var(--apx-accent);
+	transform: translateY(-2px);
+	box-shadow: var(--apx-shadow-sm);
+}
+
+.apex-404__explore a {
+	transition: border-color var(--apx-speed) var(--apx-ease),
+		color var(--apx-speed) var(--apx-ease),
+		transform var(--apx-speed) var(--apx-ease),
+		box-shadow var(--apx-speed) var(--apx-ease);
 }
 
 .apex-404__promoted {

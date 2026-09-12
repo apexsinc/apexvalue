@@ -50,7 +50,28 @@
 
 	/* ------------------------------------------------------------------
 	 * 2. Scroll reveal (IntersectionObserver, once per element)
+	 *
+	 * Column groups and product grids are auto-tagged here so their
+	 * children reveal as a cascade (delay via data-reveal-delay).
 	 * ------------------------------------------------------------------ */
+	var cascadeGroups = d.querySelectorAll(
+		'.wp-block-columns, ul.products, .wc-block-grid__products, .wc-block-product-template'
+	);
+
+	Array.prototype.forEach.call( cascadeGroups, function ( group ) {
+		var items = group.querySelectorAll(
+			':scope > .wp-block-column, :scope > li.product, :scope > .wc-block-grid__product'
+		);
+
+		Array.prototype.forEach.call( items, function ( item, i ) {
+			if ( item.classList.contains( 'apex-reveal' ) ) {
+				return;
+			}
+			item.classList.add( 'apex-reveal' );
+			item.setAttribute( 'data-reveal-delay', String( ( i % 4 ) + 1 ) );
+		} );
+	} );
+
 	var revealEls = d.querySelectorAll( '.apex-reveal' );
 
 	if ( revealEls.length && 'IntersectionObserver' in window && ! reduceMotion ) {
@@ -58,8 +79,20 @@
 			function ( entries ) {
 				entries.forEach( function ( entry ) {
 					if ( entry.isIntersecting ) {
-						entry.target.classList.add( 'is-visible' );
-						observer.unobserve( entry.target );
+						var el = entry.target;
+						el.classList.add( 'is-visible' );
+						observer.unobserve( el );
+
+						// Once the staggered reveal has landed, clear the
+						// delay so hover transitions stay instant.
+						var delay = parseInt( el.getAttribute( 'data-reveal-delay' ), 10 );
+						delay = isNaN( delay ) ? 0 : delay;
+						window.setTimeout(
+							function () {
+								el.style.transitionDelay = '0s';
+							},
+							delay * 80 + 700
+						);
 					}
 				} );
 			},
