@@ -63,6 +63,9 @@ survives parent updates.
   divider rhythm in the summary (short description → price → add-to-cart),
   flexbox cart row (full-width CTA on mobile), quiet meta line, card-style
   tab list and polished related-products heading.
+- **Fonts & Web Vitals:** the Google Fonts request gets `display=swap` (no
+  invisible text), both fonts hosts are preconnected, and block-widget
+  sidebar headings/lists follow the design system.
 - **Blog:** archive cards with hover lift, scoped entry-title sizing,
   accent blockquotes and links, card-styled prev/next navigation and
   comment bubbles. Static page titles are untouched.
