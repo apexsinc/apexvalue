@@ -92,6 +92,11 @@ Every CTA in that path defaults to `/inquiry/` (the Airtable inquiry form) or th
   keeping WooCommerce product search + recent products.
 - **AJAX cart:** the add-to-cart fragment handler keeps working because it
   calls the overridden `storefront_cart_link()` directly.
+- **Search results:** both search flavours match the design system — the
+  product search uses the WooCommerce grid, while SiteSEO's full-site search
+  gets product hits cardified via a `post_class` filter (`.apex-card`) and a
+  carded page header. Reviews, the cookie bar and the empty quote-basket
+  state follow the same tokens.
 
 ## Development notes
 

@@ -57,6 +57,37 @@ if ( ! function_exists( 'apexvalue_cart_link' ) ) {
 	}
 }
 
+/**
+ * Give SiteSEO's full-site search loop the product-card treatment.
+ *
+ * The product-specific search (`?s=...&post_type=product`) uses the standard
+ * WooCommerce `ul.products` grid, which our design system already covers.
+ * SiteSEO's general search renders each result as a plain WordPress
+ * `<article class="... type-product">`, so product hits would show as flat,
+ * unstyled entries next to styled blog hits.
+ *
+ * We append the same card classes our loop rules use (kept in sync with
+ * section 5 of style.css). If WooCommerce is inactive the filter is a no-op.
+ *
+ * @param array $classes Post classes.
+ * @return array
+ */
+function apexvalue_product_search_card_classes( $classes ) {
+	// NOTE: is_woocommerce() is deliberately NOT used here — it is false on
+	// search results pages. The `type-product` class is the reliable signal.
+	if ( ! is_search() || ! class_exists( 'WooCommerce' ) ) {
+		return $classes;
+	}
+
+	if ( in_array( 'type-product', (array) $classes, true ) ) {
+		$classes[] = 'apex-card';
+		$classes[] = 'apex-card--product';
+	}
+
+	return $classes;
+}
+add_filter( 'post_class', 'apexvalue_product_search_card_classes', 20 );
+
 if ( ! function_exists( 'storefront_header_cart' ) ) {
 	/**
 	 * Header cart: icon trigger + accessible dropdown mini-cart.

@@ -4,7 +4,7 @@ Theme URI:    https://www.apexvalue.com
 Description:  Apex Value child theme of Storefront. Modern, refined evolution of the default look: cleaner typography, tighter header, card-based product grids and accessible interactions.
 Author:       Apex Value
 Template:     storefront
-Version:      1.7.0
+Version:      1.7.1
 License:      GNU General Public License v2 or later
 License URI:  http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain:  apexvalue
@@ -2403,4 +2403,263 @@ input[type="radio"] {
 	.apex-quote-cta {
 		transition: none;
 	}
+}
+
+/* ==========================================================================
+   20. Search results, reviews, cookie bar & empty quote basket
+   ========================================================================== */
+
+/* --- Search results ----------------------------------------------------- */
+
+/* Product-specific search uses the WooCommerce grid; its header is styled
+   alongside shop archives. This mirrors that treatment for the generic
+   search page (blog + product results mixed by SiteSEO). */
+.search .page-header {
+	background: var(--apx-paper);
+	border: 1px solid var(--apx-line);
+	border-radius: var(--apx-radius);
+	box-shadow: var(--apx-shadow-sm);
+	padding: 1.6rem 1.9rem;
+	margin-bottom: 1.75rem;
+}
+
+.search .page-title {
+	font-size: 1.5em;
+	letter-spacing: -0.015em;
+	margin: 0;
+}
+
+/* Product hits inside SiteSEO's general search loop get the same card
+   treatment as `ul.products li.product` (classes added by
+   apexvalue_product_search_card_classes() in inc/template-overrides.php). */
+.apex-card {
+	background: var(--apx-paper);
+	border: 1px solid var(--apx-line);
+	border-radius: var(--apx-radius);
+	box-shadow: var(--apx-shadow-sm);
+	margin-bottom: 1.5rem;
+	overflow: hidden;
+	transition: box-shadow var(--apx-speed) var(--apx-ease),
+		transform var(--apx-speed) var(--apx-ease),
+		border-color var(--apx-speed) var(--apx-ease);
+}
+
+.apex-card:hover {
+	box-shadow: var(--apx-shadow-md);
+	transform: translateY(-2px);
+	border-color: rgba(0, 0, 0, 0.14);
+}
+
+/* Product hits: mimic the loop-card internals (image frame, title scale,
+   quotation badge inline with card padding). */
+.apex-card--product .entry-header {
+	padding: 1rem 1.2rem 0;
+}
+
+.apex-card--product .entry-title {
+	font-size: 1em;
+	font-weight: 600;
+	letter-spacing: normal;
+	margin: 0;
+}
+
+.apex-card--product .entry-title a {
+	color: var(--apx-ink);
+}
+
+.apex-card--product .entry-title a:hover,
+.apex-card--product .entry-title a:focus-visible {
+	color: var(--apx-accent);
+}
+
+.apex-card--product .entry-content {
+	padding: 0.75rem 1.2rem 1.2rem;
+}
+
+.apex-card--product .apex-quote-badge,
+.apex-card--product .price {
+	display: inline-block;
+	margin: 0;
+}
+
+.apex-card--product .entry-content img {
+	width: 100%;
+	height: auto;
+}
+
+/* Blog/post hits share the same card chassis with tighter internals. */
+.search .site-main .hentry:not(.apex-card--product) {
+	padding: 1.75rem 1.9rem;
+}
+
+/* --- Reviews: list & form ----------------------------------------------- */
+
+/* Star ratings inside the review list keep the amber tone but gain a
+   touch more presence than the tiny default glyph row. */
+.comment-form-rating .star-rating,
+.commentlist .star-rating {
+	margin-bottom: 0.5em;
+}
+
+/* Review entries: quiet bubbles consistent with post comments. */
+.commentlist > li.review {
+	border: 1px solid var(--apx-line);
+	border-radius: var(--apx-radius);
+	background: var(--apx-paper);
+	padding: 1.25rem 1.4rem;
+}
+
+.commentlist .comment_container {
+	display: flex;
+	gap: 1rem;
+}
+
+.commentlist .comment_container img.avatar {
+	width: 48px;
+	height: 48px;
+	border-radius: 999px;
+	border: 1px solid var(--apx-line);
+}
+
+.commentlist .comment-text {
+	flex: 1;
+	min-width: 0;
+}
+
+.commentlist .comment-text .meta {
+	color: var(--apx-muted);
+	font-size: 0.85rem;
+}
+
+.commentlist .comment-text .meta strong {
+	color: var(--apx-ink);
+}
+
+.commentlist .comment-text .description {
+	margin-top: 0.5em;
+}
+
+/* Review form: verify-ownership line + submit button. */
+.comment-form-rating { margin-bottom: 1.25rem; }
+
+#review_form .comment-reply-title {
+	display: block;
+	font-size: 1.1rem;
+	font-weight: 600;
+	color: var(--apx-ink);
+}
+
+#review_form .comment-form-author,
+#review_form .comment-form-email {
+	max-width: 22rem;
+}
+
+#review_form .form-submit input.submit {
+	background: var(--apx-green);
+	color: var(--apx-ink);
+	border-color: var(--apx-green);
+}
+
+#review_form .form-submit input.submit:hover,
+#review_form .form-submit input.submit:focus-visible {
+	background: var(--apx-green-dark);
+	border-color: var(--apx-green-dark);
+	color: var(--apx-ink);
+}
+
+/* --- Cookie bar (SiteSEO) ------------------------------------------------ */
+
+#siteseo-cookie-bar {
+	background: var(--apx-ink);
+	color: #fff;
+	box-shadow: 0 -4px 18px rgba(16, 24, 40, 0.18);
+}
+
+#siteseo-cookie-bar .siteseo-cookie-bar-content {
+	gap: 0.9rem;
+}
+
+#siteseo-cookie-bar p {
+	color: rgba(255, 255, 255, 0.92);
+	margin: 0;
+}
+
+#siteseo-cookie-bar a:not(.siteseo-cookie-bar-button):not(#siteseo-cookie-bar-accept):not(#siteseo-cookie-bar-manage-btn):not(#siteseo-cookie-bar-close) {
+	color: var(--apx-brand);
+}
+
+#siteseo-cookie-bar a:not(.siteseo-cookie-bar-button):not(#siteseo-cookie-bar-accept):not(#siteseo-cookie-bar-manage-btn):not(#siteseo-cookie-bar-close):hover {
+	color: #fff;
+}
+
+#siteseo-cookie-bar-accept {
+	background: var(--apx-green);
+	border-color: var(--apx-green);
+	color: var(--apx-ink);
+	border-radius: 999px;
+	font-weight: 700;
+	transition: background var(--apx-speed) var(--apx-ease),
+		transform var(--apx-speed) var(--apx-ease);
+}
+
+#siteseo-cookie-bar-accept:hover,
+#siteseo-cookie-bar-accept:focus-visible {
+	background: var(--apx-green-dark);
+	border-color: var(--apx-green-dark);
+	color: var(--apx-ink);
+	transform: translateY(-1px);
+}
+
+#siteseo-cookie-bar-manage-btn {
+	background: transparent;
+	border-color: rgba(255, 255, 255, 0.35);
+	color: #fff;
+	border-radius: 999px;
+	transition: border-color var(--apx-speed) var(--apx-ease),
+		background var(--apx-speed) var(--apx-ease);
+}
+
+#siteseo-cookie-bar-manage-btn:hover,
+#siteseo-cookie-bar-manage-btn:focus-visible {
+	background: rgba(255, 255, 255, 0.1);
+	border-color: rgba(255, 255, 255, 0.6);
+}
+
+#siteseo-cookie-bar-close {
+	opacity: 0.75;
+}
+
+#siteseo-cookie-bar-close:hover {
+	opacity: 1;
+}
+
+/* --- Empty quote basket -------------------------------------------------- */
+
+/* The quote basket's empty state: the stock icon block is replaced by a
+   centered Quotation badge (same treatment as product cards), and the
+   "New in store" block-grid below inherits our card hover treatment. */
+.wp-block-woocommerce-empty-cart-block .wc-block-cart__empty-cart__title::before {
+	display: none;
+}
+
+.wp-block-woocommerce-empty-cart-block .wc-block-cart__empty-cart__title::after {
+	content: var(--apx-quote-badge, "QUOTATION");
+	display: block;
+	width: fit-content;
+	margin: 0.9rem auto 0;
+	padding: 0.45em 1.2em;
+	border: 1px solid rgba(0, 0, 0, 0.14);
+	border-radius: 999px;
+	background: var(--apx-tint);
+	color: var(--apx-brand-dark);
+	font-family: var(--apx-font);
+	font-size: 0.72rem;
+	font-weight: 700;
+	letter-spacing: 0.12em;
+}
+
+.wp-block-woocommerce-empty-cart-block .wc-block-grid__product:hover {
+	box-shadow: var(--apx-shadow-md);
+	transform: translateY(-2px);
+	border-color: rgba(0, 0, 0, 0.14);
 }

@@ -235,3 +235,23 @@ function apexvalue_quote_cart_note() {
 	);
 }
 add_action( 'storefront_before_content', 'apexvalue_quote_cart_note', 30 );
+
+/**
+ * Publish the Customizer quote-badge label as a CSS custom property.
+ *
+ * Lets the empty quote-basket badge (pure CSS ::after in style.css) reuse
+ * the same editable label as product-card badges without duplicating markup.
+ */
+function apexvalue_quote_css_vars() {
+	$label = get_theme_mod( 'apexvalue_quote_badge_text', __( 'Quotation', 'apexvalue' ) );
+
+	if ( '' === trim( (string) $label ) ) {
+		$label = __( 'Quotation', 'apexvalue' );
+	}
+
+	printf(
+		'<style id="apexvalue-quote-vars">:root{--apx-quote-badge:"%1$s";}</style>',
+		esc_js( $label )
+	);
+}
+add_action( 'wp_head', 'apexvalue_quote_css_vars', 20 );
