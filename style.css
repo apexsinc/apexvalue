@@ -44,6 +44,25 @@ Text Domain:  apexvalue
 	/* Motion */
 	--apx-ease: cubic-bezier(0.4, 0, 0.2, 1);
 	--apx-speed: 180ms;
+
+	/*
+	 * WordPress block-layout spacing tokens.
+	 * Homepage patterns reference these (e.g. padding: var(--wp--style--root--padding-left))
+	 * but Storefront never defines them, so paddings collapse to 0.
+	 * Providing them restores proper section padding on full-bleed sections.
+	 */
+	--wp--custom--gap--horizontal: clamp(1.25rem, 4vw, 3rem);
+	--wp--style--root--padding-left: var(--wp--custom--gap--horizontal);
+	--wp--style--root--padding-right: var(--wp--custom--gap--horizontal);
+
+	/* Block spacing presets referenced by content spacers */
+	--wp--preset--spacing--20: 1rem;
+	--wp--preset--spacing--30: 1.5rem;
+	--wp--preset--spacing--40: 2rem;
+	--wp--preset--spacing--50: 3rem;
+	--wp--preset--spacing--60: 4rem;
+	--wp--preset--spacing--70: 5rem;
+	--wp--preset--spacing--80: 6rem;
 }
 
 /* ---------------------------------------------------------------------
@@ -618,6 +637,33 @@ span.onsale,
    6. Single product
    --------------------------------------------------------------------- */
 
+/* Shop archive header & toolbar */
+.woocommerce-products-header__title.page-title {
+	font-size: 2em;
+	letter-spacing: -0.015em;
+	margin-bottom: 0.4em;
+}
+
+.woocommerce-products-header { margin-bottom: 1.2rem; }
+
+.woocommerce-result-count {
+	color: var(--apx-muted);
+	padding-top: 0.4em;
+}
+
+.woocommerce-ordering select.orderby {
+	border: 1px solid var(--apx-line);
+	background-color: var(--apx-paper);
+	border-radius: var(--apx-radius-sm);
+	padding: 0.55em 1.8em 0.55em 0.8em;
+	box-shadow: none;
+	font-weight: 500;
+}
+
+.storefront-sorting {
+	margin-bottom: 1.5rem;
+}
+
 .single-product div.product .woocommerce-product-gallery img {
 	border-radius: var(--apx-radius);
 }
@@ -741,6 +787,54 @@ span.onsale,
 }
 
 .home .entry-content ul.wp-block-latest-posts__list li:last-child { border-bottom: 0; }
+
+.wp-block-latest-posts__post-title {
+	font-weight: 600;
+	color: var(--apx-ink);
+}
+
+.wp-block-latest-posts__post-title:hover { color: var(--apx-accent); }
+
+.wp-block-latest-posts__read-more {
+	font-weight: 600;
+	text-decoration: none;
+}
+
+.wp-block-latest-posts__read-more:hover { text-decoration: underline; }
+
+/* Collection / category images: gentle zoom on hover */
+.wp-block-image a {
+	display: block;
+	overflow: hidden;
+	border-radius: var(--apx-radius);
+}
+
+.wp-block-image a img {
+	transition: transform 400ms var(--apx-ease);
+}
+
+.wp-block-image a:hover img { transform: scale(1.025); }
+
+/* Content buttons: comfortable padding + hover shadow */
+.wp-block-buttons .wp-block-button__link {
+	padding: 0.75em 1.6em;
+	border-radius: var(--apx-radius-sm);
+	font-weight: 600;
+}
+
+.wp-block-buttons .wp-block-button__link:hover {
+	box-shadow: var(--apx-shadow-sm);
+	transform: translateY(-1px);
+}
+
+/* Google Reviews widget cards: soften plugin default shadows to match system */
+.grw-review-inner.grw-shadow {
+	box-shadow: var(--apx-shadow-sm);
+}
+
+.grw-review-inner.grw-round {
+	border: 1px solid var(--apx-line);
+}
 
 /* ---------------------------------------------------------------------
    10. Misc — tables, 404, misc utilities
