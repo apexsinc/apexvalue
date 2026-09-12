@@ -21,6 +21,8 @@ survives parent updates.
 | `inc/template-overrides.php` | Pluggable overrides: `storefront_cart_link()` → icon + count chip, `storefront_header_cart()` → icon + mini-cart dropdown |
 | `inc/template-functions.php` | Filter that hides Cart/Checkout links from header menus (the cart icon covers them; nothing is deleted from the menu) |
 | `inc/design-tokens.php` | CSS custom properties synced with the Customizer + hidden H1 on the front page |
+| `inc/cta-band.php` | Pre-footer CTA band, fully editable in Appearance → Customize → *Apex Value CTA Band* (empty headline hides it; hidden on cart/checkout/account) |
+| `assets/js/cta-preview.js` | Customizer live-preview for the CTA band |
 
 ## Design decisions
 
@@ -37,6 +39,10 @@ survives parent updates.
 - **Accessibility:** visible `:focus-visible` rings, screen-reader cart label
   with live count, hidden H1 on the front page, `prefers-reduced-motion`
   support.
+- **WP spacing tokens:** the homepage patterns reference
+  `--wp--style--root--padding-*` / `--wp--custom--gap--horizontal` which
+  Storefront doesn't define — the child theme provides them so section
+  padding doesn't collapse to zero.
 - **AJAX cart:** the add-to-cart fragment handler keeps working because it
   calls the overridden `storefront_cart_link()` directly.
 

@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'APEXVALUE_VERSION', '1.0.0' );
+define( 'APEXVALUE_VERSION', '1.1.0' );
 
 /**
  * Pluggable Storefront overrides (cart icon + header cart markup).
@@ -30,6 +30,11 @@ require get_stylesheet_directory() . '/inc/template-functions.php';
  * Design tokens synced with the Customizer + front-page H1.
  */
 require get_stylesheet_directory() . '/inc/design-tokens.php';
+
+/**
+ * Pre-footer CTA band (Customizer-editable).
+ */
+require get_stylesheet_directory() . '/inc/cta-band.php';
 
 /**
  * Theme customizations.
