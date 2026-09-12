@@ -176,6 +176,11 @@ function apexvalue_hero_customize_register( $wp_customize ) {
 }
 add_action( 'customize_register', 'apexvalue_hero_customize_register', 20 );
 
+/** Heading text for the hero (shared by the enabled-check and renderer). */
+function apexvalue_hero_headline() {
+	return get_theme_mod( 'apexvalue_hero_headline', __( 'Professional weather & marine monitoring for the Philippines', 'apexvalue' ) );
+}
+
 /**
  * Whether the hero is currently shown (front page + non-empty headline).
  *
@@ -186,9 +191,7 @@ function apexvalue_hero_enabled() {
 		return false;
 	}
 
-	$headline = get_theme_mod( 'apexvalue_hero_headline', __( 'Professional weather & marine monitoring for the Philippines', 'apexvalue' ) );
-
-	return '' !== trim( (string) $headline );
+	return '' !== trim( (string) apexvalue_hero_headline() );
 }
 
 /**
@@ -199,6 +202,7 @@ function apexvalue_hero_render() {
 		return; // Hero disabled; front page falls back to the hidden H1.
 	}
 
+	$headline = apexvalue_hero_headline();
 	$kicker = get_theme_mod( 'apexvalue_hero_kicker', __( 'Authorized Davis Instruments Distributor', 'apexvalue' ) );
 	$text   = get_theme_mod( 'apexvalue_hero_text', __( 'From Vantage Vue stations to complete EnviroMonitor networks — genuine hardware, expert advice and local support for homes, farms, coastlines and vessels.', 'apexvalue' ) );
 	$cta1_t = get_theme_mod( 'apexvalue_hero_cta_text', __( 'Request a Quote', 'apexvalue' ) );

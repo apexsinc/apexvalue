@@ -100,6 +100,11 @@ Every CTA in that path defaults to `/inquiry/` (the Airtable inquiry form) or th
 
 ## Recent updates
 
+- **1.8.0** — Accessibility & SEO pass: fixed an empty homepage H1 (hero
+  headline regression), aria-labels for third-party review-carousel buttons,
+  alt text on 8 product content images; SiteSEO homepage title/description,
+  per-page meta descriptions (home/shop/inquiry) and default og:image
+  configured (DB-side, not theme files).
 - **1.7.2** — Legacy `/contact/` requests now 301-redirect to `/contact-us/`.
 - **1.7.1** — Search results polished (SiteSEO product hits cardified via
   `post_class`), review list/form, cookie bar, empty quote-basket badge

@@ -161,3 +161,20 @@
 		false
 	);
 } )();
+
+/**
+ * Name third-party carousel controls that ship without accessible labels
+ * (Google Reviews widget prev/next). Progressive: a no-op if absent.
+ */
+( function () {
+	'use strict';
+
+	var names = [ [ 'grw-prev', 'Previous reviews' ], [ 'grw-next', 'Next reviews' ] ];
+	names.forEach( function ( pair ) {
+		document.querySelectorAll( 'button.' + pair[ 0 ] ).forEach( function ( btn ) {
+			if ( ! btn.hasAttribute( 'aria-label' ) ) {
+				btn.setAttribute( 'aria-label', pair[ 1 ] );
+			}
+		} );
+	} );
+} )();
