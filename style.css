@@ -4,7 +4,7 @@ Theme URI:    https://www.apexvalue.com
 Description:  Apex Value child theme of Storefront. Modern, refined evolution of the default look: cleaner typography, tighter header, card-based product grids and accessible interactions.
 Author:       Apex Value
 Template:     storefront
-Version:      1.8.0
+Version:      1.8.1
 License:      GNU General Public License v2 or later
 License URI:  http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain:  apexvalue
@@ -2662,4 +2662,69 @@ input[type="radio"] {
 	box-shadow: var(--apx-shadow-md);
 	transform: translateY(-2px);
 	border-color: rgba(0, 0, 0, 0.14);
+}
+
+/* ==========================================================================
+   21. Collection chip navigation (shop & category archives)
+   ========================================================================== */
+
+.apex-collection-nav {
+	margin: 0 0 1.75em;
+}
+
+.apex-collection-nav ul {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.apex-collection-nav__chip {
+	display: inline-block;
+	padding: 0.45em 1em;
+	border: 1px solid var(--apx-line);
+	border-radius: 999px;
+	background: var(--apx-paper);
+	color: var(--apx-body);
+	font-size: 0.85rem;
+	font-weight: 600;
+	line-height: 1.4;
+	text-decoration: none;
+	transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
+}
+
+.apex-collection-nav__chip:hover,
+.apex-collection-nav__chip:focus-visible {
+	border-color: var(--apx-green-dark);
+	background: var(--apx-green);
+	color: var(--apx-ink);
+	text-decoration: none;
+}
+
+.apex-collection-nav__chip.is-active {
+	border-color: var(--apx-ink);
+	background: var(--apx-ink);
+	color: #fff;
+}
+
+/* Mobile: let the chip row scroll sideways rather than wrap into a tall stack */
+@media (max-width: 480px) {
+	.apex-collection-nav ul {
+		flex-wrap: nowrap;
+		overflow-x: auto;
+		-webkit-overflow-scrolling: touch;
+		scrollbar-width: none;
+		padding-bottom: 2px;
+	}
+
+	.apex-collection-nav ul::-webkit-scrollbar {
+		display: none;
+	}
+
+	.apex-collection-nav__chip {
+		white-space: nowrap;
+		flex: 0 0 auto;
+	}
 }

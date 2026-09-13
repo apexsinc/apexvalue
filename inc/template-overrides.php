@@ -127,3 +127,84 @@ function apexvalue_legacy_contact_redirect() {
 	}
 }
 add_action( 'template_redirect', 'apexvalue_legacy_contact_redirect' );
+
+/**
+ * Collection chips: product-category quick-links shown on shop and
+ * product-category archives.
+ *
+ * These archives previously had no navigation into /collections/<slug>/ —
+ * categories like Marine (69 products) were only reachable via search.
+ * Chips render after the archive title (catalog ordering stays untouched)
+ * and skip empty terms and terms that only exist to group others.
+ *
+ * @return void
+ */
+function apexvalue_collection_chips() {
+	if ( ! function_exists( 'is_woocommerce' ) || ! is_woocommerce() ) {
+		return;
+	}
+
+	// Shop post-type archive and product taxonomy archives only.
+	if ( ! ( is_shop() || is_product_taxonomy() ) ) {
+		return;
+	}
+
+	$terms = get_terms(
+		array(
+			'taxonomy'   => 'product_cat',
+			'hide_empty' => true,
+		)
+	);
+
+	if ( is_wp_error( $terms ) || empty( $terms ) ) {
+		return;
+	}
+
+	// Drop terms whose only job is grouping children (e.g. a parent with no
+	// direct products but product-bearing descendants).
+	$leaf_terms = array();
+	foreach ( $terms as $term ) {
+		if ( 0 === (int) $term->parent ) {
+			continue;
+		}
+		$leaf_terms[] = $term;
+	}
+
+	if ( empty( $leaf_terms ) ) {
+		$leaf_terms = $terms;
+	}
+
+	// Leave Uncategorized out of the visual row.
+	$leaf_terms = array_values(
+		array_filter(
+			$leaf_terms,
+			static function ( $term ) {
+				return 'uncategorized' !== $term->slug;
+			}
+		)
+	);
+
+	if ( empty( $leaf_terms ) ) {
+		return;
+	}
+
+	$current_id = 0;
+	if ( is_product_category() ) {
+		$current_id = get_queried_object_id();
+	}
+
+	echo '<nav class="apex-collection-nav" aria-label="' . esc_attr__( 'Browse collections', 'apexvalue' ) . '">';
+	echo '<ul>';
+	foreach ( $leaf_terms as $term ) {
+		$url   = get_term_link( $term );
+		$class = 'apex-collection-nav__chip';
+		if ( (int) $term->term_id === $current_id ) {
+			$class .= ' is-active';
+		}
+
+		echo '<li><a class="' . esc_attr( $class ) . '" href="' . esc_url( $url ) . '">' . esc_html( $term->name ) . '</a></li>';
+	}
+	echo '</ul>';
+	echo '</nav>';
+}
+add_action( 'woocommerce_before_shop_loop', 'apexvalue_collection_chips', 15 );

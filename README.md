@@ -100,6 +100,13 @@ Every CTA in that path defaults to `/inquiry/` (the Airtable inquiry form) or th
 
 ## Recent updates
 
+- **1.8.1** — Collection chip navigation on shop & product-category
+  archives: a chip row linking every non-empty product category
+  (Marine, Accessory, Sensor, Weather Station, …) now sits after the
+  archive title, with the current category highlighted. These
+  `/collections/<slug>/` archives previously had no inbound navigation
+  anywhere on the site. Mobile chips scroll sideways instead of stacking;
+  chips are hidden on basket/checkout like the quote CTA.
 - **1.8.0** — Accessibility, SEO & email-branding pass: fixed an empty
   homepage H1 (hero headline regression), aria-labels for third-party
   review-carousel buttons, alt text on 8 product content images; SiteSEO
