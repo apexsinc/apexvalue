@@ -147,6 +147,18 @@ function storefront_footer_widgets() {
 					<?php echo wp_kses_post( $links ); ?>
 				</ul>
 			<?php endif; ?>
+
+			<?php
+			$collections = function_exists( 'apexvalue_get_collections' ) ? apexvalue_get_collections() : array();
+			if ( ! empty( $collections ) ) :
+				?>
+				<h2 class="apex-footer__heading"><?php esc_html_e( 'Collections', 'apexvalue' ); ?></h2>
+				<ul class="apex-footer__menu">
+					<?php foreach ( $collections as $term ) : ?>
+						<li class="menu-item"><a href="<?php echo esc_url( get_term_link( $term ) ); ?>"><?php echo esc_html( $term->name ); ?></a></li>
+					<?php endforeach; ?>
+				</ul>
+			<?php endif; ?>
 		</div>
 
 		<div class="block apex-footer__contact">

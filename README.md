@@ -100,6 +100,17 @@ Every CTA in that path defaults to `/inquiry/` (the Airtable inquiry form) or th
 
 ## Recent updates
 
+- **1.8.2** — Collections now reachable from every page: a **Shop
+  dropdown** (desktop + handheld) injects the ten product collections as a
+  sub-menu under the Shop item via `wp_nav_menu_objects` (display-only,
+  with keyboard `:focus-within` support), the footer gains a
+  **Collections** column heading with the same links, and the homepage
+  gets a **"Shop by collection"** strip under the hero — tinted band,
+  responsive 2/3/5-column card grid with per-collection product counts,
+  `prefers-reduced-motion` respected. One shared helper
+  (`apexvalue_get_collections()`) now feeds the chips, dropdown, footer
+  and homepage, so adding a product category updates all four surfaces
+  automatically.
 - **1.8.1** — Collection chip navigation on shop & product-category
   archives: a chip row linking every non-empty product category
   (Marine, Accessory, Sensor, Weather Station, …) now sits after the

@@ -4,7 +4,7 @@ Theme URI:    https://www.apexvalue.com
 Description:  Apex Value child theme of Storefront. Modern, refined evolution of the default look: cleaner typography, tighter header, card-based product grids and accessible interactions.
 Author:       Apex Value
 Template:     storefront
-Version:      1.8.1
+Version:      1.8.2
 License:      GNU General Public License v2 or later
 License URI:  http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain:  apexvalue
@@ -2726,5 +2726,148 @@ input[type="radio"] {
 	.apex-collection-nav__chip {
 		white-space: nowrap;
 		flex: 0 0 auto;
+	}
+}
+
+
+/* ==========================================================================
+   22. Collection navigation (Shop dropdown, footer column, homepage strip)
+   ========================================================================== */
+
+/* 22a. Desktop dropdown under the Shop menu item (Storefront opens on
+   hover/.focus; we add :focus-within so keyboard users can tab in). */
+@media (min-width: 768px) {
+	.main-navigation ul li.menu-item-has-children:focus-within > ul.sub-menu {
+		left: 0;
+		display: block;
+	}
+
+	.main-navigation ul.menu > li > .sub-menu {
+		background: var(--apx-paper);
+		border: 1px solid var(--apx-line);
+		border-radius: var(--apx-radius-sm);
+		box-shadow: var(--apx-shadow-lg);
+		padding: 0.4em 0;
+		min-width: 13em;
+	}
+
+	.main-navigation ul.menu > li > .sub-menu li a {
+		padding: 0.6em 1.2em;
+	}
+
+	.main-navigation ul.menu > li > .sub-menu li a:hover,
+	.main-navigation ul.menu > li > .sub-menu li a:focus-visible {
+		background: var(--apx-tint);
+		color: var(--apx-accent);
+	}
+}
+
+/* 22b. Handheld: the injected sub-menu inherits Storefront's expanding
+   list behaviour (aria-expanded + .toggled) — only spacing polish here. */
+.storefront-handheld-footer-bar ~ * .main-navigation .sub-menu,
+.handheld-navigation .sub-menu {
+	margin-left: 1.41575em;
+}
+
+/* 22c. Footer "Collections" links reuse the existing .apex-footer__menu
+   link treatment — no extra rules needed. */
+
+/* 22d. Homepage collections strip (front page, under the hero). */
+.apex-collections {
+	background: var(--apx-tint);
+	border-bottom: 1px solid var(--apx-line);
+	padding: 3rem 0 3.5rem;
+}
+
+.apex-collections__inner {
+	margin: 0 auto;
+}
+
+.apex-collections__head {
+	align-items: baseline;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5em 1.5em;
+	justify-content: space-between;
+	margin-bottom: 1.5rem;
+}
+
+.apex-collections__title {
+	color: var(--apx-ink);
+	font-size: clamp(1.35rem, 1.1rem + 1vw, 1.75rem);
+	margin: 0;
+}
+
+.apex-collections__all {
+	color: var(--apx-accent);
+	font-weight: 600;
+	text-decoration: none;
+}
+
+.apex-collections__all:hover,
+.apex-collections__all:focus-visible {
+	text-decoration: underline;
+}
+
+.apex-collections__grid {
+	display: grid;
+	gap: 0.875rem;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.apex-collections__card {
+	align-items: flex-start;
+	background: var(--apx-paper);
+	border: 1px solid var(--apx-line);
+	border-radius: var(--apx-radius);
+	box-shadow: var(--apx-shadow-sm);
+	color: var(--apx-ink);
+	display: flex;
+	flex-direction: column;
+	gap: 0.3em;
+	height: 100%;
+	padding: 1.1rem 1.2rem;
+	text-decoration: none;
+	transition: border-color var(--apx-speed) var(--apx-ease),
+		box-shadow var(--apx-speed) var(--apx-ease),
+		transform var(--apx-speed) var(--apx-ease);
+}
+
+.apex-collections__card:hover,
+.apex-collections__card:focus-visible {
+	border-color: var(--apx-accent);
+	box-shadow: var(--apx-shadow-md);
+	transform: translateY(-2px);
+}
+
+.apex-collections__name {
+	font-weight: 600;
+}
+
+.apex-collections__count {
+	color: var(--apx-muted);
+	font-size: 0.875rem;
+}
+
+@media (min-width: 640px) {
+	.apex-collections__grid {
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+	}
+}
+
+@media (min-width: 1024px) {
+	.apex-collections__grid {
+		grid-template-columns: repeat(5, minmax(0, 1fr));
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.apex-collections__card,
+	.apex-collections__card:hover,
+	.apex-collections__card:focus-visible {
+		transform: none;
 	}
 }

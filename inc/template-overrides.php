@@ -208,3 +208,213 @@ function apexvalue_collection_chips() {
 	echo '</nav>';
 }
 add_action( 'woocommerce_before_shop_loop', 'apexvalue_collection_chips', 15 );
+
+
+/**
+ * Shared helper: browsable product collections.
+ *
+ * Leaves only product-bearing, non-grouping terms (same policy as the
+ * collection chips), ordered by name. Returns WP_Term[] or an empty array.
+ *
+ * @return array
+ */
+function apexvalue_get_collections() {
+	if ( ! taxonomy_exists( 'product_cat' ) ) {
+		return array();
+	}
+
+	$terms = get_terms(
+		array(
+			'taxonomy'   => 'product_cat',
+			'hide_empty' => true,
+		)
+	);
+
+	if ( is_wp_error( $terms ) || empty( $terms ) ) {
+		return array();
+	}
+
+	// Drop terms whose only job is grouping children (no direct products).
+	$leaf_terms = array_values(
+		array_filter(
+			$terms,
+			static function ( $term ) {
+				return 0 !== (int) $term->parent && 'uncategorized' !== $term->slug;
+			}
+		)
+	);
+
+	if ( empty( $leaf_terms ) ) {
+		$leaf_terms = array_values(
+			array_filter(
+				$terms,
+				static function ( $term ) {
+					return 'uncategorized' !== $term->slug;
+				}
+			)
+		);
+	}
+
+	usort(
+		$leaf_terms,
+		static function ( $a, $b ) {
+			return strcmp( $a->name, $b->name );
+		}
+	);
+
+	return $leaf_terms;
+}
+
+/**
+ * Inject collection links as a sub-menu under the Shop nav item.
+ *
+ * Product collections (/collections/…) previously had no navigation path
+ * from every page. This adds them as a dropdown under the existing Shop
+ * menu entry in both header menus (desktop + handheld). Display-only:
+ * nothing is written to the menu database, and WordPress automatically
+ * gains the `menu-item-has-children` + `sub-menu` markup Storefront's
+ * dropdown behaviour expects. Reflected in the footer "Explore" column too.
+ */
+add_filter( 'wp_nav_menu_objects', 'apexvalue_menu_collections', 20, 2 );
+function apexvalue_menu_collections( $items, $args ) {
+	// Header menus only (desktop primary + handheld), not the footer list.
+	$is_header = in_array(
+		$args->theme_location ?? '',
+		array( 'primary', 'handheld', 'apexvalue-main' ),
+		true
+	);
+	if ( ! $is_header ) {
+		return $items;
+	}
+
+	// Flat lists (e.g. the footer menu with depth=1) don't take sub-menus.
+	if ( isset( $args->depth ) && 1 === (int) $args->depth ) {
+		return $items;
+	}
+
+	$terms = apexvalue_get_collections();
+	if ( empty( $terms ) ) {
+		return $items;
+	}
+
+	// Find the top-level Shop item (WooCommerce shop page).
+	$shop_key = null;
+	foreach ( $items as $key => $item ) {
+		if ( 0 === (int) $item->menu_item_parent
+			&& 'post_type' === $item->type && 'page' === $item->object
+			&& function_exists( 'wc_get_page_id' )
+			&& (int) $item->object_id === (int) wc_get_page_id( 'shop' ) ) {
+			$shop_key = $key;
+			break;
+		}
+	}
+	if ( null === $shop_key ) {
+		return $items;
+	}
+
+	$shop_id = (int) $items[ $shop_key ]->ID;
+
+	// _wp_menu_item_classes_by_context() runs BEFORE this filter, so the
+	// injected items (and the Shop parent) must get their classes manually.
+	if ( ! in_array( 'menu-item-has-children', (array) $items[ $shop_key ]->classes, true ) ) {
+		$items[ $shop_key ]->classes[] = 'menu-item-has-children';
+	}
+
+	// Build one WP_Post per collection term, parented under Shop.
+	$children = array();
+	foreach ( $terms as $term ) {
+		$children[] = new WP_Post(
+			(object) array(
+				'ID'               => 100000 + (int) $term->term_id,
+				'post_type'        => 'nav_menu_item',
+				'post_status'      => 'publish',
+				'post_title'       => $term->name,
+				'db_id'            => 0,
+				'menu_item_parent' => $shop_id,
+				'type'             => 'taxonomy',
+				'object'           => 'product_cat',
+				'object_id'        => $term->term_id,
+				'url'              => get_term_link( $term ),
+				'classes'          => array(
+					'menu-item',
+					'menu-item-type-taxonomy',
+					'menu-item-object-product_cat',
+				),
+				'xfn'              => '',
+				'current'          => false,
+				'current_item_ancestor' => false,
+				'current_item_parent'   => false,
+			)
+		);
+	}
+
+	// Rebuild the list with children directly after the Shop item.
+	$new_items = array();
+	foreach ( $items as $key => $item ) {
+		$new_items[ $key ] = $item;
+		if ( $key === $shop_key ) {
+			foreach ( $children as $child ) {
+				$new_items[] = $child;
+			}
+		}
+	}
+
+	return $new_items;
+}
+
+
+/**
+ * Homepage collections strip.
+ *
+ * Renders directly under the hero on the front page: a "Shop by collection"
+ * row that links every product collection (the same term set as the shop
+ * chips and the Shop dropdown). Hides itself automatically when no
+ * collections exist.
+ */
+function apexvalue_home_collections() {
+	if ( ! is_front_page() || ! function_exists( 'wc_get_page_id' ) ) {
+		return;
+	}
+
+	$terms = apexvalue_get_collections();
+	if ( empty( $terms ) ) {
+		return;
+	}
+
+	$shop_url = get_permalink( (int) wc_get_page_id( 'shop' ) );
+	?>
+	<section class="apex-collections" aria-label="<?php esc_attr_e( 'Browse collections', 'apexvalue' ); ?>">
+		<div class="col-full apex-collections__inner">
+			<div class="apex-collections__head">
+				<h2 class="apex-collections__title"><?php esc_html_e( 'Shop by collection', 'apexvalue' ); ?></h2>
+				<?php if ( $shop_url ) : ?>
+					<a class="apex-collections__all" href="<?php echo esc_url( $shop_url ); ?>">
+						<?php esc_html_e( 'View all products', 'apexvalue' ); ?><span aria-hidden="true">&nbsp;&rarr;</span>
+					</a>
+				<?php endif; ?>
+			</div>
+			<ul class="apex-collections__grid">
+				<?php foreach ( $terms as $term ) : ?>
+					<li class="apex-collections__item">
+						<a class="apex-collections__card" href="<?php echo esc_url( get_term_link( $term ) ); ?>">
+							<span class="apex-collections__name"><?php echo esc_html( $term->name ); ?></span>
+							<span class="apex-collections__count">
+								<?php
+								echo esc_html(
+									sprintf(
+										/* translators: %s: number of products in the collection. */
+										_n( '%s product', '%s products', $term->count, 'apexvalue' ),
+										number_format_i18n( $term->count )
+									)
+								);
+								?>
+							</span>
+						</a>
+					</li>
+				<?php endforeach; ?>
+			</ul>
+		</div>
+	</section>
+	<?php
+}
+add_action( 'storefront_before_content', 'apexvalue_home_collections', 30 );
