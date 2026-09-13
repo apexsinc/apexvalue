@@ -320,9 +320,24 @@ function apexvalue_menu_collections( $items, $args ) {
 		$items[ $shop_key ]->classes[] = 'menu-item-has-children';
 	}
 
+	// Highlight the collection currently being browsed (category archives).
+	$current_term_id = 0;
+	if ( is_product_taxonomy() ) {
+		$current_term_id = (int) get_queried_object_id();
+	}
+
 	// Build one WP_Post per collection term, parented under Shop.
 	$children = array();
 	foreach ( $terms as $term ) {
+		$is_current = ( $current_term_id === (int) $term->term_id );
+		$classes = array(
+			'menu-item',
+			'menu-item-type-taxonomy',
+			'menu-item-object-product_cat',
+		);
+		if ( $is_current ) {
+			$classes[] = 'current-menu-item';
+		}
 		$children[] = new WP_Post(
 			(object) array(
 				'ID'               => 100000 + (int) $term->term_id,
@@ -335,17 +350,25 @@ function apexvalue_menu_collections( $items, $args ) {
 				'object'           => 'product_cat',
 				'object_id'        => $term->term_id,
 				'url'              => get_term_link( $term ),
-				'classes'          => array(
-					'menu-item',
-					'menu-item-type-taxonomy',
-					'menu-item-object-product_cat',
-				),
+				'classes'          => $classes,
 				'xfn'              => '',
-				'current'          => false,
+				'current'          => $is_current,
 				'current_item_ancestor' => false,
 				'current_item_parent'   => false,
 			)
 		);
+	}
+
+	// Mark the Shop parent as an ancestor while a collection archive is open
+	// (WordPress only handles this for DB-backed menu items), so the desktop
+	// nav keeps its active colour on /collections/… pages.
+	if ( $current_term_id ) {
+		$shop_classes = (array) $items[ $shop_key ]->classes;
+		foreach ( array( 'current-menu-ancestor', 'current-menu-parent' ) as $cls ) {
+			if ( ! in_array( $cls, $shop_classes, true ) ) {
+				$items[ $shop_key ]->classes[] = $cls;
+			}
+		}
 	}
 
 	// Rebuild the list with children directly after the Shop item.
@@ -362,6 +385,59 @@ function apexvalue_menu_collections( $items, $args ) {
 	return $new_items;
 }
 
+
+/**
+ * Image for a collection card: the first product's thumbnail for the term,
+ * cached in a transient (1 h). Returns the term's own thumbnail when set.
+ *
+ * @param WP_Term $term Product category term.
+ * @return string|null Attachment image URL, or null when the collection has
+ *                     no images (callers render a monogram fallback).
+ */
+function apexvalue_collection_image( $term ) {
+	$cache_key = 'apexvalue_coll_img_' . (int) $term->term_id;
+	$cached = get_transient( $cache_key );
+	if ( false !== $cached ) {
+		return $cached;
+	}
+
+	$url = null;
+
+	// 1. Term thumbnail, if the shop manager ever sets one.
+	$thumb_id = (int) get_term_meta( $term->term_id, 'thumbnail_id', true );
+	if ( $thumb_id ) {
+		$src = wp_get_attachment_image_src( $thumb_id, 'woocommerce_thumbnail' );
+		if ( $src ) {
+			$url = $src[0];
+		}
+	}
+
+	// 2. Fallback: newest product image in the collection.
+	if ( ! $url ) {
+		$products = wc_get_products(
+			array(
+				'status'   => 'publish',
+				'limit'    => 1,
+				'category' => array( $term->slug ),
+				'orderby'  => 'date',
+				'order'    => 'DESC',
+			)
+		);
+		if ( $products ) {
+			$image_id = (int) $products[0]->get_image_id();
+			if ( $image_id ) {
+				$src = wp_get_attachment_image_src( $image_id, 'woocommerce_thumbnail' );
+				if ( $src ) {
+					$url = $src[0];
+				}
+			}
+		}
+	}
+
+	set_transient( $cache_key, $url, HOUR_IN_SECONDS );
+
+	return $url;
+}
 
 /**
  * Homepage collections strip.
@@ -395,9 +471,17 @@ function apexvalue_home_collections() {
 			</div>
 			<ul class="apex-collections__grid">
 				<?php foreach ( $terms as $term ) : ?>
-					<li class="apex-collections__item">
-						<a class="apex-collections__card" href="<?php echo esc_url( get_term_link( $term ) ); ?>">
-							<span class="apex-collections__name"><?php echo esc_html( $term->name ); ?></span>
+				<?php $img_url = apexvalue_collection_image( $term ); ?>
+				<li class="apex-collections__item">
+					<a class="apex-collections__card" href="<?php echo esc_url( get_term_link( $term ) ); ?>">
+						<span class="apex-collections__media" aria-hidden="true">
+							<?php if ( $img_url ) : ?>
+								<img src="<?php echo esc_url( $img_url ); ?>" alt="" loading="lazy" decoding="async" />
+							<?php else : ?>
+								<span class="apex-collections__mono"><?php echo esc_html( mb_substr( $term->name, 0, 1 ) ); ?></span>
+							<?php endif; ?>
+						</span>
+						<span class="apex-collections__name"><?php echo esc_html( $term->name ); ?></span>
 							<span class="apex-collections__count">
 								<?php
 								echo esc_html(

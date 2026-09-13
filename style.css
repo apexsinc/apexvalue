@@ -4,7 +4,7 @@ Theme URI:    https://www.apexvalue.com
 Description:  Apex Value child theme of Storefront. Modern, refined evolution of the default look: cleaner typography, tighter header, card-based product grids and accessible interactions.
 Author:       Apex Value
 Template:     storefront
-Version:      1.8.2
+Version:      1.9.0
 License:      GNU General Public License v2 or later
 License URI:  http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain:  apexvalue
@@ -477,8 +477,18 @@ textarea:focus,
 	}
 }
 
+/* Active collection inside a dropdown (desktop) or inline submenu
+   (handheld): accent + weight so the browsed collection stands out. */
+.main-navigation ul.menu ul li.current-menu-item > a,
+.main-navigation ul.nav-menu ul li.current-menu-item > a {
+	color: var(--apx-accent);
+	font-weight: 600;
+}
+
 @media (min-width: 768px) {
-	ul.menu li.current-menu-item > a {
+	ul.menu li.current-menu-item > a,
+	ul.menu li.current-menu-ancestor > a,
+	ul.menu li.current-menu-parent > a {
 		color: var(--apx-accent);
 	}
 }
@@ -2850,6 +2860,36 @@ input[type="radio"] {
 .apex-collections__count {
 	color: var(--apx-muted);
 	font-size: 0.875rem;
+}
+
+/* Card media tile: product image, or a monogram tile as fallback. */
+
+.apex-collections__media {
+	align-self: stretch;
+	aspect-ratio: 4 / 3;
+	background: var(--apx-tint);
+	border: 1px solid var(--apx-line);
+	border-radius: calc(var(--apx-radius) - 4px);
+	margin-bottom: 0.25rem;
+	overflow: hidden;
+}
+
+.apex-collections__media img {
+	display: block;
+	height: 100%;
+	object-fit: cover;
+	width: 100%;
+}
+
+.apex-collections__mono {
+	align-items: center;
+	color: var(--apx-accent);
+	display: flex;
+	font-size: 1.5rem;
+	font-weight: 700;
+	height: 100%;
+	justify-content: center;
+	letter-spacing: 0.02em;
 }
 
 @media (min-width: 640px) {

@@ -100,6 +100,13 @@ Every CTA in that path defaults to `/inquiry/` (the Airtable inquiry form) or th
 
 ## Recent updates
 
+- **1.9.0** — Collections visually enriched: homepage collection cards
+  now show a **product image tile** (first product's thumbnail per
+  collection, cached in a 1-hour transient; falls back to the term
+  thumbnail when set, or a monogram tile when no image exists), and the
+  **Shop dropdown + handheld menu highlight the collection currently
+  being browsed** (accent colour/weight on category archives, Shop kept
+  in its active state as the dropdown parent).
 - **1.8.2** — Collections now reachable from every page: a **Shop
   dropdown** (desktop + handheld) injects the ten product collections as a
   sub-menu under the Shop item via `wp_nav_menu_objects` (display-only,
