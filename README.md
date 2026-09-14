@@ -39,7 +39,7 @@ APEX Value sells via **quotation** (Quotes for WooCommerce): product buttons say
 
 **Header pill / hero / mobile bar → Products → "Request Quote" on a product → quote basket (reassurance note) → checkout ("no payment taken" note) → team replies with a formal quotation.**
 
-Every CTA in that path defaults to `/inquiry/` (the Airtable inquiry form) or the basket itself, and each label/URL is editable in the Customizer (*Apex Value Quote CTA*, *Apex Value Hero*, *Apex Value CTA Band*).
+Every CTA in that path defaults to `/inquiry/` (the Airtable inquiry form) or the basket itself, and each label/URL is editable in the Customizer (*Apex Value Quote CTA*, *Apex Value Hero*, *Apex Value CTA Band*). The cart and checkout pages use the WooCommerce **block** versions (client-rendered); the empty basket ends with a server-rendered "Browse products" CTA. Checkout's terms checkbox activates once the Refund & Returns Policy page is published.
 
 ## Design decisions
 
@@ -100,6 +100,29 @@ Every CTA in that path defaults to `/inquiry/` (the Airtable inquiry form) or th
 
 ## Recent updates
 
+- **1.11.1** — Quote-flow audit + the long-blocked refund-policy item:
+  - **Quote-flow audit (filled-basket path).** Cart/checkout are
+    WooCommerce **blocks** (React, rendered client-side via the Store
+    API), which is why quote-mode labels don't appear in curl HTML —
+    verified working through the Store API instead: cart items return,
+    and the plugin's `quotes-for-woocommerce` registers a "Request
+    Quote" payment-method block, renames cart/checkout titles when the
+    basket is quotable, and swaps the proceed-to-checkout button via
+    its own blocks script. Session-driven testing from the server is
+    impractical (Secure-flagged cookies + block hydration), so this
+    path is confirmed at the API level; **a real-browser pass through
+    add → basket → submit is still worth doing manually.**
+  - **Empty quote-basket CTA** (`inc/quote-flow.php`): a themed
+    "Browse products" buttons-block button now closes the empty-cart
+    block, which previously ended with no next step. Server-rendered,
+    scoped to the cart only.
+  - **Refund & Returns Policy drafted** (still **draft**, not
+    published — content approval is yours): replaced WooCommerce's
+    sample placeholder with a real policy aligned to the site's
+    one-year warranty post and the quote-based flow (30-day returns,
+    non-returnable items, defect/damage handling, refund timing).
+    Original saved to `/var/backups/apex-policy-draft-20260914/`.
+    **Review and publish it to activate checkout's terms checkbox.**
 - **1.11.0** — Cookie-consent bar fixed and enabled, brand spotlight, decluttered transactional pages:
   - **Cookie bar now actually renders.** GA tracking was active (GA4, consent-gated in auto-accept mode) but the consent notice could never display — its render hook only registers when the `opt_out_edit_choice` flag is set, and that flag was never saved. Enabled it (config-level, with `siteseo_google_analytics_option_name` backed up to `/var/backups/apex-siteseo-20260914/`) and restyled the bar onto the design tokens (hero-navy surface, accent button). The bar's assets were already loading unconditionally; now something justifies them.
   - **Homepage brand spotlight** (`inc/brand-spotlight.php`, new). Data-driven cards generated from live `product_brand` terms — thumbnail, name, product count — plus Customizer-editable heading/intro/button. Self-hides if no brands exist or the heading is emptied.
@@ -258,6 +281,12 @@ Every CTA in that path defaults to `/inquiry/` (the Airtable inquiry form) or th
 Changes made outside version control (DB/plugin settings), newest
 first. Every entry had a verification step and, for option edits, a
 backup under `/var/backups/`.
+
+- **2026-09-14 — refund-policy draft replaced (post 25, still draft).**
+  WooCommerce's sample placeholder content replaced with a real draft
+  aligned to the warranty post and quote flow. Original content backed
+  up to `/var/backups/apex-policy-draft-20260914/post-25-original.html`.
+  **Not published — awaiting your review.**
 
 - **2026-09-14 — cookie-consent configuration + flush-helper fix.**
   Backed up `siteseo_toggle` and `siteseo_google_analytics_option_name`

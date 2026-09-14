@@ -256,3 +256,36 @@ function apexvalue_quote_css_vars() {
 	);
 }
 add_action( 'wp_head', 'apexvalue_quote_css_vars', 20 );
+
+/**
+ * Give the empty quote basket a clear next step.
+ *
+ * The Cart block's empty state ends with a "New in store" grid but no
+ * explicit path back to the catalog. A themed "Browse products" button
+ * (core buttons block — inherits the design system, zero extra CSS)
+ * closes that gap. Rendered server-side, so it needs no JavaScript.
+ *
+ * @param string $block_content Rendered block HTML.
+ * @param array  $block         Block name and attributes.
+ * @return string
+ */
+function apexvalue_empty_cart_cta( $block_content, $block ) {
+	if ( empty( $block['blockName'] ) || 'woocommerce/empty-cart-block' !== $block['blockName'] ) {
+		return $block_content;
+	}
+
+	$shop_url = function_exists( 'wc_get_page_permalink' ) ? wc_get_page_permalink( 'shop' ) : '';
+
+	if ( '' === trim( (string) $shop_url ) ) {
+		return $block_content;
+	}
+
+	$button = sprintf(
+		'<!-- wp:buttons --><div class="wp-block-buttons" style="justify-content:center"><!-- wp:button --><div class="wp-block-button"><a class="wp-block-button__link" href="%1$s">%2$s</a></div><!-- /wp:button --></div><!-- /wp:buttons -->',
+		esc_url( $shop_url ),
+		esc_html__( 'Browse products', 'apexvalue' )
+	);
+
+	return $block_content . $button;
+}
+add_filter( 'render_block', 'apexvalue_empty_cart_cta', 10, 2 );
