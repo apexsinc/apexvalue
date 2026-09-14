@@ -100,6 +100,29 @@ Every CTA in that path defaults to `/inquiry/` (the Airtable inquiry form) or th
 
 ## Recent updates
 
+- **1.10.0** — Front-end performance pass (first asset-level audit of
+  the site):
+  - **Zero render-blocking scripts**: jQuery, jQuery Migrate and the
+    theme script now defer (all other head scripts already arrived
+    deferred). Verified 9/9 head scripts deferred; safe because every
+    jQuery dependent in the tag chain is also deferred and no plugin
+    prints inline code that calls jQuery synchronously (scanned all
+    page types).
+  - **Removed unused CSS**: dashicons (59 KB) + the Post Views Counter
+    frontend stylesheet — its counter is never displayed (display
+    option off, zero `[post_views]` users, no dashicons classes in any
+    guest markup); Storefront's WC Brands extension CSS+JS (~5 KB) —
+    no brand taxonomy or terms exist and no brand markup renders.
+  - **Emoji shims dropped**: the twemoji detector/converter, TinyMCE
+    emoji stylesheet and s.w.org resource hints — the design system
+    uses SVG/CSS icons only (~4.5 KB + one request saved).
+  - Net effect: **~70 KB less on every page**, three fewer head
+    requests, and a fully deferred script graph. gzip remains on
+    (~80% wire reduction); images already lazy-load with correct
+    LCP hints from the earlier passes.
+  - All removals are dequeue-level with evidence recorded inline in
+    `inc/performance.php` — delete the corresponding block if a view
+    counter or brand filter ever appears.
 - **1.9.3** — Whole-site polish pass (audited all 16 page types):
   content-embedded iframes (the Airtable forms on Inquiry/Contact and
   any future embeds) now get an accessible `title`, `loading="lazy"`
