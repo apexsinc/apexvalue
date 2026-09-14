@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'APEXVALUE_VERSION', '1.9.1' );
+define( 'APEXVALUE_VERSION', '1.9.2' );
 
 /**
  * Pluggable Storefront overrides (cart icon + header cart markup).
@@ -61,6 +61,11 @@ require get_stylesheet_directory() . '/inc/quote-flow.php';
  * Image performance filters (LCP + lazy-loading gaps).
  */
 require get_stylesheet_directory() . '/inc/performance.php';
+
+/**
+ * Structured data additions (FAQPage on the FAQs archive).
+ */
+require get_stylesheet_directory() . '/inc/schema.php';
 
 /**
  * Theme customizations.

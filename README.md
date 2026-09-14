@@ -100,6 +100,14 @@ Every CTA in that path defaults to `/inquiry/` (the Airtable inquiry form) or th
 
 ## Recent updates
 
+- **1.9.2** — Structured data: **FAQPage JSON-LD on the `/faqs/`
+  archive** (10 question/answer pairs, built from the posts shown so
+  pagination stays valid) and removed the **hollow duplicate Product
+  node** on product pages — siteseo-pro's auto Product schema emitted
+  null offers/image next to WooCommerce's complete one (DB option
+  edited, backup in `/var/backups/apex-schema-20260914/`). Checkout
+  audit: already quote-appropriate (title, gateway, button, optional
+  company/phone). New *Safe-editing workflow* section in this README.
 - **1.9.1** — Homepage **"How quoting works"** section above the CTA
   band: three-step explainer (browse → submit → quotation) with a
   Request-a-Quotation button; all copy editable in Appearance →
@@ -165,3 +173,26 @@ Every CTA in that path defaults to `/inquiry/` (the Airtable inquiry form) or th
 - Caching stack on this server: SpeedyCache (page cache) + APCu object cache.
   Clear both after theme switches (APCu is cleared from a web request, not
   the CLI).
+
+## Safe-editing workflow
+
+1. **Theme files only via git.** Every change to this directory goes
+   through a commit — never hand-edit and leave the tree dirty. Files
+   outside the theme (plugins, uploads, `wp-content` root) are NOT in
+   version control: before touching a plugin option or postmeta, save a
+   dated backup to `/var/backups/` first (see `apex-schema-*`,
+   `apex-email-*`, `alt-fix-*` for the pattern).
+2. **Lint before you flush.** `php -l` every changed PHP file; check CSS
+   braces balance after stylesheet edits.
+3. **Flush caches from a web request**, then verify with
+   `curl -H "Host: www.apexvalue.com"` — expect `ver=<current>` on theme
+   assets and the edited markup actually present in the HTML.
+4. **Keep versions in lockstep** (`style.css` + `functions.php`), bump on
+   every user-visible change, and note it under *Recent updates*.
+5. **DB-side settings are the escape hatch, not the default.** Plugin
+   options (SiteSEO, email-templates, WooCommerce) are changed only when
+   the theme cannot own the concern — and always with a backup + a note
+   here.
+6. **Commits:** author `janasco <jaymaranasco@gmail.com>`, single
+   contributor, no machine attribution (a server-side hook enforces
+   this). Tag releases `vX.Y.Z` with a one-line summary.
