@@ -502,3 +502,19 @@ function apexvalue_home_collections() {
 	<?php
 }
 add_action( 'storefront_before_content', 'apexvalue_home_collections', 30 );
+
+/**
+ * Suppress the blog sidebar (Recent Posts / Archives / Categories widgets) on
+ * transactional WooCommerce pages. A quotation-first store has no reason to
+ * cross-link blog widgets inside the cart and account flows; those pages get
+ * the full content width instead.
+ *
+ * Pluggable override: the child theme's functions.php loads before Storefront's,
+ * so this definition wins over storefront_get_sidebar() without removing hooks.
+ */
+function storefront_get_sidebar() {
+	if ( function_exists( 'is_woocommerce' ) && ( is_cart() || is_checkout() || is_account_page() ) ) {
+		return;
+	}
+	get_sidebar();
+}

@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'APEXVALUE_VERSION', '1.10.1' );
+define( 'APEXVALUE_VERSION', '1.11.0' );
 
 /**
  * Pluggable Storefront overrides (cart icon + header cart markup).
@@ -40,6 +40,11 @@ require get_stylesheet_directory() . '/inc/cta-band.php';
  * Homepage "How quoting works" explainer (Customizer-editable).
  */
 require get_stylesheet_directory() . '/inc/how-it-works.php';
+
+/**
+ * Homepage brand spotlight (generated from product_brand terms).
+ */
+require get_stylesheet_directory() . '/inc/brand-spotlight.php';
 
 /**
  * Homepage hero (Customizer-editable).

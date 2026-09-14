@@ -4,7 +4,7 @@ Theme URI:    https://www.apexvalue.com
 Description:  Apex Value child theme of Storefront. Modern, refined evolution of the default look: cleaner typography, tighter header, card-based product grids and accessible interactions.
 Author:       Apex Value
 Template:     storefront
-Version:      1.10.1
+Version:      1.11.0
 License:      GNU General Public License v2 or later
 License URI:  http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain:  apexvalue
@@ -3073,6 +3073,139 @@ input[type="radio"] {
 @media (prefers-reduced-motion: reduce) {
 	.entry-content .wp-block-button__link,
 	.entry-content .wp-block-button__link:hover {
+		transform: none;
+	}
+}
+
+/* --- Brand spotlight (data-driven from product_brand terms) --------------- */
+
+.apex-brandspot {
+	background: var(--apx-paper);
+	border-top: 1px solid var(--apx-line);
+	padding: clamp(2.75rem, 6vw, 4.5rem) 0;
+}
+
+.apex-brandspot__heading {
+	color: var(--apx-ink);
+	font-size: clamp(1.5rem, 3vw, 2rem);
+	line-height: 1.2;
+	margin: 0 0 0.5rem;
+}
+
+.apex-brandspot__lede {
+	color: var(--apx-muted);
+	font-size: 1.0625rem;
+	margin: 0 0 2rem;
+	max-width: 44rem;
+}
+
+.apex-brandspot__grid {
+	display: grid;
+	gap: 1.25rem;
+	grid-template-columns: 1fr;
+	list-style: none;
+	margin: 0 0 1.75rem;
+	padding: 0;
+}
+
+.apex-brandspot__card {
+	background: #fff;
+	border: 1px solid var(--apx-line);
+	border-radius: var(--apx-radius);
+	box-shadow: var(--apx-shadow-sm);
+	transition: box-shadow var(--apx-speed) var(--apx-ease), transform var(--apx-speed) var(--apx-ease);
+}
+
+.apex-brandspot__card:hover,
+.apex-brandspot__card:focus-within {
+	box-shadow: var(--apx-shadow-md);
+	transform: translateY(-2px);
+}
+
+.apex-brandspot__link {
+	align-items: center;
+	display: flex;
+	flex-direction: column;
+	gap: 0.35rem;
+	padding: 1.5rem 1.25rem;
+	text-align: center;
+	text-decoration: none;
+}
+
+.apex-brandspot__thumb {
+	align-items: center;
+	display: flex;
+	height: 4.5rem;
+	justify-content: center;
+	margin-bottom: 0.35rem;
+	width: 100%;
+}
+
+.apex-brandspot__thumb img {
+	height: 100%;
+	object-fit: contain;
+	width: auto;
+}
+
+.apex-brandspot__monogram {
+	align-items: center;
+	background: var(--apx-tint);
+	border-radius: 999px;
+	color: var(--apx-accent);
+	display: inline-flex;
+	font-size: 1.5rem;
+	font-weight: 700;
+	height: 3.5rem;
+	justify-content: center;
+	width: 3.5rem;
+}
+
+.apex-brandspot__name {
+	color: var(--apx-ink);
+	font-size: 1.0625rem;
+	font-weight: 600;
+}
+
+.apex-brandspot__count {
+	color: var(--apx-muted);
+	font-size: 0.8125rem;
+}
+
+.apex-brandspot__btn {
+	background: var(--apx-accent);
+	border-radius: var(--apx-radius-sm);
+	color: #fff;
+	display: inline-block;
+	font-weight: 600;
+	padding: 0.7rem 1.4rem;
+	text-decoration: none;
+	transition: background var(--apx-speed) var(--apx-ease);
+}
+
+.apex-brandspot__btn:hover,
+.apex-brandspot__btn:focus-visible {
+	background: var(--apx-accent-dark);
+}
+
+@media (min-width: 480px) {
+	.apex-brandspot__grid {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+
+@media (min-width: 900px) {
+	.apex-brandspot__grid {
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.apex-brandspot,
+	.apex-brandspot__card {
+		transition: none;
+	}
+	.apex-brandspot__card:hover,
+	.apex-brandspot__card:focus-within {
 		transform: none;
 	}
 }

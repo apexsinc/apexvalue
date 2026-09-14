@@ -100,6 +100,11 @@ Every CTA in that path defaults to `/inquiry/` (the Airtable inquiry form) or th
 
 ## Recent updates
 
+- **1.11.0** — Cookie-consent bar fixed and enabled, brand spotlight, decluttered transactional pages:
+  - **Cookie bar now actually renders.** GA tracking was active (GA4, consent-gated in auto-accept mode) but the consent notice could never display — its render hook only registers when the `opt_out_edit_choice` flag is set, and that flag was never saved. Enabled it (config-level, with `siteseo_google_analytics_option_name` backed up to `/var/backups/apex-siteseo-20260914/`) and restyled the bar onto the design tokens (hero-navy surface, accent button). The bar's assets were already loading unconditionally; now something justifies them.
+  - **Homepage brand spotlight** (`inc/brand-spotlight.php`, new). Data-driven cards generated from live `product_brand` terms — thumbnail, name, product count — plus Customizer-editable heading/intro/button. Self-hides if no brands exist or the heading is emptied.
+  - **Blog widgets removed from cart/checkout/account pages** via a pluggable `storefront_get_sidebar()` override. Those transactional pages now get full content width; blog and FAQ pages are untouched.
+  - **`apex-flush.php` hardened:** added APCu object-cache clearing (wp-cli writes were invisible to FPM until flushed in web context) — and it turned out the helper itself could only ever run via the `Host: www.apexvalue.com` header, which is now the documented invocation.
 - **1.10.1** — Correction + brand archive discoverability:
   - **Reverted the v1.10.0 removal of Storefront's WC Brands CSS/JS.**
     The original check for brand terms had failed silently (wp-cli root
@@ -253,6 +258,20 @@ Every CTA in that path defaults to `/inquiry/` (the Airtable inquiry form) or th
 Changes made outside version control (DB/plugin settings), newest
 first. Every entry had a verification step and, for option edits, a
 backup under `/var/backups/`.
+
+- **2026-09-14 — cookie-consent configuration + flush-helper fix.**
+  Backed up `siteseo_toggle` and `siteseo_google_analytics_option_name`
+  to `/var/backups/apex-siteseo-20260914/`, then set
+  `google_analytics_opt_out_edit_choice = true` so the consent bar
+  (previously unreachable: assets loaded, notice never rendered) now
+  displays, restyled to the theme palette via the plugin's own color
+  settings. GA4 tracking behaviour unchanged (auto-accept mode kept).
+  Also: `apex-flush.php` gained `apcu_clear_cache()` — wp-cli-side
+  writes to options were invisible to FPM (APCu object cache) until a
+  web-context flush ran; and it was established the helper only ever
+  executes when called with the `Host: www.apexvalue.com` header (the
+  default vhost 301s it to https, where nothing listens locally).
+  Verified: bar renders on all page types with the themed styles.
 
 - **2026-09-14 — update-readiness drill.** Fresh full DB snapshot
   (`/var/backups/apex-db-20260914/apex-db-full.sql.gz`, 103 tables,
