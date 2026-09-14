@@ -344,6 +344,10 @@ function apexvalue_menu_collections( $items, $args ) {
 				'post_type'        => 'nav_menu_item',
 				'post_status'      => 'publish',
 				'post_title'       => $term->name,
+				// The nav walker renders ->title, not ->post_title; leaving
+				// this unset produced clickable but EMPTY menu links (a11y
+				// "link-name" failure + invisible dropdown rows).
+				'title'            => $term->name,
 				'db_id'            => 0,
 				'menu_item_parent' => $shop_id,
 				'type'             => 'taxonomy',
@@ -517,4 +521,73 @@ function storefront_get_sidebar() {
 		return;
 	}
 	get_sidebar();
+}
+
+/**
+ * Name image-only links inside raw post/page HTML.
+ *
+ * The homepage collection strip is hand-authored HTML: <a><img alt=""></a>
+ * with no link text. axe (link-name) treats every one as a serious
+ * failure for screen-reader users. Fill the accessibility name from the
+ * linked tag archive title (fallback: the image's attachment alt/caption,
+ * then the filename) without touching the visible design.
+ */
+add_filter( 'render_block', 'apexvalue_name_image_links', 10, 2 );
+function apexvalue_name_image_links( $block_content, $block ) {
+	if ( is_admin() || wp_doing_ajax() || empty( $block_content ) ) {
+		return $block_content;
+	}
+
+	// Cheap pre-check before firing a regex over every block.
+	if ( false === strpos( $block_content, '<a' ) || false === strpos( $block_content, '<img' ) ) {
+		return $block_content;
+	}
+
+	return preg_replace_callback(
+		'#<a\b([^>]*)>\s*<img\b([^>]*)>\s*</a>#is',
+		function ( $m ) {
+			// Skip anchors that already have an accessible name.
+			if ( preg_match( '/aria-label="/', $m[1] ) || preg_match( '/alt="[^"]+"/', $m[2] ) ) {
+				return $m[0];
+			}
+
+			$name = '';
+			$src  = '';
+
+			// Preferred: the linked URL's slug reads like a human label
+			// ("Vantage Vue"), whereas attachment titles are often raw
+			// filenames ("collection_vantage-vue_1024x1024").
+			if ( preg_match( '/href="([^"]+)"/', $m[1], $h ) ) {
+				$path = trim( (string) parse_url( $h[1], PHP_URL_PATH ), '/' );
+				$slug = $path ? basename( $path ) : '';
+				if ( $slug ) {
+					$name = ucwords( str_replace( array( '-', '_' ), ' ', $slug ) );
+				}
+			}
+
+			if ( '' === $name && preg_match( '/src="([^"]+)"/', $m[2], $s ) ) {
+				$src = $s[1];
+				$att = attachment_url_to_postid( $src );
+				if ( $att ) {
+					$name = get_the_title( $att );
+				}
+			}
+
+			if ( '' === $name && $src ) {
+				$name = ucwords( str_replace( array( '-', '_' ), ' ', pathinfo( (string) parse_url( $src, PHP_URL_PATH ), PATHINFO_FILENAME ) ) );
+			}
+			if ( '' === $name ) {
+				return $m[0];
+			}
+
+			$label = esc_attr( $name );
+			return sprintf(
+				'<a%1$s aria-label="%2$s"><img%3$s></a>',
+				$m[1],
+				$label,
+				$m[2]
+			);
+		},
+		$block_content
+	);
 }

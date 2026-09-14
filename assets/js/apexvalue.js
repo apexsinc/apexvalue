@@ -178,3 +178,76 @@
 		} );
 	} );
 } )();
+
+/**
+ * Make plugin scrollable regions keyboard-operable. Third-party widgets
+ * (e.g. the Google Reviews carousel) render overflow-scroll containers
+ * without tabindex, leaving their content unreachable by keyboard — an
+ * axe "scrollable-region-focusable" failure. Progressive: a no-op when
+ * absent, and non-fatal if the page changes underneath us.
+ */
+( function () {
+	'use strict';
+
+	function fix() {
+		document.querySelectorAll( '.wp-google-feedback.grw-scroll' ).forEach( function ( el ) {
+			if ( ! el.hasAttribute( 'tabindex' ) ) {
+				el.setAttribute( 'tabindex', '0' );
+			}
+		} );
+	}
+
+	if ( document.readyState === 'loading' ) {
+		document.addEventListener( 'DOMContentLoaded', fix );
+	} else {
+		fix();
+	}
+} )();
+
+/**
+ * WooCommerce shop pages render two pagination navs (top + bottom), both
+ * labelled "Product Pagination" — an axe landmark-unique failure and a
+ * screen-reader ambiguity. Differentiate them. Progressive: a no-op when
+ * only one nav exists.
+ */
+( function () {
+	'use strict';
+
+	function fix() {
+		var navs = document.querySelectorAll( 'nav.woocommerce-pagination' );
+		if ( navs.length < 2 ) {
+			return;
+		}
+		navs[ 0 ].setAttribute( 'aria-label', 'Product pagination (top)' );
+		navs[ navs.length - 1 ].setAttribute( 'aria-label', 'Product pagination (bottom)' );
+	}
+
+	if ( document.readyState === 'loading' ) {
+		document.addEventListener( 'DOMContentLoaded', fix );
+	} else {
+		fix();
+	}
+} )();
+
+/**
+ * An empty <h3> renders a heading level with no text (axe empty-heading,
+ * minor). Hide it from the accessibility tree. Progressive: a no-op when
+ * absent.
+ */
+( function () {
+	'use strict';
+
+	function fix() {
+		document.querySelectorAll( 'h3' ).forEach( function ( h ) {
+			if ( ! h.textContent.trim() && ! h.querySelector( 'img, svg, a' ) ) {
+				h.setAttribute( 'aria-hidden', 'true' );
+			}
+		} );
+	}
+
+	if ( document.readyState === 'loading' ) {
+		document.addEventListener( 'DOMContentLoaded', fix );
+	} else {
+		fix();
+	}
+} )();

@@ -4,7 +4,7 @@ Theme URI:    https://www.apexvalue.com
 Description:  Apex Value child theme of Storefront. Modern, refined evolution of the default look: cleaner typography, tighter header, card-based product grids and accessible interactions.
 Author:       Apex Value
 Template:     storefront
-Version:      1.11.3
+Version:      1.11.5
 License:      GNU General Public License v2 or later
 License URI:  http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain:  apexvalue
@@ -1412,6 +1412,14 @@ span.onsale,
 	border: 1px solid var(--apx-line);
 }
 
+/* "Powered by Google" caption ships as a too-light gray on white (axe
+   color-contrast failure). The plugin hard-codes its own color with
+   !important, but exposes it as the --powered-color variable — setting
+   the variable from the theme is the clean, cascade-proof fix. */
+.wp-gr {
+	--powered-color: var(--apx-ink);
+}
+
 /* ---------------------------------------------------------------------
    11. Misc — tables, 404, misc utilities
    --------------------------------------------------------------------- */
@@ -1707,6 +1715,16 @@ ul.products li.product:hover img,
 .single-product div.product form.cart .single_add_to_cart_button {
 	flex: 1 1 auto;
 	padding: 0.85em 2em;
+	/* Storefront's default renders dark text on a near-dark background
+	   (axe color-contrast failure); use the primary CTA treatment. */
+	background-color: var(--apx-green);
+	border-color: var(--apx-green-dark);
+	color: #1a2b12;
+}
+
+.single-product div.product form.cart .single_add_to_cart_button:hover {
+	background-color: var(--apx-green-dark);
+	border-color: var(--apx-green-dark);
 }
 
 /* SKU / category / tags meta line */
@@ -2016,11 +2034,15 @@ ul.products li.product:hover img,
 }
 
 .apex-404__code {
-	font-size: clamp(4.5rem, 15vw, 8.5rem);
+	/* Was a 10%-opacity ghost numeral: decorative, but axe flags any
+	   low-contrast text regardless of aria-hidden. Now a solid muted
+	   brand blue (#51677f, 5.8:1 on paper) at a reduced scale — same
+	   idea, fully accessible. */
+	font-size: clamp(3rem, 8vw, 5rem);
 	font-weight: 900;
 	line-height: 1;
 	letter-spacing: -0.04em;
-	color: rgba(29, 61, 92, 0.1);
+	color: #51677f;
 	margin: 0 0 0.5rem;
 }
 

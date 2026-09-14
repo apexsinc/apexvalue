@@ -52,6 +52,20 @@ if ( ! class_exists( 'ApexValue_Theme' ) ) :
 		 * NOT enqueue style.css again here — that would load it twice.
 		 */
 		public function scripts() {
+			// Preload the two weights used on every page (400 body, 700
+			// headings/UI) so text doesn't swap late on first paint.
+			add_action( 'wp_head', function () {
+				$base = get_stylesheet_directory_uri() . '/assets/fonts/';
+				printf(
+					'<link rel="preload" as="font" type="font/woff2" href="%s" crossorigin />' . "\n",
+					esc_url( $base . 'source-sans-pro-400.woff2' )
+				);
+				printf(
+					'<link rel="preload" as="font" type="font/woff2" href="%s" crossorigin />' . "\n",
+					esc_url( $base . 'source-sans-pro-700.woff2' )
+				);
+			}, 2 );
+
 			// Tiny progressive-enhancement script (reveals, header shadow,
 			// cart bump, smooth anchors). Loaded in the header so the
 			// scrolled-header state applies before first paint.

@@ -100,6 +100,43 @@ Every CTA in that path defaults to `/inquiry/` (the Airtable inquiry form) or th
 
 ## Recent updates
 
+- **1.11.5** — Accessibility + performance audit (axe-core 4.10 via the
+  headless-Chromium harness, plus full page-weight measurement). Result:
+  all six audited page types (home/shop/product/contact/cart/account)
+  render axe-clean — zero serious violations.
+  - **Shop dropdown links had empty labels** — the auto-generated
+    collection sub-menu items set `post_title` but never `title`, which
+    is what the nav walker actually renders: 10 clickable-but-invisible
+    rows in every header menu (axe `link-name` x10–15). Root-cause fix
+    in the WP_Post factory in `inc/template-overrides.php`.
+  - **Image-only links in raw content HTML unnamed** — the homepage
+    collection strip's `<a><img alt=""></a>` links now get `aria-label`
+    from the linked URL's slug ("Vantage Vue"), via a `render_block`
+    filter; falls back to attachment title, then filename.
+  - **Add-to-cart button contrast** — the classic product-page button
+    rendered dark-on-dark (Storefront default); now the primary CTA
+    green treatment with matching hover.
+  - **Reviews-widget contrast, cascade-proof** — the plugin hard-codes
+    its caption color with `!important`, but exposes it as a CSS
+    variable; the theme sets `--powered-color` on `.wp-gr` instead of
+    fighting the cascade.
+  - **404 numeral redesigned** — the 10%-opacity ghost (0.5:1) is now a
+    solid muted brand blue (5.8:1) at reduced scale; axe-clean.
+  - **Keyboard + AT fixes (progressive JS)**: reviews carousel scroll
+    container gains `tabindex=0`; duplicate shop pagination navs get
+    distinct labels (top/bottom); empty `<h3>`s hidden from the a11y
+    tree; carousel prev/next buttons named.
+  - **Font preloads** — the two weights used on every page (400/700)
+    are preloaded in `<head>`, killing late-swap flash (the unused
+    300 weight is a candidate for removal in a future pass).
+  - **Product-card images had no alt text** — the core product-image
+    block omits `alt` even when the media library has it; theme filter
+    now fills it from the attachment data (fallback: product name).
+  - **Contact page weight flagged** (plugin-side, not fixed here): the
+    Airtable form pulls ~9.3MB/694 requests — documented for follow-up
+    (iframe placeholder or self-hosted form). Known accepted notes:
+    WooCommerce's prev/next thumbnail `image-redundant-alt` (minor,
+    core pattern) and its decoy console lines (intentional).
 - **1.11.3** — Full-site render audit (headless Chromium, 11 page types)
   and the follow-up fixes it surfaced:
   - **COEP disabled** — the security-header plugin's default
