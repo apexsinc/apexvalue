@@ -203,6 +203,14 @@ Changes made outside version control (DB/plugin settings), newest
 first. Every entry had a verification step and, for option edits, a
 backup under `/var/backups/`.
 
+- **2026-09-14 — update-readiness drill.** Fresh full DB snapshot
+  (`/var/backups/apex-db-20260914/apex-db-full.sql.gz`, 103 tables,
+  gzip-integrity checked), UpdraftPlus safety net confirmed active
+  (daily backups, 59 archives on disk), error-log review clean
+  (WP_DEBUG off, no debug.log, FPM quiet), 15/15 page smoke test, mail
+  transport last-logged `status=sent provider=smtp`. Everything on the
+  site is current — next plugin/theme update can proceed against this
+  snapshot.
 - **2026-09-14 — plugin rationalisation, corrected after a regression
   (27 → 25 active).** Deactivated for good: `yaymail` (email-templates
   is the active email renderer — branding re-verified through
