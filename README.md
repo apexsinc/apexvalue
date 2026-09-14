@@ -100,6 +100,17 @@ Every CTA in that path defaults to `/inquiry/` (the Airtable inquiry form) or th
 
 ## Recent updates
 
+- **1.9.3** — Whole-site polish pass (audited all 16 page types):
+  content-embedded iframes (the Airtable forms on Inquiry/Contact and
+  any future embeds) now get an accessible `title`, `loading="lazy"`
+  and `referrerpolicy` via a `the_content` filter; authored block
+  content (lists, separators, captions, block buttons) brought onto the
+  design tokens; **DB content fix** — nine `h4` section headings on
+  three Solution pages promoted to `h3` (h1→h4 skip; backups in
+  `/var/backups/apex-heading-fix-20260914/`). Remaining known skip:
+  `/solutions/` and detail pages open content at h3 directly under the
+  page-title h1 — left as-is (h3 styling is intentional); first
+  sections could become h2 if desired.
 - **1.9.2** — Structured data: **FAQPage JSON-LD on the `/faqs/`
   archive** (10 question/answer pairs, built from the posts shown so
   pagination stays valid) and removed the **hollow duplicate Product

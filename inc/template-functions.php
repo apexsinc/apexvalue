@@ -66,3 +66,46 @@ function apexvalue_filter_header_menu( $items, $args ) {
 
 	return $items;
 }
+
+/**
+ * Hardened markup for content-embedded iframes (Airtable forms on the
+ * Inquiry/Contact pages, and any future embeds): an accessible title,
+ * native lazy-loading and safer frame flags. Media embeds (YouTube etc.)
+ * keep allowfullscreen so playback is unaffected.
+ */
+function apexvalue_harden_embed_iframes( $content ) {
+	if ( is_admin() || is_feed() || empty( $content ) || false === stripos( $content, '<iframe' ) ) {
+		return $content;
+	}
+
+	return preg_replace_callback(
+		'/<iframe\b[^>]*>/i',
+		function ( $m ) {
+			$tag  = $m[0];
+			$attr = strtolower( $tag );
+
+			if ( false === strpos( $attr, 'title=' ) ) {
+				$src   = ( preg_match( '/src=["\']([^"\']+)["\']/i', $tag, $s ) ) ? $s[1] : '';
+				$title = 'Embedded content';
+				if ( false !== stripos( $src, 'airtable' ) ) {
+					$title = __( 'Online inquiry form', 'apexvalue' );
+				} elseif ( preg_match( '/(youtube|vimeo|youtu\.be)/i', $src ) ) {
+					$title = __( 'Embedded video', 'apexvalue' );
+				}
+				$tag = preg_replace( '/^<iframe/i', '<iframe title="' . esc_attr( $title ) . '"', $tag );
+			}
+
+			if ( false === strpos( $attr, 'loading=' ) ) {
+				$tag = preg_replace( '/^<iframe/i', '<iframe loading="lazy"', $tag );
+			}
+
+			if ( false === stripos( $tag, 'referrerpolicy=' ) ) {
+				$tag = preg_replace( '/\s*>$/', ' referrerpolicy="strict-origin-when-cross-origin">', $tag );
+			}
+
+			return $tag;
+		},
+		$content
+	);
+}
+add_filter( 'the_content', 'apexvalue_harden_embed_iframes', 999 );

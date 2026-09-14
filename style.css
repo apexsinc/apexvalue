@@ -4,7 +4,7 @@ Theme URI:    https://www.apexvalue.com
 Description:  Apex Value child theme of Storefront. Modern, refined evolution of the default look: cleaner typography, tighter header, card-based product grids and accessible interactions.
 Author:       Apex Value
 Template:     storefront
-Version:      1.9.2
+Version:      1.9.3
 License:      GNU General Public License v2 or later
 License URI:  http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain:  apexvalue
@@ -3009,5 +3009,70 @@ input[type="radio"] {
 @media (prefers-reduced-motion: reduce) {
 	.apex-how {
 		animation: none;
+	}
+}
+
+/* --- Content typography polish (lists, separators, captions) ------------- */
+/* WP core supplies defaults for these; these rules bring them onto the
+   design tokens so authored block content matches the rest of the site. */
+
+.entry-content ul:not(.wp-block-gallery):not(.wp-block-navigation__container),
+.entry-content ol {
+	padding-left: 1.4em;
+}
+
+.entry-content ul:not(.wp-block-gallery):not(.wp-block-navigation__container) > li {
+	margin: 0.35em 0;
+}
+
+.entry-content ul:not(.wp-block-gallery):not(.wp-block-navigation__container) > li::marker {
+	color: var(--apx-accent);
+}
+
+.entry-content ol > li {
+	margin: 0.35em 0;
+}
+
+.entry-content ol > li::marker {
+	color: var(--apx-muted);
+	font-variant-numeric: tabular-nums;
+}
+
+.entry-content hr,
+.entry-content .wp-block-separator {
+	border: 0;
+	border-top: 1px solid var(--apx-line);
+	margin: 2.2em auto;
+	max-width: 12rem;
+}
+
+.entry-content .wp-block-separator.is-style-wide {
+	max-width: none;
+}
+
+.entry-content figcaption {
+	color: var(--apx-muted);
+	font-size: 0.875rem;
+	margin-top: 0.5em;
+	text-align: center;
+}
+
+/* Block buttons inherit the card-button feel on light backgrounds. */
+.entry-content .wp-block-button__link {
+	border-radius: var(--apx-radius-sm);
+	box-shadow: var(--apx-shadow-sm);
+	transition: box-shadow var(--apx-speed) var(--apx-ease),
+		transform var(--apx-speed) var(--apx-ease);
+}
+
+.entry-content .wp-block-button__link:hover {
+	box-shadow: var(--apx-shadow-md);
+	transform: translateY(-1px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.entry-content .wp-block-button__link,
+	.entry-content .wp-block-button__link:hover {
+		transform: none;
 	}
 }
