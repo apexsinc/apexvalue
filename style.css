@@ -4,7 +4,7 @@ Theme URI:    https://www.apexvalue.com
 Description:  Apex Value child theme of Storefront. Modern, refined evolution of the default look: cleaner typography, tighter header, card-based product grids and accessible interactions.
 Author:       Apex Value
 Template:     storefront
-Version:      1.9.0
+Version:      1.9.1
 License:      GNU General Public License v2 or later
 License URI:  http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain:  apexvalue
@@ -2909,5 +2909,105 @@ input[type="radio"] {
 	.apex-collections__card:hover,
 	.apex-collections__card:focus-visible {
 		transform: none;
+	}
+}
+
+/* --- How quoting works (homepage) ---------------------------------------- */
+
+.apex-how {
+	background: var(--apx-paper);
+	border-top: 1px solid var(--apx-line);
+	padding: clamp(2.75rem, 6vw, 4.5rem) 0;
+}
+
+.apex-how__inner {
+	max-width: 60rem;
+}
+
+.apex-how__heading {
+	color: var(--apx-ink);
+	font-size: clamp(1.5rem, 3vw, 2rem);
+	line-height: 1.2;
+	margin: 0 0 0.5rem;
+}
+
+.apex-how__lede {
+	color: var(--apx-muted);
+	font-size: 1.0625rem;
+	margin: 0 0 2rem;
+	max-width: 44rem;
+}
+
+.apex-how__steps {
+	display: grid;
+	gap: 1.25rem;
+	grid-template-columns: 1fr;
+	list-style: none;
+	margin: 0 0 1.75rem;
+	padding: 0;
+}
+
+.apex-how__step {
+	background: #fff;
+	border: 1px solid var(--apx-line);
+	border-radius: var(--apx-radius);
+	box-shadow: var(--apx-shadow-sm);
+	display: flex;
+	flex-direction: column;
+	gap: 0.4rem;
+	padding: 1.25rem 1.35rem;
+	position: relative;
+}
+
+.apex-how__num {
+	align-items: center;
+	background: var(--apx-tint);
+	border-radius: 999px;
+	color: var(--apx-accent);
+	display: inline-flex;
+	font-size: 0.8125rem;
+	font-weight: 700;
+	height: 1.75rem;
+	justify-content: center;
+	margin-bottom: 0.25rem;
+	width: 1.75rem;
+}
+
+.apex-how__title {
+	color: var(--apx-ink);
+	font-size: 1.0625rem;
+	margin: 0;
+}
+
+.apex-how__text {
+	color: var(--apx-body);
+	font-size: 0.9375rem;
+}
+
+.apex-how__btn {
+	background: var(--apx-accent);
+	border-radius: var(--apx-radius-sm);
+	color: #fff;
+	display: inline-block;
+	font-weight: 600;
+	padding: 0.7rem 1.4rem;
+	text-decoration: none;
+	transition: background var(--apx-speed) var(--apx-ease);
+}
+
+.apex-how__btn:hover,
+.apex-how__btn:focus-visible {
+	background: var(--apx-accent-dark);
+}
+
+@media (min-width: 640px) {
+	.apex-how__steps {
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.apex-how {
+		animation: none;
 	}
 }

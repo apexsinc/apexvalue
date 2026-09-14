@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'APEXVALUE_VERSION', '1.9.0' );
+define( 'APEXVALUE_VERSION', '1.9.1' );
 
 /**
  * Pluggable Storefront overrides (cart icon + header cart markup).
@@ -35,6 +35,11 @@ require get_stylesheet_directory() . '/inc/design-tokens.php';
  * Pre-footer CTA band (Customizer-editable).
  */
 require get_stylesheet_directory() . '/inc/cta-band.php';
+
+/**
+ * Homepage "How quoting works" explainer (Customizer-editable).
+ */
+require get_stylesheet_directory() . '/inc/how-it-works.php';
 
 /**
  * Homepage hero (Customizer-editable).

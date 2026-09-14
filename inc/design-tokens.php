@@ -37,9 +37,26 @@ function apexvalue_design_tokens_css() {
 		$f_link  = '#33688f';
 	}
 
+	// Darker accent for hover/focus on accent-filled buttons: 25% towards
+	// black. Only near-black accents keep their own value — darkening those
+	// further would make the hover state invisible.
+	$ch = array(
+		hexdec( substr( $accent, 1, 2 ) ),
+		hexdec( substr( $accent, 3, 2 ) ),
+		hexdec( substr( $accent, 5, 2 ) ),
+	);
+	foreach ( $ch as $i => $c ) {
+		$ch[ $i ] = (int) max( 0, round( $c * 0.75 ) );
+	}
+	$accent_dark = sprintf( '#%02x%02x%02x', $ch[0], $ch[1], $ch[2] );
+	if ( apexvalue_hex_luminance( $accent_dark ) < 0.04 ) {
+		$accent_dark = $accent; // Already near-black — a hover shift would be invisible.
+	}
+
 	$base = '';
 	foreach ( array(
 		'--apx-accent'       => $accent,
+		'--apx-accent-dark'  => $accent_dark,
 		'--apx-ink'          => $heading,
 		'--apx-body'         => $text,
 		'--apx-header-bg'    => $header,

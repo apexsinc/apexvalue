@@ -100,6 +100,15 @@ Every CTA in that path defaults to `/inquiry/` (the Airtable inquiry form) or th
 
 ## Recent updates
 
+- **1.9.1** — Homepage **"How quoting works"** section above the CTA
+  band: three-step explainer (browse → submit → quotation) with a
+  Request-a-Quotation button; all copy editable in Appearance →
+  Customize → Apex Value How It Works, empty heading hides the section.
+  Also fixed `--apx-accent-dark` being used but never defined (accent
+  button hovers were silently falling back to transparent): the token is
+  now computed from the Customizer accent (25% darker, guarded against
+  near-black values). Contrast stress test: 14/14 token combinations
+  pass WCAG AA (9 also AAA).
 - **1.9.0** — Collections visually enriched: homepage collection cards
   now show a **product image tile** (first product's thumbnail per
   collection, cached in a 1-hour transient; falls back to the term
