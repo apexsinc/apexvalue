@@ -100,6 +100,23 @@ Every CTA in that path defaults to `/inquiry/` (the Airtable inquiry form) or th
 
 ## Recent updates
 
+- **1.10.1** — Correction + brand archive discoverability:
+  - **Reverted the v1.10.0 removal of Storefront's WC Brands CSS/JS.**
+    The original check for brand terms had failed silently (wp-cli root
+    guard swallowed the output) and the "no brands" conclusion was
+    wrong: a `davis-instruments` brand on 324 products is in active
+    use, including a Davis-filtered product collection on the
+    homepage. Assets restored; lesson recorded in
+    `inc/performance.php` — verify a probe actually returned data.
+  - **Footer "Brands" group added** — the `/brand/davis-instruments/`
+    archive was reachable only by URL with zero inbound links. Now
+    rendered from live `product_brand` terms (data-driven, appears
+    only when brands exist), alongside Explore/Collections/Contact.
+  - dashicons + PVC frontend CSS removal stands (counter verifiably
+    never displayed).
+  - Plugin config flagged, not changed: siteseo's cookies-bar assets
+    load site-wide though no Google Analytics exists and no bar
+    renders — a siteseo quirk; harmless but worth knowing.
 - **1.10.0** — Front-end performance pass (first asset-level audit of
   the site):
   - **Zero render-blocking scripts**: jQuery, jQuery Migrate and the

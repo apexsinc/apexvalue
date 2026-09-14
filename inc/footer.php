@@ -159,6 +159,26 @@ function storefront_footer_widgets() {
 					<?php endforeach; ?>
 				</ul>
 			<?php endif; ?>
+
+			<?php
+			// Brand archives (e.g. Davis Instruments) — rendered only when
+			// product brands exist, so the list never goes stale.
+			$brands = get_terms(
+				array(
+					'taxonomy'   => 'product_brand',
+					'hide_empty' => true,
+					'number'     => 10,
+				)
+			);
+			if ( ! is_wp_error( $brands ) && ! empty( $brands ) ) :
+				?>
+				<h2 class="apex-footer__heading"><?php esc_html_e( 'Brands', 'apexvalue' ); ?></h2>
+				<ul class="apex-footer__menu">
+					<?php foreach ( $brands as $brand ) : ?>
+						<li class="menu-item"><a href="<?php echo esc_url( get_term_link( $brand ) ); ?>"><?php echo esc_html( $brand->name ); ?></a></li>
+					<?php endforeach; ?>
+				</ul>
+			<?php endif; ?>
 		</div>
 
 		<div class="block apex-footer__contact">

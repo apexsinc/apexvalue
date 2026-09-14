@@ -125,28 +125,24 @@ add_action( 'wp_enqueue_scripts', 'apexvalue_dequeue_google_fonts', 25 );
  *    dashicons- classes in any guest-facing markup).
  *  - post-views-counter-frontend (1 KB): ships with dashicons for the
  *    same never-displayed counter.
- *  - storefront-woocommerce-brands CSS + JS (~5 KB): Storefront loads
- *    these whenever the WC_Brands extension class exists (bundled with
- *    modern WooCommerce), but no brand taxonomy or terms exist on this
- *    site and no brand markup is rendered on product pages.
  *
- * All removals are dequeue-level (no plugin files touched) and safe to
- * delete here if a view counter or brand filter ever appears on the
- * site.
+ * NOTE: Storefront's WooCommerce Brands CSS/JS were removed in v1.10.0
+ * on the belief that no brand taxonomy existed — that check had failed
+ * silently and was wrong: a `davis-instruments` brand (324 products) is
+ * in active use. The brands assets were therefore restored in v1.10.1
+ * and must stay enqueued while any product carries a brand term.
+ *
+ * Removals are dequeue-level (no plugin files touched) and safe to
+ * delete here if the view counter is ever displayed on the site.
  */
 function apexvalue_trim_unused_assets() {
 	if ( is_admin() || is_customize_preview() ) {
 		return;
 	}
 
-	foreach ( array( 'dashicons', 'post-views-counter-frontend', 'storefront-woocommerce-brands-style' ) as $handle ) {
+	foreach ( array( 'dashicons', 'post-views-counter-frontend' ) as $handle ) {
 		wp_dequeue_style( $handle );
 		wp_deregister_style( $handle );
-	}
-
-	foreach ( array( 'storefront-woocommerce-brands' ) as $handle ) {
-		wp_dequeue_script( $handle );
-		wp_deregister_script( $handle );
 	}
 }
 add_action( 'wp_enqueue_scripts', 'apexvalue_trim_unused_assets', 100 );
