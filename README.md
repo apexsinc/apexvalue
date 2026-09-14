@@ -196,3 +196,31 @@ Every CTA in that path defaults to `/inquiry/` (the Airtable inquiry form) or th
 6. **Commits:** author `janasco <jaymaranasco@gmail.com>`, single
    contributor, no machine attribution (a server-side hook enforces
    this). Tag releases `vX.Y.Z` with a one-line summary.
+
+## Server operations log
+
+Changes made outside version control (DB/plugin settings), newest
+first. Every entry had a verification step and, for option edits, a
+backup under `/var/backups/`.
+
+- **2026-09-14 — plugin rationalisation (27 → 22 active).** Deactivated
+  five plugins with zero runtime impact, each verified after the
+  change: `yaymail` (email-templates is the active email renderer —
+  branding re-verified through `wrap_message()`), `wp-fastest-cache`
+  (was double page-caching alongside SpeedyCache; confirmed both were
+  live first), `gosmtp` (self-defers to gosmtp-pro; real send tested
+  via `wp_mail()` = true), `loginizer` (self-defers to
+  loginizer-security), `fileorganizer` (self-defers to
+  fileorganizer-pro). Updated `loginizer-security` 2.0.8 → 2.1.0.
+  siteseo + siteseo-pro both kept (Pro is a true add-on, not a
+  duplicate).
+- **2026-09-14 — checkout terms: intentionally NOT wired.** The
+  *Refund and Returns Policy* page (ID 25) is still WooCommerce's
+  draft placeholder ("This is a sample page." + stock template).
+  Wiring it to checkout requires real policy text from the owner
+  first.
+- **2026-09-12 — email branding** (`mailtpl_opts`, backup
+  `apex-email-20260912/`), **SiteSEO titles/descriptions/OG**
+  (`apex-seo-20260912/`), **hollow Product auto-schema removed**
+  (`apex-schema-20260914/`), **product-content alt text**
+  (`alt-fix-20260912/`).
