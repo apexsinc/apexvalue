@@ -100,6 +100,24 @@ Every CTA in that path defaults to `/inquiry/` (the Airtable inquiry form) or th
 
 ## Recent updates
 
+- **1.11.3** — Full-site render audit (headless Chromium, 11 page types)
+  and the follow-up fixes it surfaced:
+  - **COEP disabled** — the security-header plugin's default
+    `Cross-Origin-Embedder-Policy: credentialless` blocked every
+    cross-origin image without a CORP header (team photos on
+    `img.apexvalue.com`, review avatars). Confirmed via browser console
+    (`ERR_BLOCKED_BY_RESPONSE…Coep`), disabled at the plugin config
+    (backup covers it), re-verified: all images load, zero console
+    errors across all 11 page types.
+  - **CSP extended twice more**, evidence-driven from real browser
+    violations: `challenges.cloudflare.com` (Turnstile on the product
+    page) and `static.airtable.com` (the embed snippet the Airtable
+    iframes need).
+  - **Cart/checkout block components themed**: buttons, text inputs,
+    checkboxes/radios (`accent-color`), radio option cards, totals
+    footer, notice banners — all on the design tokens, verified
+    against the WC 10.7 build's actual class names. Interactive
+    verification in a real browser recommended at next checkout.
 - **1.11.2** — Fixed the site-wide visual breakage reported from the live
   browser (white hero, missing page margins, header/footer colors wrong):
   - **Root cause: the `security-header` plugin was serving its factory
@@ -325,7 +343,12 @@ backup under `/var/backups/`.
   form-action 'self'; frame-ancestors 'self'; upgrade-insecure-requests`.
   Verified public header + headless-render before/after. If a new
   integration is added, extend the relevant directive — do not revert
-  to the plugin's default mode.
+  to the plugin's default mode. **Also 2026-09-14:** CSP extended for
+  `challenges.cloudflare.com` (Turnstile) and `static.airtable.com`
+  (embed snippet), and `Cross-Origin-Embedder-Policy` disabled — its
+  default `credentialless` mode blocked cross-origin images without
+  CORP headers (img.apexvalue.com team photos, review avatars; browser
+  error `ERR_BLOCKED_BY_RESPONSE…Coep`).
 
 - **2026-09-14 — refund-policy draft replaced (post 25, still draft).**
   WooCommerce's sample placeholder content replaced with a real draft

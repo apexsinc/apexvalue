@@ -4,7 +4,7 @@ Theme URI:    https://www.apexvalue.com
 Description:  Apex Value child theme of Storefront. Modern, refined evolution of the default look: cleaner typography, tighter header, card-based product grids and accessible interactions.
 Author:       Apex Value
 Template:     storefront
-Version:      1.11.2
+Version:      1.11.3
 License:      GNU General Public License v2 or later
 License URI:  http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain:  apexvalue
@@ -3208,4 +3208,82 @@ input[type="radio"] {
 	.apex-brandspot__card:focus-within {
 		transform: none;
 	}
+}
+
+/* ---------------------------------------------------------------------
+   WooCommerce blocks (cart / checkout) on the design system.
+   Components render client-side; classes verified against WC 10.7 build.
+   --------------------------------------------------------------------- */
+
+.wc-block-components-button:not(.is-link) {
+	background-color: var(--apx-green);
+	border-color: var(--apx-green);
+	color: var(--apx-ink);
+	font-weight: 600;
+}
+
+.wc-block-components-button:not(.is-link):hover,
+.wc-block-components-button:not(.is-link):focus {
+	background-color: var(--apx-green-dark);
+	border-color: var(--apx-green-dark);
+	color: var(--apx-ink);
+}
+
+.wc-block-components-button:not(.is-link):disabled,
+.wc-block-components-button:not(.is-link)[aria-disabled="true"] {
+	opacity: 0.5;
+	cursor: not-allowed;
+}
+
+.wc-block-components-text-input input[type="text"],
+.wc-block-components-text-input input[type="email"],
+.wc-block-components-text-input input[type="tel"] {
+	border: 1px solid var(--apx-line);
+	border-radius: var(--apx-radius-sm);
+	background-color: #fff;
+	transition: border-color var(--apx-speed) var(--apx-ease), box-shadow var(--apx-speed) var(--apx-ease);
+}
+
+.wc-block-components-text-input input:focus,
+.wc-block-components-text-input input[type="text"]:focus {
+	border-color: var(--apx-accent);
+	box-shadow: 0 0 0 1px var(--apx-accent);
+	outline: none;
+}
+
+.wc-block-components-checkbox .wc-block-components-checkbox__input,
+.wc-block-components-radio-control__option input[type="radio"] {
+	accent-color: var(--apx-accent);
+}
+
+.wc-block-components-radio-control__option {
+	border: 1px solid var(--apx-line);
+	border-radius: var(--apx-radius-sm);
+	transition: border-color var(--apx-speed) var(--apx-ease), background-color var(--apx-speed) var(--apx-ease);
+}
+
+.wc-block-components-radio-control__option:hover {
+	border-color: var(--apx-accent);
+	background: #fff;
+}
+
+.wc-block-components-totals-footer-item .wc-block-components-totals-item__value {
+	font-weight: 700;
+	font-size: 1.1em;
+	color: var(--apx-ink);
+}
+
+.wc-block-components-notice-banner {
+	border-radius: var(--apx-radius-sm);
+}
+
+.wc-block-components-panel {
+	border-color: var(--apx-line);
+}
+
+/* Keep checkout actions aligned with the site's focus language */
+.wc-block-components-button:focus-visible,
+.wc-block-components-checkbox__input:focus-visible {
+	outline: 2px solid var(--apx-accent);
+	outline-offset: 2px;
 }
