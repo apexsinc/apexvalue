@@ -203,17 +203,24 @@ Changes made outside version control (DB/plugin settings), newest
 first. Every entry had a verification step and, for option edits, a
 backup under `/var/backups/`.
 
-- **2026-09-14 — plugin rationalisation (27 → 22 active).** Deactivated
-  five plugins with zero runtime impact, each verified after the
-  change: `yaymail` (email-templates is the active email renderer —
-  branding re-verified through `wrap_message()`), `wp-fastest-cache`
-  (was double page-caching alongside SpeedyCache; confirmed both were
-  live first), `gosmtp` (self-defers to gosmtp-pro; real send tested
-  via `wp_mail()` = true), `loginizer` (self-defers to
-  loginizer-security), `fileorganizer` (self-defers to
-  fileorganizer-pro). Updated `loginizer-security` 2.0.8 → 2.1.0.
-  siteseo + siteseo-pro both kept (Pro is a true add-on, not a
-  duplicate).
+- **2026-09-14 — plugin rationalisation, corrected after a regression
+  (27 → 25 active).** Deactivated for good: `yaymail` (email-templates
+  is the active email renderer — branding re-verified through
+  `wrap_message()`) and `wp-fastest-cache` (was double page-caching
+  alongside SpeedyCache — confirmed serving cached pages first).
+  **Reverted the same day:** `gosmtp`, `loginizer`, `fileorganizer`.
+  Their "self-defer to Pro" code only fires for OLD pro versions; with
+  current Pro installed the FREE plugin keeps loading and gosmtp free
+  is the actual SMTP transport (pro only adds logging/reports on top).
+  Evidence: with gosmtp free off, `wp_mail()` still returned true but
+  the message never reached the mail log — the unauthenticated PHP
+  `mail()` fallback likely black-holed it; after reactivation the test
+  send logged `status=sent, provider=smtp`. Lesson recorded: a true
+  runtime behaviour test beats a source-code reading. Kept both
+  siteseo + siteseo-pro (Pro is a real add-on). Updated
+  `loginizer-security` 2.0.8 → 2.1.0. Two test mails were sent to
+  superadmin@apexsinc.com during verification (only test 2 was
+  properly transported).
 - **2026-09-14 — checkout terms: intentionally NOT wired.** The
   *Refund and Returns Policy* page (ID 25) is still WooCommerce's
   draft placeholder ("This is a sample page." + stock template).
