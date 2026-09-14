@@ -100,6 +100,27 @@ Every CTA in that path defaults to `/inquiry/` (the Airtable inquiry form) or th
 
 ## Recent updates
 
+- **1.11.2** — Fixed the site-wide visual breakage reported from the live
+  browser (white hero, missing page margins, header/footer colors wrong):
+  - **Root cause: the `security-header` plugin was serving its factory
+    Content-Security-Policy** (`style-src 'self'` without
+    `'unsafe-inline'`), which silently discarded **every inline `<style>`
+    block and style attribute** on the public site. WordPress prints
+    design tokens, theme.json spacing, and Customizer colors inline —
+    so the hero lost its navy background, the page lost the WP spacing
+    tokens (the "no margins" symptom), and header/footer fell back to
+    Storefront defaults. It also blocked Google Analytics, the
+    Cloudflare beacon, review-avatar images, and the Airtable iframes.
+    Confirmed with a headless-Chromium render before/after: hero was
+    `rgba(0,0,0,0)` (white page) → now `rgb(29,61,92)`; header now
+    `rgb(143,164,191)`; footer now `rgb(0,0,0)`; gutters restored.
+  - **CSP rebuilt properly** (custom mode, backed up first): allows
+    self + inline styles (WordPress' architecture), GA + gtag + CF
+    beacon scripts, Google/Airtable frames, https images. See the
+    server ops log for the exact policy.
+  - **White sections tinted**: brand-spotlight and how-it-works used
+    `--apx-paper` (#fff) with white cards — white-on-white. Both now
+    use `--apx-tint` so cards read as cards.
 - **1.11.1** — Quote-flow audit + the long-blocked refund-policy item:
   - **Quote-flow audit (filled-basket path).** Cart/checkout are
     WooCommerce **blocks** (React, rendered client-side via the Store
@@ -281,6 +302,30 @@ Every CTA in that path defaults to `/inquiry/` (the Airtable inquiry form) or th
 Changes made outside version control (DB/plugin settings), newest
 first. Every entry had a verification step and, for option edits, a
 backup under `/var/backups/`.
+
+- **2026-09-14 — Content-Security-Policy reconfigured (site-breaking
+  fix).** The `security-header` (Inspired Monks) plugin was active with
+  its factory CSP `default-src 'self'; script-src 'self'; style-src
+  'self';` — which blocks ALL inline styles and scripts. WordPress
+  depends on inline styles (design tokens, theme.json, Customizer
+  colors), so the public site rendered unstyled in several places:
+  white hero, missing spacing tokens/margins, default header/footer
+  colors; GA, CF beacon, review avatars and Airtable iframes were
+  blocked too. Backed up `inspiredmonks_security_header_options` to
+  `/var/backups/apex-csp-20260914/`, then set the CSP to custom mode:
+  `default-src 'self'; script-src 'self' 'unsafe-inline'
+  https://www.googletagmanager.com https://static.cloudflareinsights.com;
+  style-src 'self' 'unsafe-inline'; img-src 'self' data: https:;
+  font-src 'self' data: https://fonts.gstatic.com; connect-src 'self'
+  https://www.google-analytics.com https://analytics.google.com
+  https://region1.google-analytics.com https://www.googletagmanager.com
+  https://cloudflareinsights.com; frame-src https://airtable.com
+  https://*.airtable.com https://www.google.com https://maps.google.com;
+  child-src (same as frame-src); object-src 'none'; base-uri 'self';
+  form-action 'self'; frame-ancestors 'self'; upgrade-insecure-requests`.
+  Verified public header + headless-render before/after. If a new
+  integration is added, extend the relevant directive — do not revert
+  to the plugin's default mode.
 
 - **2026-09-14 — refund-policy draft replaced (post 25, still draft).**
   WooCommerce's sample placeholder content replaced with a real draft

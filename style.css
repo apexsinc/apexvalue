@@ -4,7 +4,7 @@ Theme URI:    https://www.apexvalue.com
 Description:  Apex Value child theme of Storefront. Modern, refined evolution of the default look: cleaner typography, tighter header, card-based product grids and accessible interactions.
 Author:       Apex Value
 Template:     storefront
-Version:      1.11.1
+Version:      1.11.2
 License:      GNU General Public License v2 or later
 License URI:  http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain:  apexvalue
@@ -2915,7 +2915,7 @@ input[type="radio"] {
 /* --- How quoting works (homepage) ---------------------------------------- */
 
 .apex-how {
-	background: var(--apx-paper);
+	background: var(--apx-tint);
 	border-top: 1px solid var(--apx-line);
 	padding: clamp(2.75rem, 6vw, 4.5rem) 0;
 }
@@ -3080,7 +3080,7 @@ input[type="radio"] {
 /* --- Brand spotlight (data-driven from product_brand terms) --------------- */
 
 .apex-brandspot {
-	background: var(--apx-paper);
+	background: var(--apx-tint);
 	border-top: 1px solid var(--apx-line);
 	padding: clamp(2.75rem, 6vw, 4.5rem) 0;
 }
