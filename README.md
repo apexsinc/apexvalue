@@ -100,6 +100,23 @@ Every CTA in that path defaults to `/inquiry/` (the Airtable inquiry form) or th
 
 ## Recent updates
 
+- **1.11.9** — Quotation privacy completed across every remaining surface.
+  - **Order-received (thank-you) page:** the Total row and the per-item
+    Total column are gone for quote orders. Debug logging proved the theme
+    override in `woocommerce/checkout/` was being bypassed — the resolved
+    template did not match `wc_locate_template()` on this stack — so
+    `inc/quote-flow.php` now forces the theme template via `wc_get_template`
+    (priority 999) for orders carrying `_quote_status`. A new
+    `woocommerce_get_order_item_totals` filter empties the Subtotal/Total
+    rows everywhere (thank-you, My Account, plain-text emails).
+  - **Send-quote email** (sent when an official quote goes to the customer):
+    the plugin's own template hardcodes a Price column with no display
+    guard; a theme override at the plugin's `quotes-for-wc/emails/` path
+    removes it (the email is currently disabled in WC settings, but is
+    correct the day it is turned on).
+  - Verified live in a real browser: order-received markup contains zero
+    peso signs, zero Total elements; only order number, date and payment
+    method remain.
 - **1.11.8** — Quotation emails: the per-item price column is actually gone
   now, plus footer/promo polish.
   - **Per-item price cells:** the trailing `₱0.00` cells came from WooMail's

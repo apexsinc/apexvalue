@@ -316,3 +316,61 @@ function apexvalue_remove_email_app_promo() {
 	}
 }
 add_action( 'woocommerce_email_footer', 'apexvalue_remove_email_app_promo', 8 );
+
+/**
+ * Strip money rows from every totals table a quote order renders.
+ *
+ * APEX Value sells via quotation: customers never see prices until an
+ * official quote is sent outside the store. WooCommerce builds the
+ * Subtotal/Total rows for the thank-you page, My Account order views and
+ * the plain-text order emails from one place — get_order_item_totals() —
+ * which is filterable. For orders carrying the quote plugin's
+ * `_quote_status` meta the rows are removed entirely, so those surfaces
+ * show only products and quantities. Real (non-quote) orders are
+ * unaffected, and future pricing display only needs the meta removed.
+ *
+ * @param array  $total_rows Totals rows (label/value pairs).
+ * @param WC_Order $order    The order being rendered.
+ * @return array
+ */
+function apexvalue_hide_quote_totals( $total_rows, $order ) {
+	if ( $order instanceof WC_Order && (bool) $order->get_meta( '_quote_status', true ) ) {
+		return array();
+	}
+	return $total_rows;
+}
+add_filter( 'woocommerce_get_order_item_totals', 'apexvalue_hide_quote_totals', 10, 2 );
+
+/**
+ * Force the theme's thankyou template for quote orders.
+ *
+ * The order-received page must never show a Total row for quotation
+ * orders. WooCommerce resolves checkout/thankyou.php through a chain of
+ * template filters; on this site the resolved path does not always match
+ * wc_locate_template()'s answer (an active plugin rewrites it), so the
+ * theme override in woocommerce/checkout/ is not reliably included.
+ * Forcing the path here — after every other filter has run — is the
+ * last word before the template is included.
+ *
+ * @param string $template      Resolved template path.
+ * @param string $template_name Template name (e.g. checkout/thankyou.php).
+ * @param array  $args          Template args; contains the order.
+ * @return string
+ */
+function apexvalue_force_quote_thankyou_template( $template, $template_name, $args ) {
+	if ( 'checkout/thankyou.php' !== $template_name ) {
+		return $template;
+	}
+
+	$order = $args['order'] ?? null;
+
+	if ( $order instanceof WC_Order && (bool) $order->get_meta( '_quote_status', true ) ) {
+		$mine = get_stylesheet_directory() . '/woocommerce/checkout/thankyou.php';
+		if ( file_exists( $mine ) ) {
+			return $mine;
+		}
+	}
+
+	return $template;
+}
+add_filter( 'wc_get_template', 'apexvalue_force_quote_thankyou_template', 999, 3 );
