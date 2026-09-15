@@ -1,0 +1,106 @@
+<?php
+/**
+ * Request New Quote email (admin, plain text).
+ *
+ * APEX VALUE OVERRIDE: identical to the quotes-for-woocommerce plugin
+ * template except per-item prices are removed — quotation requests must
+ * not expose pricing. Re-diff after plugin updates.
+ *
+ * @package Quotes for WooCommerce/Email Templates/Plain
+ */
+
+defined( 'ABSPATH' ) || exit;
+
+use Automattic\WooCommerce\Utilities\FeaturesUtil;
+
+$email_improvements_enabled = FeaturesUtil::feature_is_enabled( 'email_improvements' );
+
+$text_align  = is_rtl() ? 'right' : 'left';
+$margin_side = is_rtl() ? 'left' : 'right';
+// translators: Customer Name.
+$opening_paragraph = __( 'A request for quote has been made by %s and is awaiting your attention. The details of the quote request are as follows:', 'quote-wc' );
+
+echo "=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n";
+echo esc_html( wp_strip_all_tags( $email_heading ) ) . "\n";
+echo "=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n";
+
+$billing_first_name = $order->get_billing_first_name();
+$billing_last_name  = $order->get_billing_last_name();
+if ( $order && $billing_first_name && $billing_last_name ) :
+	$order_id  = $order->get_id();
+	$order_url = qwc_is_hpos_enabled() ? admin_url( 'admin.php?page=wc-orders&id=' . $order_id . '&action=edit' ) : admin_url( 'post.php?post=' . $order_id . '&action=edit' );
+	echo esc_html( sprintf( $opening_paragraph, esc_attr( $billing_first_name . ' ' . $billing_last_name ) ) );
+endif;
+
+if ( $order ) {
+	do_action( 'woocommerce_email_before_order_table', $order, $sent_to_admin, $plain_text, $email );
+
+	echo "\n=============================================\n";
+	echo esc_html__( 'Quote Items:', 'quote-wc-pro' );
+	echo "\n=============================================\n";
+
+	foreach ( $order->get_items() as $item ) {
+		$item_id    = $item->get_id();
+		$product_id = $item->get_variation_id() > 0 ? $item->get_variation_id() : $item->get_product_id();
+		$_product   = wc_get_product( $product_id );
+		$sku        = $_product ? $_product->get_sku() : '';
+		$item_name  = $item->get_name();
+		$qty        = $item->get_quantity();
+
+		if ( $email_improvements_enabled ) {
+
+			$item_name .= ' × ' . $qty;
+			echo wp_kses_post( str_pad( wp_kses_post( $item_name ), 40 ) );
+
+			// SKU.
+			if ( '' !== $sku && $show_sku ) {
+				echo "\n";
+				echo esc_html__( 'SKU', 'quote-wc-pro' ) . ': #' . esc_html( $sku );
+			}
+		} else {
+			echo wp_kses_post( $item_name );
+			// SKU.
+			if ( '' !== $sku && $show_sku ) {
+				echo "\n";
+				echo esc_html__( 'SKU', 'quote-wc-pro' ) . ': #' . esc_html( $sku );
+			}
+			echo "\n";
+			echo wp_kses_post( __( 'Quantity: ', 'quote-wc-pro' ) . esc_html( $qty ) );
+		}
+		echo "\n";
+		// allow other plugins to add additional product information here.
+		do_action( 'woocommerce_order_item_meta_start', $item_id, $item, $order, $plain_text );
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo wp_strip_all_tags(
+			wc_display_item_meta(
+				$item,
+				array(
+					'before'    => "\n- ",
+					'separator' => "\n- ",
+					'after'     => '',
+					'echo'      => false,
+					'autop'     => false,
+				)
+			)
+		);
+
+		// allow other plugins to add additional product information here.
+		do_action( 'woocommerce_order_item_meta_end', $item_id, $item, $order, $plain_text );
+
+		echo "\n=============================================\n";
+
+	}
+	do_action( 'qwc_new_quote_admin_row', $order->get_id(), $order );
+
+	do_action( 'woocommerce_email_after_order_table', $order, $sent_to_admin, $plain_text, $email );
+
+	do_action( 'woocommerce_email_order_meta', $order, $sent_to_admin, $plain_text, $email );
+
+	echo "\n\n";
+	echo esc_html( sprintf( __( 'This request is awaiting a quote.', 'quote-wc' ) ) );
+	// translators: Admin Url for order.
+	echo wp_kses_post( make_clickable( sprintf( __( 'You can view and edit this quote in the dashboard here: %s', 'quote-wc' ), $order_url ) ) );
+
+	echo "\n\n";
+	echo wp_kses_post( apply_filters( 'woocommerce_email_footer_text', get_option( 'woocommerce_email_footer_text' ) ) );
+}

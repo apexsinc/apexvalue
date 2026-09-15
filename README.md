@@ -100,6 +100,28 @@ Every CTA in that path defaults to `/inquiry/` (the Airtable inquiry form) or th
 
 ## Recent updates
 
+- **1.11.8** — Quotation emails: the per-item price column is actually gone
+  now, plus footer/promo polish.
+  - **Per-item price cells:** the trailing `₱0.00` cells came from WooMail's
+    bundled `email-order-items.php` — both layout branches print a
+    `get_formatted_line_subtotal()` cell that the 1.11.7 pass (headers +
+    totals only) missed. The file now guards the cell behind the
+    `_quote_status` check like its `email-order-details.php` sibling
+    (backup: `/var/backups/apex-woomail-20260915/`).
+  - **Quote-plugin admin email:** quotes-for-woocommerce's own admin template
+    (`request-new-quote.php`) hardcodes a Price column with no display guard;
+    the theme now overrides it (plus the plain-text variant) at the plugin's
+    own `quotes-for-wc/emails/` template path — update-safe.
+  - **"Get the app" promo:** the empty `email-mobile-messaging.php` override
+    wasn't reached on live sends, so `inc/quote-flow.php` now unhooks the
+    mobile-messaging callback from `woocommerce_email_footer` in-theme.
+  - **Footer sliced into two lines:** WooMail's footer kses whitelist now
+    permits `br/p/span/strong/em/a` (it previously stripped every tag,
+    flattening the footer into one run-on line), the footer option carries an
+    explicit `<br />`, and the `{store_address}` typo ("Sute" → "Suite") was
+    fixed at the source.
+  - **Verified live:** fresh quote sends render `Product | Quantity` only —
+    zero peso signs, zero subtotals — with a two-line footer and no promo.
 - **1.11.7** — Quotation privacy: pricing removed from the request-a-quote
   emails, end-to-end.
   - **The trail:** the emails that actually render are built by the active

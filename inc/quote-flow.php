@@ -289,3 +289,30 @@ function apexvalue_empty_cart_cta( $block_content, $block ) {
 	return $block_content . $button;
 }
 add_filter( 'render_block', 'apexvalue_empty_cart_cta', 10, 2 );
+
+/**
+ * Remove WooCommerce's "Process your orders on the go. Get the app." block
+ * from order emails.
+ *
+ * WC_Email_New_Order hooks its mobile-app promo into woocommerce_email_footer
+ * at priority 9 (before the footer itself). The template it prints
+ * (emails/email-mobile-messaging.php) is theme-overridable, but the block is
+ * not wanted at all on this store — APEX Value does not advertise the
+ * WooCommerce app. Unhooking here (priority 8) removes it for every email.
+ */
+function apexvalue_remove_email_app_promo() {
+	if ( ! class_exists( 'WC_Email_New_Order' ) ) {
+		return;
+	}
+
+	$mailer = WC()->mailer();
+	if ( ! $mailer || ! isset( $mailer->emails['WC_Email_New_Order'] ) ) {
+		return;
+	}
+
+	$email = $mailer->emails['WC_Email_New_Order'];
+	if ( is_object( $email ) && has_action( 'woocommerce_email_footer', array( $email, 'mobile_messaging' ) ) ) {
+		remove_action( 'woocommerce_email_footer', array( $email, 'mobile_messaging' ), 9 );
+	}
+}
+add_action( 'woocommerce_email_footer', 'apexvalue_remove_email_app_promo', 8 );
