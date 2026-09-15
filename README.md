@@ -100,6 +100,28 @@ Every CTA in that path defaults to `/inquiry/` (the Airtable inquiry form) or th
 
 ## Recent updates
 
+- **1.11.7** — Quotation privacy: pricing removed from the request-a-quote
+  emails, end-to-end.
+  - **The trail:** the emails that actually render are built by the active
+    **Email Templates (WooMail) plugin**, whose bundled `email-order-details.php`
+    wins over both WooCommerce's and the theme's template chain (verified by
+    its markup being present in the SMTP log bodies — the theme-level override
+    alone changed nothing on live sends).
+  - **Fix (two layers):** theme overrides at
+    `woocommerce/emails/email-order-details.php` + `email-order-items.php`
+    drop the Price column and Subtotal/Total rows for orders carrying
+    `_quote_status` (non-quote orders keep the full WooCommerce layout);
+    WooMail's own template copy received the identical conditional patch
+    (backup: `/var/backups/apex-woomail-20260915/`).
+  - **Verified with real test quotes:** final email pair shows
+    Product/Quantity headers, item name, and billing address — **zero price
+    headers, zero Subtotal/Total rows, zero peso signs**. Front-end cart and
+    checkout were already price-free (Customizer CSS) except a hidden
+    screen-reader aria label. Test orders cleaned up.
+  - **Update warning:** a WooMail plugin update will overwrite the patched
+    template — re-apply, or move email rendering back to the standard chain
+    (the theme override then takes over automatically).
+
 - **1.11.6** — Performance: cart-page payload cut from ~2.85 MB to ~2.1 MB
   and two long-standing "jQuery is not defined" page errors fixed.
   - **Editor stack on the cart page:** WooCommerce's cart/checkout block
@@ -382,6 +404,15 @@ Every CTA in that path defaults to `/inquiry/` (the Airtable inquiry form) or th
 Changes made outside version control (DB/plugin settings), newest
 first. Every entry had a verification step and, for option edits, a
 backup under `/var/backups/`.
+
+- **2026-09-15 — Email Templates (WooMail) order-details template
+  patched** (`templates/woo/emails/email-order-details.php`) to drop the
+  Price column and Subtotal/Total rows for quote orders
+  (`_quote_status` meta). WooMail's bundled template wins over the
+  wc_get_template chain, so a theme override alone had no effect on live
+  sends. Backup: `/var/backups/apex-woomail-20260915/`. A plugin update
+  will overwrite this patch — re-apply or retire WooMail rendering (the
+  theme's own override then takes over).
 
 - **2026-09-14 — Content-Security-Policy reconfigured (site-breaking
   fix).** The `security-header` (Inspired Monks) plugin was active with
