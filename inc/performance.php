@@ -167,6 +167,22 @@ function apexvalue_defer_head_scripts( $tag, $handle ) {
 	// 'jquery' is the alias handle; the tag is printed under 'jquery-core'.
 	$defer = array( 'jquery', 'jquery-core', 'jquery-migrate', 'apexvalue-js' );
 
+	// qwc-product-js (quotes-for-woocommerce) uses jQuery but registers with
+	// empty deps, so the dependency check below cannot catch it.
+	$defer[] = 'qwc-product-js';
+
+	// Every script that depends on jQuery must be deferred too: jQuery itself
+	// is deferred, deferred scripts execute in document order, and a
+	// non-deferred tag placed after jQuery executes during parsing — before
+	// deferred jQuery — with "jQuery is not defined" (seen with the siteseo
+	// consent bar and the quotes plugin's product-page script).
+	if ( ! in_array( $handle, $defer, true ) ) {
+		$dep_obj = wp_scripts()->query( $handle );
+		if ( $dep_obj && ! empty( $dep_obj->deps ) && array_intersect( $dep_obj->deps, array( 'jquery', 'jquery-core' ) ) ) {
+			$defer[] = $handle;
+		}
+	}
+
 	if ( ! in_array( $handle, $defer, true ) ) {
 		return $tag;
 	}
@@ -221,4 +237,74 @@ function apexvalue_drop_emoji_resource_hints( $hints, $relation ) {
 	);
 }
 add_filter( 'wp_resource_hints', 'apexvalue_drop_emoji_resource_hints', 10, 2 );
+
+/**
+ * Strip the Gutenberg editor stack and password meter from storefront pages.
+ *
+ * Evidence (audited 2026-09-15):
+ *
+ *  - WooCommerce's cart/checkout block asset files declare `wp-plugins`
+ *    and `wp-components` as dependencies (cart.asset.php, checkout.asset.php,
+ *    cart-frontend.asset.php, checkout-frontend.asset.php, …). The shipped
+ *    frontend bundles never reference them — zero `wp.components` /
+ *    `wp.plugins` usages in wc-cart-checkout-base-frontend.js and
+ *    wc-cart-block-frontend.js, and no Store API payment-extension plugin
+ *    is in use. That stale dependency chain drags ~33 editor packages
+ *    (components.min.js alone is 817 KB; the whole set ~1.3 MB) onto the
+ *    cart page, which is otherwise the site's heaviest real page.
+ *
+ *  - `zxcvbn-async` (803 KB) plus the password-strength meters leak out of
+ *    the Checkout block for logged-out visitors. This site has account
+ *    registration disabled (`woocommerce_enable_myaccount_registration`
+ *    and `woocommerce_registration_generate_password` are both "no"),
+ *    guest checkout is on, and no registration form exists on the front
+ *    end — there is nothing for the strength meter to attach to.
+ *
+ * The handles are dequeued AND scrubbed from every registered script's
+ * dependency list, so queued parents (wc-blocks-checkout,
+ * wc-cart-checkout-base, …) cannot re-pull them while resolving deps.
+ *
+ * SCOPE NOTE (tested 2026-09-15): only the password-meter chain is removed.
+ * The editor packages (`wp-components`, `wp-plugins`) that WooCommerce's
+ * cart/checkout block assets declare were ALSO tested for removal and are
+ * genuinely required: the frontend bundles access `wp.components.SVG` and
+ * `wp.plugins.PluginArea` at runtime (via externals invisible to static
+ * grep). Do not widen this list without a full cart/checkout hydration
+ * test in a real browser.
+ *
+ * IF ACCOUNT REGISTRATION IS EVER ENABLED, DELETE THIS FUNCTION (and
+ * re-measure) — the meter becomes required again.
+ *
+ * Removals are dequeue-level (no plugin files touched).
+ */
+function apexvalue_trim_editor_stack_scripts() {
+	if ( is_admin() || is_customize_preview() ) {
+		return;
+	}
+
+	$drop = array(
+		'zxcvbn-async',
+		'password-strength-meter',
+		'wc-password-strength-meter',
+	);
+
+	$wp_scripts = wp_scripts();
+
+	foreach ( $drop as $handle ) {
+		wp_dequeue_script( $handle );
+
+		// Scrub from every registered script's dependency list.
+		foreach ( $wp_scripts->registered as $dep_obj ) {
+			if ( ! empty( $dep_obj->deps ) && is_array( $dep_obj->deps ) ) {
+				$dep_obj->deps = array_diff( $dep_obj->deps, array( $handle ) );
+			}
+		}
+	}
+}
+add_action( 'wp_enqueue_scripts', 'apexvalue_trim_editor_stack_scripts', 100 );
+
+// Second pass: WooCommerce registers its cart/checkout block bundles during
+// content rendering (after wp_enqueue_scripts) and they print in the footer.
+// wp_print_footer_scripts runs at wp_footer priority 20 — this must be earlier.
+add_action( 'wp_footer', 'apexvalue_trim_editor_stack_scripts', 10 );
 

@@ -100,6 +100,31 @@ Every CTA in that path defaults to `/inquiry/` (the Airtable inquiry form) or th
 
 ## Recent updates
 
+- **1.11.6** — Performance: cart-page payload cut from ~2.85 MB to ~2.1 MB
+  and two long-standing "jQuery is not defined" page errors fixed.
+  - **Editor stack on the cart page:** WooCommerce's cart/checkout block
+    assets legitimately depend on `wp-components`/`wp-plugins` (verified:
+    the bundles call `wp.components.SVG` / `wp.plugins.PluginArea` at
+    runtime — do not dequeue them). The *password-meter* chain, however,
+    was removable: `zxcvbn-async` (~803 KB), `password-strength-meter`
+    and `wc-password-strength-meter` are now dequeued on the front end
+    (account registration is off, guest checkout on — nothing to attach
+    to). Dequeue + dependency-scrub on both `wp_enqueue_scripts` and a
+    late `wp_footer` pass, because WC registers block bundles after
+    `wp_enqueue_scripts`.
+  - **Unused font face dropped:** the self-hosted Source Sans Pro 300
+    weight had zero `font-weight: 300` declarations — face and file
+    removed (weights in use: 400, 600, 700, 900).
+  - **jQuery-order fixes:** jQuery is deferred by the theme, so any
+    script that *uses* jQuery must be deferred too (deferred scripts
+    execute in document order). The siteseo consent bar and the quotes
+    plugin's `qwc-product-js` (registered with empty deps despite using
+    jQuery — plugin bug) now get deferred; dependency-based deferral
+    catches any other jQuery-dependent script generically.
+  - **Verified end-to-end:** real-browser quote flow (product → Request
+    Quote → checkout) mounts the checkout block with zero console/page
+    errors; 11-page render audit all green; PHP log quiet.
+
 - **1.11.5** — Accessibility + performance audit (axe-core 4.10 via the
   headless-Chromium harness, plus full page-weight measurement). Result:
   all six audited page types (home/shop/product/contact/cart/account)
