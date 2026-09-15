@@ -100,6 +100,17 @@ Every CTA in that path defaults to `/inquiry/` (the Airtable inquiry form) or th
 
 ## Recent updates
 
+- **1.12.0** — Watchdog + final hardening of the quotation email fixes.
+  - **Patch watchdog:** `admin_notices` now verifies the three patches that
+    live inside the Email Templates (WooMail) plugin files — the
+    `_quote_status` guards in `email-order-details.php` (2) and
+    `email-order-items.php` (1), plus the footer kses whitelist in
+    `class-mailtpl-woomail-composer.php`. If a plugin update reverts any of
+    them, wp-admin shows an error notice naming exactly which file needs
+    re-patching. Verified silent in the healthy state and alerting in a
+    simulated revert.
+  - Removed all temporary debug probes from the web root; debug logging in
+    `inc/quote-flow.php` was stripped in 1.11.9.
 - **1.11.9** — Quotation privacy completed across every remaining surface.
   - **Order-received (thank-you) page:** the Total row and the per-item
     Total column are gone for quote orders. Debug logging proved the theme

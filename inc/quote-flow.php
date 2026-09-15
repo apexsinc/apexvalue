@@ -374,3 +374,84 @@ function apexvalue_force_quote_thankyou_template( $template, $template_name, $ar
 	return $template;
 }
 add_filter( 'wc_get_template', 'apexvalue_force_quote_thankyou_template', 999, 3 );
+
+/**
+ * Warn in wp-admin if a plugin update reverts the email price-guard patches.
+ *
+ * Three patches live inside plugin files (not the theme), because those
+ * plugins render the quote emails on the live send path:
+ *
+ *  1. email-templates (WooMail) templates/woo/emails/email-order-details.php
+ *     — Price column header + totals rows wrapped in the `_quote_status`
+ *     guard (2 occurrences).
+ *  2. email-templates (WooMail) templates/woo/emails/email-order-items.php
+ *     — per-item subtotal cell behind the same guard (1 occurrence).
+ *  3. email-templates (WooMail) class-mailtpl-woomail-composer.php — the
+ *     footer wp_kses whitelist that keeps `<br />` line breaks alive in the
+ *     email footer.
+ *
+ * Updating or reinstalling the Email Templates plugin overwrites all three.
+ * The theme's own woocommerce/emails/ overrides then take over for the
+ * standard chain, but WooMail's bundled templates are what actually render
+ * on this site — so a revert silently puts prices back into quote emails.
+ * This notice checks the marker strings on every admin page load and tells
+ * the operator exactly which patch needs re-applying.
+ *
+ * @return void
+ */
+function apexvalue_woomail_patch_watchdog() {
+	if ( ! current_user_can( 'manage_woocommerce' ) ) {
+		return;
+	}
+
+	$et_dir = WP_PLUGIN_DIR . '/email-templates';
+
+	$checks = array(
+		'order table (Price column + totals)' => array(
+			'file'   => $et_dir . '/templates/woo/emails/email-order-details.php',
+			'marker' => '_quote_status',
+			'count'  => 2,
+		),
+		'per-item subtotal cell'              => array(
+			'file'   => $et_dir . '/templates/woo/emails/email-order-items.php',
+			'marker' => '_quote_status',
+			'count'  => 1,
+		),
+		'footer line breaks (kses whitelist)' => array(
+			'file'   => $et_dir . '/class-mailtpl-woomail-composer.php',
+			'marker' => "'br' => array(),",
+			'count'  => 1,
+		),
+	);
+
+	$reverted = array();
+	foreach ( $checks as $label => $check ) {
+		if ( ! file_exists( $check['file'] ) ) {
+			$reverted[] = sprintf( '%s — file missing: %s', $label, str_replace( WP_PLUGIN_DIR . '/', '', $check['file'] ) );
+			continue;
+		}
+		$contents = file_get_contents( $check['file'] ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+		if ( false === $contents || substr_count( $contents, $check['marker'] ) < $check['count'] ) {
+			$reverted[] = sprintf( '%s — %s', $label, str_replace( WP_PLUGIN_DIR . '/', '', $check['file'] ) );
+		}
+	}
+
+	if ( empty( $reverted ) ) {
+		return;
+	}
+
+	$items = '<ul style="margin:6px 0 6px 18px;list-style:disc;">';
+	foreach ( $reverted as $item ) {
+		$items .= '<li><code>' . esc_html( $item ) . '</code></li>';
+	}
+	$items .= '</ul>';
+
+	printf(
+		'<div class="notice notice-error"><p><strong>%1$s</strong> %2$s</p>%3$s<p>%4$s</p></div>',
+		esc_html__( 'Quotation email price-guard needs attention.', 'apexvalue' ),
+		esc_html__( 'A plugin update appears to have reverted the patches that hide prices in quotation emails:', 'apexvalue' ),
+		$items, // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- built with esc_html() above.
+		esc_html__( 'Re-apply the _quote_status guards and the footer kses whitelist (see the ops log), or send a test quotation request to verify prices are still hidden.', 'apexvalue' )
+	);
+}
+add_action( 'admin_notices', 'apexvalue_woomail_patch_watchdog' );
