@@ -100,6 +100,11 @@ Every CTA in that path defaults to `/inquiry/` (the Airtable inquiry form) or th
 
 ## Recent updates
 
+- **1.12.4** — Full-page cache activated (SpeedyCache). Server response
+  dropped from ~840 ms to ~30 ms on cached pages. See the server
+  operations log for the full configuration and the two landmines
+  discovered while wiring it up.
+
 - **1.12.3** — Lighthouse-driven polish: icons CSS trimmed, font-display
   fixed, mobile quote chip contrast fixed.
   - **Icons stylesheet subset** (`assets/css/icons-subset.css`, 29 KB):
@@ -507,6 +512,50 @@ Every CTA in that path defaults to `/inquiry/` (the Airtable inquiry form) or th
 Changes made outside version control (DB/plugin settings), newest
 first. Every entry had a verification step and, for option edits, a
 backup under `/var/backups/`.
+
+- **2026-09-17 — Full-page cache activated (SpeedyCache v1.3.9).** The
+  site had FIVE cache plugins installed (SpeedyCache, SpeedyCache Pro,
+  W3 Total Cache, WP Fastest Cache, WP Optimize) but **none active** —
+  every page was rendered by PHP per request (~530 ms TTFB; Lighthouse
+  "server response time" scored 0). SpeedyCache was chosen because its
+  sane config survived in the DB (`minify_html`, `gzip`, `lbc`,
+  `delay_js` on; cart/checkout/account hard-excluded in code; query
+  strings excluded; logged-in users excluded) and its `.htaccess` serve
+  rule + `advanced-cache.php` dropin were already in place. Steps and
+  findings:
+
+  1. Activated the plugin and rewrote the stale `advanced-cache.php`
+     dropin with the plugin's current copy. **APCu object-cache gotcha
+     #1:** `wp plugin activate` updated the DB, but the web SAPI kept
+     serving a stale `active_plugins` list from APCu shared memory
+     (`apc.enable_cli=Off` means WP-CLI cannot see or flush it). The
+     plugin stayed invisible on the front end until `wp cache flush`
+     **plus a full Apache restart** (`systemctl restart apache2`) — a
+     graceful reload is NOT enough to clear APCu. If a plugin ever
+     "refuses to activate", flush APCu from the web SAPI and restart
+     Apache fully.
+  2. **APCu gotcha #2:** option changes made via WP-CLI (e.g. turning
+     off `minify_css`) don't reach the web SAPI until `apcu_clear_cache()`
+     runs in web context. Verified by fetching a one-off PHP script over
+     HTTP to clear it.
+  3. **Disabled `minify_css` (landmine):** SpeedyCache's CSS minifier
+     rewrites stylesheet URLs into `wp-content/cache/speedycache/<host>/assets/…`,
+     which breaks the relative `url(../fonts/…)` font paths inside the
+     CSS (fonts 404 → icons/text fallback fonts). HTML minify + gzip
+     remain on; the CSS is already small and gzipped by Apache.
+  4. Verified: cached pages serve directly from Apache via the
+     `.htaccess` rewrite (sub-millisecond TTFB, no PHP), gzip + 304
+     support work, 404s / cart / checkout / wp-admin never cache, and
+     the AJAX add-to-cart + mobile menu still work from cached HTML.
+     Lighthouse: server-response-time 840 ms → 30 ms, TBT 290 → 100 ms.
+  5. Purging: delete `wp-content/cache/speedycache/` (or use the admin
+     bar "Purge SpeedyCache" button / `Delete::run()` — it fires on
+     post save, menu save, theme switch, and WC order changes). APCu
+     caveat: purge-all via WP-CLI needs an APCu flush + restart to be
+     seen by the web SAPI, but the file purge itself is web-visible.
+  6. Known trade-off: the cached HTML no longer sets the
+     post-views-counter cookie, so view counting on cached pages stops
+     while the cache is warm.
 
 - **2026-09-15 — Email Templates (WooMail) order-details template
   patched** (`templates/woo/emails/email-order-details.php`) to drop the
