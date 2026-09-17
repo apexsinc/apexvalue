@@ -4,7 +4,7 @@ Theme URI:    https://www.apexvalue.com
 Description:  Apex Value child theme of Storefront. Modern, refined evolution of the default look: cleaner typography, tighter header, card-based product grids and accessible interactions.
 Author:       Apex Value
 Template:     storefront
-Version:      1.12.2
+Version:      1.12.3
 License:      GNU General Public License v2 or later
 License URI:  http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain:  apexvalue
@@ -2335,9 +2335,14 @@ input[type="radio"] {
 	}
 }
 
-/* --- Handheld footer bar: Quote item (icon + label, framed) --- */
+/* --- Handheld footer bar: Quote item (icon + label, filled chip) --- */
 
-.storefront-handheld-footer-bar ul li.quote > a {
+/* Selector carries .site-footer + ul[class] (0,4,3) so it outranks the
+   0,4,1 Customizer-hardening colour rule above that would otherwise
+   repaint this link with the footer's muted token. White on --apx-accent
+   is 5.5:1 — AA for the 9px label; white or the old muted tone on the
+   bare header-blue bar were both sub-3:1. */
+.site-footer .storefront-handheld-footer-bar ul[class] li.quote > a {
 	text-indent: 0;
 	overflow: visible;
 	padding-top: 1.85em;
@@ -2345,6 +2350,9 @@ input[type="radio"] {
 	font-weight: 600;
 	text-align: center;
 	color: #fff;
+	/* Contain the ::after chip's negative z-index inside this link,
+	   so it can never slip behind the bar's own background. */
+	isolation: isolate;
 }
 
 .storefront-handheld-footer-bar ul li.quote > a::before {
@@ -2362,18 +2370,22 @@ input[type="radio"] {
 	text-indent: 0;
 }
 
+/* The chip canvas: ::after sits behind the label and icon (negative
+   z-index), inset 2px from the cell for a framed, tappable look. */
 .storefront-handheld-footer-bar ul li.quote > a::after {
 	content: "";
 	position: absolute;
 	inset: 2px;
-	border: 1px solid rgba(255, 255, 255, 0.35);
-	border-radius: 6px;
+	background-color: var(--apx-accent);
+	border: 0;
+	border-radius: 8px;
 	pointer-events: none;
+	z-index: -1;
 }
 
-.storefront-handheld-footer-bar ul li.quote > a:hover::after,
-.storefront-handheld-footer-bar ul li.quote > a:focus-visible::after {
-	border-color: rgba(255, 255, 255, 0.75);
+.site-footer .storefront-handheld-footer-bar ul li.quote > a:hover::after,
+.site-footer .storefront-handheld-footer-bar ul li.quote > a:focus-visible::after {
+	background-color: var(--apx-accent-dark);
 }
 
 /* --- "Quotation" price badge (quote-only products) --- */

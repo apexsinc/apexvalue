@@ -42,6 +42,12 @@ if ( ! class_exists( 'ApexValue_Theme' ) ) :
 			// call in the wild ($.isArray) still exists in 3.7.1 core. Migrate
 			// is ~24 KB of dead weight here. Admin and login screens keep it.
 			add_action( 'wp_default_scripts', array( $this, 'dequeue_jquery_migrate' ) );
+
+			// Serve a trimmed icons stylesheet. Storefront's icons.css is the
+			// full Font Awesome catalog (~75 KB of rules for ~1,500 icons);
+			// assets/css/icons-subset.css keeps only the rules for glyphs this
+			// site renders (29 KB, font-display: swap, subset font URLs).
+			add_filter( 'style_loader_src', array( $this, 'swap_icons_css' ), 10, 2 );
 		}
 
 		/**
@@ -61,7 +67,8 @@ if ( ! class_exists( 'ApexValue_Theme' ) ) :
 		 */
 		public function scripts() {
 			// Preload the two weights used on every page (400 body, 700
-			// headings/UI) so text doesn't swap late on first paint.
+			// headings/UI) plus the solid icon face (header cart/menu glyphs
+			// render above the fold) so text and icons don't swap late.
 			add_action( 'wp_head', function () {
 				$base = get_stylesheet_directory_uri() . '/assets/fonts/';
 				printf(
@@ -71,6 +78,10 @@ if ( ! class_exists( 'ApexValue_Theme' ) ) :
 				printf(
 					'<link rel="preload" as="font" type="font/woff2" href="%s" crossorigin />' . "\n",
 					esc_url( $base . 'source-sans-pro-700.woff2' )
+				);
+				printf(
+					'<link rel="preload" as="font" type="font/woff2" href="%s" crossorigin />' . "\n",
+					esc_url( $base . 'fa-solid-900.woff2' )
 				);
 			}, 2 );
 
@@ -85,22 +96,28 @@ if ( ! class_exists( 'ApexValue_Theme' ) ) :
 				false
 			);
 
-			// Subset icon fonts. Storefront's icons.css ships @font-face rules
-			// for the full ~150 KB Font Awesome files; this site renders only
-			// 52 glyphs (theme icons + Storefront's component icons). Printing
-			// a second @font-face after it re-points both families at 4 KB
-			// subsets in assets/fonts/ — later declarations win the cascade.
-			wp_register_style( 'apexvalue-font-fa', false, array( 'storefront-icons' ), APEXVALUE_VERSION );
-			wp_enqueue_style( 'apexvalue-font-fa' );
-			wp_add_inline_style(
-				'apexvalue-font-fa',
-				sprintf(
-					'@font-face{font-family:"Font Awesome 5 Free";font-style:normal;font-weight:900;font-display:block;src:url(%1$s) format("woff2")}' .
-					'@font-face{font-family:"Font Awesome 5 Brands";font-style:normal;font-weight:400;font-display:block;src:url(%2$s) format("woff2")}',
-					wp_json_encode( get_stylesheet_directory_uri() . '/assets/fonts/fa-solid-900.woff2' ),
-					wp_json_encode( get_stylesheet_directory_uri() . '/assets/fonts/fa-brands-400.woff2' )
-				)
-			);
+		}
+
+		/**
+		 * Point the `storefront-icons` stylesheet at our trimmed subset.
+		 *
+		 * Swapping the style source (instead of loading a competing
+		 * stylesheet) preserves handle order, dependencies, and the RTL
+		 * replace behaviour, so nothing about Storefront's enqueue changes —
+		 * the browser just downloads 29 KB instead of 75 KB.
+		 *
+		 * @param string $src    Stylesheet URL.
+		 * @param string $handle Style handle.
+		 * @return string Maybe-rewritten URL.
+		 */
+		public function swap_icons_css( $src, $handle ) {
+			if ( is_admin() || 'storefront-icons' !== $handle ) {
+				return $src;
+			}
+			if ( false === strpos( $src, '/themes/storefront/assets/css/base/icons' ) ) {
+				return $src;
+			}
+			return get_stylesheet_directory_uri() . '/assets/css/icons-subset.css?ver=' . APEXVALUE_VERSION;
 		}
 
 		/**

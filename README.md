@@ -100,6 +100,26 @@ Every CTA in that path defaults to `/inquiry/` (the Airtable inquiry form) or th
 
 ## Recent updates
 
+- **1.12.3** — Lighthouse-driven polish: icons CSS trimmed, font-display
+  fixed, mobile quote chip contrast fixed.
+  - **Icons stylesheet subset** (`assets/css/icons-subset.css`, 29 KB):
+    Storefront's `icons.css` ships the entire Font Awesome catalog (~75 KB,
+    ~1,500 dead rules). The child theme now swaps the `storefront-icons`
+    style source at runtime (`style_loader_src` filter) to a generated copy
+    that keeps only the rules for glyphs this site renders — same handle,
+    order and dependencies, just 46 KB less CSS. Its `@font-face` rules are
+    re-pointed at the 4 KB woff2 subsets with `font-display: swap`, which
+    also retires the previous inline `@font-face` override and fixes
+    Lighthouse's `font-display` audit.
+  - **Solid icon font preloaded** in `wp_head` alongside the body fonts.
+  - **Handheld quote chip contrast (1.91:1 → 5.5:1):** the mobile footer
+    bar's "Request a Quote" link now renders as a filled chip — an
+    `::after` accent fill behind the label (z-index −1, contained by
+    `isolation: isolate` on the link) with white text. Selector carries
+    `.site-footer` + `ul[class]` (0,4,3) to outrank the Customizer
+    hardening rule that repaints handheld links with the muted token.
+  - Note: Cloudflare had been serving a stale `style.css` (186-day
+    max-age) during verification — the version bump refreshes it.
 - **1.12.2** — Layout-shift and lazy-load hardening (image pass).
   - **Collections strip images now carry intrinsic dimensions**
     (`width`/`height` from `wp_get_attachment_image_src`): the strip renders
