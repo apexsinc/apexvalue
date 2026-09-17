@@ -100,6 +100,24 @@ Every CTA in that path defaults to `/inquiry/` (the Airtable inquiry form) or th
 
 ## Recent updates
 
+- **1.12.1** — Performance pass: 918 KB → 425 KB homepage transfer, no
+  functional or visual change.
+  - **Icon font subsetting:** the theme + Storefront render only 52 Font
+    Awesome glyphs; new `assets/fonts/fa-solid-900.woff2` (3.5 KB) and
+    `fa-brands-400.woff2` (0.5 KB) subsets replace the 153 KB full files via
+    a second `@font-face` printed after `storefront-icons` (cascade wins).
+    Subset verified with fontkit: exactly the 49 solid + 1 brand codepoints
+    referenced by the theme's CSS and Storefront's component icons, nothing
+    else. Full FA files no longer download on any page.
+  - **jquery-migrate removed on the front end** via `wp_default_scripts` —
+    ~24 KB of shim. Every front-end script (Storefront, WooCommerce, the
+    quotes plugin, the Reviews widget) was audited for jQuery-3-removed
+    APIs first; the one deprecated call in the wild ($.isArray) still exists
+    in 3.7.1 core. Admin/login keep migrate. Verified: mobile menu toggles,
+    AJAX cart events bind, zero console errors.
+  - Verified live with headless Chromium: fonts load and glyphs render,
+    `wp_enqueue_style` dependency order places the override after
+    `storefront-icons` on every page.
 - **1.12.0** — Watchdog + final hardening of the quotation email fixes.
   - **Patch watchdog:** `admin_notices` now verifies the three patches that
     live inside the Email Templates (WooMail) plugin files — the
