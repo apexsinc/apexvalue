@@ -455,3 +455,64 @@ function apexvalue_woomail_patch_watchdog() {
 	);
 }
 add_action( 'admin_notices', 'apexvalue_woomail_patch_watchdog' );
+
+/**
+ * Admin notice when the page-cache cart bypass is missing.
+ *
+ * Two files carry a hand-applied patch (documented in the ops log) that
+ * keeps SpeedyCache from serving cached HTML to visitors holding items in
+ * their WooCommerce cart — otherwise the header cart count renders stale
+ * until the AJAX fragments refresh:
+ *
+ *  1. wp-content/advanced-cache.php — a cart-cookie check before serving.
+ *  2. .htaccess — `woocommerce_items_in_cart` added to the serve-rule's
+ *     cookie exclusion condition.
+ *
+ * Both are overwritten by a SpeedyCache update/re-activation (file 1) or
+ * by any WordPress .htaccess rewrite (file 2). This notice names whichever
+ * lost its marker so the operator can re-apply it.
+ *
+ * @return void
+ */
+function apexvalue_cache_patch_watchdog() {
+	if ( ! current_user_can( 'manage_woocommerce' ) ) {
+		return;
+	}
+
+	$checks = array(
+		'advanced-cache.php dropin (cart-cookie bypass)' => array(
+			'file'   => WP_CONTENT_DIR . '/advanced-cache.php',
+			'marker' => 'Apex Value: never serve cached HTML',
+		),
+		'.htaccess serve rule (cart cookie excluded)'    => array(
+			'file'   => ABSPATH . '.htaccess',
+			'marker' => 'woocommerce_items_in_cart',
+		),
+	);
+
+	$reverted = array();
+	foreach ( $checks as $label => $check ) {
+		if ( ! file_exists( $check['file'] ) || false === strpos( (string) file_get_contents( $check['file'] ), $check['marker'] ) ) { // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+			$reverted[] = $label;
+		}
+	}
+
+	if ( empty( $reverted ) ) {
+		return;
+	}
+
+	$items = '<ul style="margin:6px 0 6px 18px;list-style:disc;">';
+	foreach ( $reverted as $item ) {
+		$items .= '<li>' . esc_html( $item ) . '</li>';
+	}
+	$items .= '</ul>';
+
+	printf(
+		'<div class="notice notice-warning"><p><strong>%1$s</strong> %2$s</p>%3$s<p>%4$s</p></div>',
+		esc_html__( 'Page cache cart-bypass patch missing.', 'apexvalue' ),
+		esc_html__( 'A SpeedyCache update or .htaccess rewrite removed the cart-cookie exclusion, so visitors with items in their cart may briefly see a stale cart count on cached pages:', 'apexvalue' ),
+		$items, // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- built with esc_html() above.
+		esc_html__( 'Re-apply the cart-cookie bypass described in the README server-operations log (2026-09-17 entry).', 'apexvalue' )
+	);
+}
+add_action( 'admin_notices', 'apexvalue_cache_patch_watchdog' );

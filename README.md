@@ -100,6 +100,13 @@ Every CTA in that path defaults to `/inquiry/` (the Airtable inquiry form) or th
 
 ## Recent updates
 
+- **1.12.5** — Cache-safety hardening and a full end-to-end quotation
+  test against the cached site. Cart-cookie cache bypass (dropin +
+  `.htaccess`), admin watchdog for it, Post Views Counter moved to JS
+  mode so views count on cached pages, cache purge set to daily to keep
+  PVC nonces valid, E2E quote order verified price-free. See the server
+  operations log.
+
 - **1.12.4** — Full-page cache activated (SpeedyCache). Server response
   dropped from ~840 ms to ~30 ms on cached pages. See the server
   operations log for the full configuration and the two landmines
@@ -512,6 +519,50 @@ Every CTA in that path defaults to `/inquiry/` (the Airtable inquiry form) or th
 Changes made outside version control (DB/plugin settings), newest
 first. Every entry had a verification step and, for option edits, a
 backup under `/var/backups/`.
+
+- **2026-09-17 (later) — Cache hardening + E2E quote test + view
+  counting.**
+
+  1. **Cart-cookie cache bypass added** (SpeedyCache only excludes
+     logged-in/comment cookies by default; its own code has a TODO for
+     cart cookies). Visitors carrying `woocommerce_items_in_cart` now
+     bypass both serve paths — patched `wp-content/advanced-cache.php`
+     (dropin, before serving) and the `.htaccess` serve-rule cookie
+     condition. Verified: plain visitors <1 ms cached; cart-cookie
+     visitors get dynamic PHP. **wp-admin watchdog added** in
+     `inc/quote-flow.php` (`apexvalue_cache_patch_watchdog`) — warns if
+     a SpeedyCache update or WP `.htaccess` rewrite removes either
+     marker. A SpeedyCache update overwrites BOTH patches: re-apply
+     per the code comment in the dropin and the ops-log snippet.
+  2. **Post Views Counter switched to JS mode**
+     (`post_views_counter_settings_general.counter_mode = js`): on
+     cached pages the count fires from the browser via admin-ajax, so
+     views keep counting (was frozen — PHP mode sets the `pvc_visits`
+     cookie in PHP, which cached HTML never runs). Verified live:
+     product 333 counted 430 → 431 through a fully cached page load.
+     Caveat: the JS payload embeds a 12–24 h nonce, hence…
+  3. **Cache purge moved to daily at 02:07** (was every 5 days) so no
+     cached page outlives the PVC nonce window. Preload re-warms
+     afterwards (`speedycache_preload` cron, daily). Trade-off: ~20 min
+     of dynamic PHP renders per night; negligible.
+  4. **E2E quotation flow tested against the cached site** (headless
+     Chromium, production URL): cached product page → AJAX add-to-cart
+     (header count 0→1) → block cart shows the item → checkout fields
+     → order placed → order-received page with **zero prices visible**
+     (v1.11.9 guards hold on real orders). Zero JS errors end-to-end.
+     Test order trashed afterwards.
+  5. **Cloudflare edge HTML caching assessed — operator decision
+     pending.** Anonymous page HTML carries no `Set-Cookie` and the
+     origin now serves sub-ms, so a Cloudflare **Cache Rule** (e.g.
+     "cache HTML for URLs without query strings, bypass when cookie
+     `woocommerce_items_in_cart` present, respect origin 304s") would
+     put pages at the edge. NOTE: the token stored in SpeedyCache's CDN
+     settings (`speedycache_cdn.cdn_key`, `cfut_…`) is **not a valid
+     Cloudflare API token** (API error 9109), so the plugin's
+     purge-Cloudflare bridge does nothing — enable edge caching from
+     the Cloudflare dashboard with a zone-admin account, and either
+     issue a proper purge token or keep purges origin-side (a daily
+     CF purge could be added to the same cron).
 
 - **2026-09-17 — Full-page cache activated (SpeedyCache v1.3.9).** The
   site had FIVE cache plugins installed (SpeedyCache, SpeedyCache Pro,
