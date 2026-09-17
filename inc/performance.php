@@ -64,7 +64,14 @@ add_filter( 'wp_get_attachment_image_attributes', 'apexvalue_gallery_lcp_image',
  * keeps the very first image eager (safety margin for small viewports)
  * and lazy-loads the rest.
  *
- * @param string $content Post content.
+ * Runs on BOTH the_content and render_block: block-rendered page content
+ * never passes through the_content, so images hand-placed in page HTML
+ * (e.g. the homepage pattern images) were missed entirely. The counter is
+ * request-global so the exemption covers the first image whichever path
+ * renders it; images that already carry a loading hint are counted but
+ * left untouched, keeping double processing idempotent.
+ *
+ * @param string $content Post content or rendered block HTML.
  * @return string
  */
 function apexvalue_lazy_content_images( $content ) {
@@ -76,7 +83,7 @@ function apexvalue_lazy_content_images( $content ) {
 		return $content;
 	}
 
-	$count = 0;
+	static $count = 0;
 
 	return preg_replace_callback(
 		'/<img[^>]*>/i',
@@ -100,6 +107,7 @@ function apexvalue_lazy_content_images( $content ) {
 	);
 }
 add_filter( 'the_content', 'apexvalue_lazy_content_images', 50 );
+add_filter( 'render_block', 'apexvalue_lazy_content_images', 999 );
 
 /**
  * Fonts are self-hosted in the child stylesheet (assets/fonts/), so the

@@ -391,33 +391,44 @@ function apexvalue_menu_collections( $items, $args ) {
 
 
 /**
- * Image for a collection card: the first product's thumbnail for the term,
- * cached in a transient (1 h). Returns the term's own thumbnail when set.
+ * Image (src + intrinsic dimensions) for a collection card.
+ *
+ * Returns array( url, width, height ) so the card can print width/height
+ * attributes — the strip renders before any image bytes arrive, and
+ * without intrinsic dimensions each card collapses then jumps (CLS).
+ * Dimensions come from the same wp_get_attachment_image_src lookup as the
+ * URL, so nothing extra is queried.
  *
  * @param WP_Term $term Product category term.
- * @return string|null Attachment image URL, or null when the collection has
- *                     no images (callers render a monogram fallback).
+ * @return array Array with keys url (string|null), width (int), height (int).
  */
 function apexvalue_collection_image( $term ) {
 	$cache_key = 'apexvalue_coll_img_' . (int) $term->term_id;
 	$cached = get_transient( $cache_key );
-	if ( false !== $cached ) {
+	if ( is_array( $cached ) && array_key_exists( 'url', $cached ) ) {
 		return $cached;
 	}
+	// Legacy cached values were plain URL strings — ignore them and rebuild.
 
-	$url = null;
+	$img = array(
+		'url'    => null,
+		'width'  => 0,
+		'height' => 0,
+	);
 
 	// 1. Term thumbnail, if the shop manager ever sets one.
 	$thumb_id = (int) get_term_meta( $term->term_id, 'thumbnail_id', true );
 	if ( $thumb_id ) {
 		$src = wp_get_attachment_image_src( $thumb_id, 'woocommerce_thumbnail' );
 		if ( $src ) {
-			$url = $src[0];
+			$img['url'] = $src[0];
+			$img['width'] = (int) $src[1];
+			$img['height'] = (int) $src[2];
 		}
 	}
 
 	// 2. Fallback: newest product image in the collection.
-	if ( ! $url ) {
+	if ( ! $img['url'] ) {
 		$products = wc_get_products(
 			array(
 				'status'   => 'publish',
@@ -432,15 +443,17 @@ function apexvalue_collection_image( $term ) {
 			if ( $image_id ) {
 				$src = wp_get_attachment_image_src( $image_id, 'woocommerce_thumbnail' );
 				if ( $src ) {
-					$url = $src[0];
+					$img['url'] = $src[0];
+					$img['width'] = (int) $src[1];
+					$img['height'] = (int) $src[2];
 				}
 			}
 		}
 	}
 
-	set_transient( $cache_key, $url, HOUR_IN_SECONDS );
+	set_transient( $cache_key, $img, HOUR_IN_SECONDS );
 
-	return $url;
+	return $img;
 }
 
 /**
@@ -475,12 +488,13 @@ function apexvalue_home_collections() {
 			</div>
 			<ul class="apex-collections__grid">
 				<?php foreach ( $terms as $term ) : ?>
-				<?php $img_url = apexvalue_collection_image( $term ); ?>
+				<?php $img = apexvalue_collection_image( $term ); ?>
 				<li class="apex-collections__item">
 					<a class="apex-collections__card" href="<?php echo esc_url( get_term_link( $term ) ); ?>">
 						<span class="apex-collections__media" aria-hidden="true">
-							<?php if ( $img_url ) : ?>
-								<img src="<?php echo esc_url( $img_url ); ?>" alt="" loading="lazy" decoding="async" />
+							<?php if ( $img['url'] ) : ?>
+								<img src="<?php echo esc_url( $img['url'] ); ?>" alt="" loading="lazy" decoding="async"
+									<?php if ( $img['width'] && $img['height'] ) : ?>width="<?php echo (int) $img['width']; ?>" height="<?php echo (int) $img['height']; ?>"<?php endif; ?> />
 							<?php else : ?>
 								<span class="apex-collections__mono"><?php echo esc_html( mb_substr( $term->name, 0, 1 ) ); ?></span>
 							<?php endif; ?>

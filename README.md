@@ -100,6 +100,21 @@ Every CTA in that path defaults to `/inquiry/` (the Airtable inquiry form) or th
 
 ## Recent updates
 
+- **1.12.2** — Layout-shift and lazy-load hardening (image pass).
+  - **Collections strip images now carry intrinsic dimensions**
+    (`width`/`height` from `wp_get_attachment_image_src`): the strip renders
+    before any image bytes arrive and each card previously collapsed then
+    jumped. `apexvalue_collection_image()` now returns
+    `array(url, width, height)`; legacy string transients are ignored and
+    rebuilt.
+  - **`render_block` added to the lazy-image filter** (`inc/performance.php`):
+    block-rendered page content never passes `the_content`, so the first
+    hand-placed homepage pattern image stayed eager even though the hero is
+    theme-rendered and the image sits below the fold. The request-global
+    counter keeps exactly one image eager whichever path renders it; the
+    change is idempotent for images that already carry a loading hint.
+  - Verified with headless Chromium on home (1280/375), products, inquiry:
+    0 eager below-fold images, 0 images without dimensions, 0 JS errors.
 - **1.12.1** — Performance pass: 918 KB → 425 KB homepage transfer, no
   functional or visual change.
   - **Icon font subsetting:** the theme + Storefront render only 52 Font
