@@ -4,7 +4,7 @@ Theme URI:    https://www.apexvalue.com
 Description:  Apex Value child theme of Storefront. Modern, refined evolution of the default look: cleaner typography, tighter header, card-based product grids and accessible interactions.
 Author:       Apex Value
 Template:     storefront
-Version:      1.13.0
+Version:      1.13.1
 License:      GNU General Public License v2 or later
 License URI:  http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain:  apexvalue
@@ -309,6 +309,94 @@ html[data-apx-theme="dark"] .storefront-handheld-footer-bar ul li .my-account::b
 html[data-apx-theme="dark"] .storefront-handheld-footer-bar ul li .search::before,
 html[data-apx-theme="dark"] .storefront-handheld-footer-bar ul li .cart::before {
 	color: #d7dee7;
+}
+
+/* --- Dark forms: inputs, selects, dropdown panels ---------------------- */
+/* Storefront inks inputs dark (#43454b) and never provides a dark-mode
+   color — left alone, typed text is nearly invisible on dark paper. */
+
+@media (prefers-color-scheme: dark) {
+	html:not([data-apx-theme]) input[type="text"],
+	html:not([data-apx-theme]) input[type="number"],
+	html:not([data-apx-theme]) input[type="email"],
+	html:not([data-apx-theme]) input[type="tel"],
+	html:not([data-apx-theme]) input[type="url"],
+	html:not([data-apx-theme]) input[type="password"],
+	html:not([data-apx-theme]) input[type="search"],
+	html:not([data-apx-theme]) textarea,
+	html:not([data-apx-theme]) .input-text,
+	html:not([data-apx-theme]) select,
+	html:not([data-apx-theme]) .select2-container--default .select2-selection--single {
+		color: var(--apx-ink);
+	}
+
+	html:not([data-apx-theme]) input[type="checkbox"],
+	html:not([data-apx-theme]) input[type="radio"] {
+		accent-color: var(--apx-brand);
+	}
+
+	html:not([data-apx-theme]) select option {
+		background-color: var(--apx-paper);
+		color: var(--apx-ink);
+	}
+
+	html:not([data-apx-theme]) .select2-container--default .select2-selection--single .select2-selection__rendered {
+		color: var(--apx-ink);
+	}
+
+	html:not([data-apx-theme]) .select2-dropdown,
+	html:not([data-apx-theme]) .select2-container--default .select2-search--dropdown .select2-search__field {
+		background-color: var(--apx-paper);
+		border-color: var(--apx-line);
+		color: var(--apx-ink);
+	}
+
+	html:not([data-apx-theme]) .select2-container--default .select2-results__option[aria-selected="true"],
+	html:not([data-apx-theme]) .select2-container--default .select2-results__option--highlighted[aria-selected] {
+		background-color: var(--apx-tint);
+		color: var(--apx-ink);
+	}
+}
+
+html[data-apx-theme="dark"] input[type="text"],
+html[data-apx-theme="dark"] input[type="number"],
+html[data-apx-theme="dark"] input[type="email"],
+html[data-apx-theme="dark"] input[type="tel"],
+html[data-apx-theme="dark"] input[type="url"],
+html[data-apx-theme="dark"] input[type="password"],
+html[data-apx-theme="dark"] input[type="search"],
+html[data-apx-theme="dark"] textarea,
+html[data-apx-theme="dark"] .input-text,
+html[data-apx-theme="dark"] select,
+html[data-apx-theme="dark"] .select2-container--default .select2-selection--single {
+	color: var(--apx-ink);
+}
+
+html[data-apx-theme="dark"] input[type="checkbox"],
+html[data-apx-theme="dark"] input[type="radio"] {
+	accent-color: var(--apx-brand);
+}
+
+html[data-apx-theme="dark"] select option {
+	background-color: var(--apx-paper);
+	color: var(--apx-ink);
+}
+
+html[data-apx-theme="dark"] .select2-container--default .select2-selection--single .select2-selection__rendered {
+	color: var(--apx-ink);
+}
+
+html[data-apx-theme="dark"] .select2-dropdown,
+html[data-apx-theme="dark"] .select2-container--default .select2-search--dropdown .select2-search__field {
+	background-color: var(--apx-paper);
+	border-color: var(--apx-line);
+	color: var(--apx-ink);
+}
+
+html[data-apx-theme="dark"] .select2-container--default .select2-results__option[aria-selected="true"],
+html[data-apx-theme="dark"] .select2-container--default .select2-results__option--highlighted[aria-selected] {
+	background-color: var(--apx-tint);
+	color: var(--apx-ink);
 }
 
 /* --- Dark hero: deepen the navy instead of the flat Customizer color --- */
