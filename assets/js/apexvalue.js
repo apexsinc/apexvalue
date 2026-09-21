@@ -2,14 +2,16 @@
  * Apex Value front-end interactions.
  *
  * Small, dependency-free enhancements (~2 KB):
+ *  - light/dark mode toggle (auto-detects the OS, persists the choice)
  *  - elevated header shadow once the page scrolls
  *  - scroll-reveal for elements tagged .apex-reveal
  *  - cart-count "bump" when the AJAX fragments refresh
  *  - smooth same-page anchor scrolling (keeps keyboard focus correct)
  *
  * Everything is progressive: without JavaScript the site renders fully
- * styled, and `prefers-reduced-motion` is respected (CSS disables the
- * transitions; the JS checks it before any programmatic scrolling).
+ * styled (mode follows the OS via CSS alone), and `prefers-reduced-motion`
+ * is respected (CSS disables the transitions; the JS checks it before any
+ * programmatic scrolling).
  */
 ( function () {
 	'use strict';
@@ -249,5 +251,87 @@
 		document.addEventListener( 'DOMContentLoaded', fix );
 	} else {
 		fix();
+	}
+} )();
+
+/**
+ * Light/dark mode toggle.
+ *
+ * Default = AUTO: the CSS media query alone follows the OS. The toggle
+ * pins a mode (html[data-apx-theme]) and persists it; while unpinned the
+ * site keeps following live OS changes. The head bootstrap script (PHP)
+ * has already applied the pre-paint state — this only adds interaction:
+ * sync button state/labels, update meta theme-color, and toggle.
+ */
+( function () {
+	'use strict';
+
+	var d = document;
+	var root = d.documentElement;
+	var KEY = 'apexvalue:mode';
+	var mql = window.matchMedia ? window.matchMedia( '(prefers-color-scheme: dark)' ) : null;
+
+	function effective() {
+		var pinned = root.getAttribute( 'data-apx-theme' );
+		if ( pinned === 'light' || pinned === 'dark' ) {
+			return pinned;
+		}
+		return mql && mql.matches ? 'dark' : 'light';
+	}
+
+	function sync() {
+		var dark = effective() === 'dark';
+		d.querySelectorAll( '.apex-mode-toggle' ).forEach( function ( btn ) {
+			btn.setAttribute( 'aria-pressed', dark ? 'true' : 'false' );
+			btn.setAttribute(
+				'aria-label',
+				dark ? 'Switch to light mode' : 'Switch to dark mode'
+			);
+		} );
+		var meta = d.querySelector( 'meta[name="theme-color"]' );
+		if ( meta ) {
+			meta.setAttribute( 'content', dark ? '#101418' : '#ffffff' );
+		}
+	}
+
+	function onClick() {
+		var next = effective() === 'dark' ? 'light' : 'dark';
+		root.setAttribute( 'data-apx-theme', next );
+		try {
+			localStorage.setItem( KEY, next );
+		} catch ( e ) {
+			/* Storage unavailable (private mode) — pin for this pageview only. */
+		}
+		sync();
+	}
+
+	function bind() {
+		d.querySelectorAll( '.apex-mode-toggle' ).forEach( function ( btn ) {
+			if ( ! btn.dataset.apxModeBound ) {
+				btn.dataset.apxModeBound = '1';
+				btn.addEventListener( 'click', onClick );
+			}
+		} );
+		sync();
+	}
+
+	// While unpinned (auto), follow live OS changes.
+	if ( mql ) {
+		var onChange = function () {
+			if ( ! root.getAttribute( 'data-apx-theme' ) ) {
+				sync();
+			}
+		};
+		if ( mql.addEventListener ) {
+			mql.addEventListener( 'change', onChange );
+		} else if ( mql.addListener ) {
+			mql.addListener( onChange ); // Safari < 14
+		}
+	}
+
+	if ( d.readyState === 'loading' ) {
+		d.addEventListener( 'DOMContentLoaded', bind );
+	} else {
+		bind();
 	}
 } )();

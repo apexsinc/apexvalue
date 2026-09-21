@@ -100,6 +100,23 @@ Every CTA in that path defaults to `/inquiry/` (the Airtable inquiry form) or th
 
 ## Recent updates
 
+- **1.13.0** — Light/dark mode with OS auto-detection. The site follows
+  the visitor's system preference by default (pure CSS, works without
+  JS); the header toggle pins a choice in `localStorage`, and a tiny
+  head bootstrap applies it before first paint (no flash). Dark values
+  live in one token block (`prefers-color-scheme` +
+  `html[data-apx-theme]`); Storefront's inline Customizer chrome
+  (header/footer/handheld/nav), the monochrome logo (CSS-inverted — the
+  artwork is pure black), the cookie bar, cart preview and dropdowns are
+  re-inked for dark. Accent shifts to a light purple for contrast on
+  dark surfaces. Verified in real browsers: auto-detect both ways,
+  toggle + persistence across reloads, no-FOUC timing, zero JS errors,
+  WCAG contrast (body 13.8:1, nav 10.6:1, footer 15.2:1), and
+  full-page-screenshot luminance analysis across home/about/cart in
+  both modes. Fixed en route: the head-bootstrap hook was registered
+  inside `wp_enqueue_scripts` (same priority as `wp_head`'s own pass),
+  where it silently never ran.
+
 - **1.12.5** — Cache-safety hardening and a full end-to-end quotation
   test against the cached site. Cart-cookie cache bypass (dropin +
   `.htaccess`), admin watchdog for it, Post Views Counter moved to JS

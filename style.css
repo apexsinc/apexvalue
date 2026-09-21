@@ -4,7 +4,7 @@ Theme URI:    https://www.apexvalue.com
 Description:  Apex Value child theme of Storefront. Modern, refined evolution of the default look: cleaner typography, tighter header, card-based product grids and accessible interactions.
 Author:       Apex Value
 Template:     storefront
-Version:      1.12.5
+Version:      1.13.0
 License:      GNU General Public License v2 or later
 License URI:  http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain:  apexvalue
@@ -34,6 +34,28 @@ Text Domain:  apexvalue
 	--apx-line: rgba(0, 0, 0, 0.08);
 	--apx-paper: #ffffff;
 	--apx-tint: #f6f7f9;
+
+	/* Semantic aliases — everything below adapts via the dark-mode block.
+	   on-accent: readable text on green fills; canvas: page background. */
+	--apx-canvas: #ffffff;
+	--apx-on-green: #1a1c20;
+	--apx-star: #e8a33d;
+	--apx-line-strong: rgba(0, 0, 0, 0.16);
+	--apx-focus-ring: rgba(143, 164, 191, 0.25);
+	--apx-placeholder: #9aa0a6;
+	--apx-on-accent: #ffffff;
+	--apx-black: #000000;
+	--apx-eyebrow: #51677f;
+	--apx-accent-hover: #6d4799;
+	--apx-accent-tint: rgba(127, 84, 179, 0.35);
+	--apx-ok: #0f834d;
+	--apx-danger: #e2401c;
+	--apx-hover-wash: rgba(127, 127, 127, 0.08);
+	--apx-sheen: rgba(255, 255, 255, 0.28);
+	--apx-cookie-bg: #1a1c20;
+
+	/* Color scheme (form controls, scrollbars, UA dark UA styles) */
+	color-scheme: light;
 
 	/* Radii & shadows */
 	--apx-radius: 8px;
@@ -67,6 +89,252 @@ Text Domain:  apexvalue
 	--wp--preset--spacing--70: 5rem;
 	--wp--preset--spacing--80: 6rem;
 }
+
+/* =====================================================================
+   DARK MODE
+   Every component reads the semantic tokens above, so re-pointing them
+   here re-skins the whole site. The page renders LIGHT by default; this
+   block activates when the OS asks for dark (auto — works without JS)
+   or the visitor explicitly picks a mode via the header toggle.
+   ===================================================================== */
+@media (prefers-color-scheme: dark) {
+	:root:not([data-apx-theme]) {
+		--apx-canvas: #101418;
+		--apx-ink: #f2f4f7;
+		--apx-body: #b9c2cf;
+		--apx-muted: #8d97a5;
+		--apx-line: rgba(255, 255, 255, 0.1);
+		--apx-line-strong: rgba(255, 255, 255, 0.2);
+		--apx-paper: #161a20;
+		--apx-tint: #1e242c;
+		--apx-black: #3a3f46;
+		--apx-focus-ring: rgba(159, 196, 226, 0.35);
+		--apx-placeholder: #7d8794;
+		--apx-eyebrow: #9fc4e2;
+		--apx-accent: #a685d9;
+		--apx-accent-dark: #b89ae4;
+		--apx-accent-hover: #b89ae4;
+		--apx-accent-tint: rgba(166, 133, 217, 0.45);
+		--apx-on-accent: #14161a;
+		--apx-ok: #4fc880;
+		--apx-danger: #ff6b52;
+		--apx-hover-wash: rgba(255, 255, 255, 0.08);
+		--apx-sheen: rgba(255, 255, 255, 0.14);
+		--apx-cookie-bg: #0d1117;
+		--apx-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5), 0 1px 3px rgba(0, 0, 0, 0.55);
+		--apx-shadow-md: 0 4px 10px -2px rgba(0, 0, 0, 0.55), 0 12px 20px -6px rgba(0, 0, 0, 0.6);
+		--apx-shadow-lg: 0 8px 18px -4px rgba(0, 0, 0, 0.6), 0 22px 40px -12px rgba(0, 0, 0, 0.7);
+
+		color-scheme: dark;
+	}
+}
+
+html[data-apx-theme="dark"] {
+	--apx-canvas: #101418;
+	--apx-ink: #f2f4f7;
+	--apx-body: #b9c2cf;
+	--apx-muted: #8d97a5;
+	--apx-line: rgba(255, 255, 255, 0.1);
+	--apx-line-strong: rgba(255, 255, 255, 0.2);
+	--apx-paper: #161a20;
+	--apx-tint: #1e242c;
+	--apx-black: #3a3f46;
+	--apx-focus-ring: rgba(159, 196, 226, 0.35);
+	--apx-placeholder: #7d8794;
+	--apx-eyebrow: #9fc4e2;
+	--apx-accent: #a685d9;
+	--apx-accent-dark: #b89ae4;
+	--apx-accent-hover: #b89ae4;
+	--apx-accent-tint: rgba(166, 133, 217, 0.45);
+	--apx-on-accent: #14161a;
+	--apx-ok: #4fc880;
+	--apx-danger: #ff6b52;
+	--apx-hover-wash: rgba(255, 255, 255, 0.08);
+	--apx-sheen: rgba(255, 255, 255, 0.14);
+	--apx-cookie-bg: #0d1117;
+	--apx-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5), 0 1px 3px rgba(0, 0, 0, 0.55);
+	--apx-shadow-md: 0 4px 10px -2px rgba(0, 0, 0, 0.55), 0 12px 20px -6px rgba(0, 0, 0, 0.6);
+	--apx-shadow-lg: 0 8px 18px -4px rgba(0, 0, 0, 0.6), 0 22px 40px -12px rgba(0, 0, 0, 0.7);
+
+	color-scheme: dark;
+}
+
+/* html[data-apx-theme="light"] intentionally re-declares nothing: it only
+   stops the media-query block below from matching (auto → light pin). */
+
+/* --- Dark chrome: header, nav, handheld bar ---------------------------- */
+/* The steel-blue header/footer/handheld chrome and its ink colors come
+   from Storefront's inline Customizer CSS — re-point them here. */
+
+@media (prefers-color-scheme: dark) {
+	html:not([data-apx-theme]) body {
+		background-color: var(--apx-canvas);
+	}
+
+	html:not([data-apx-theme]) .site-header,
+	html:not([data-apx-theme]) .storefront-handheld-footer-bar,
+	html:not([data-apx-theme]) .storefront-handheld-footer-bar ul li > a,
+	html:not([data-apx-theme]) .storefront-handheld-footer-bar ul li.search .site-search {
+		background-color: #232b36;
+	}
+
+	html:not([data-apx-theme]) .site-header {
+		color: #eef2f6;
+		border-bottom-color: rgba(255, 255, 255, 0.12);
+	}
+
+	html:not([data-apx-theme]) .main-navigation ul.menu > li > a,
+	html:not([data-apx-theme]) .main-navigation ul.nav-menu > li > a,
+	html:not([data-apx-theme]) .site-header-cart .cart-contents {
+		color: #eef2f6;
+	}
+
+	html:not([data-apx-theme]) .main-navigation ul.menu > li > a:hover,
+	html:not([data-apx-theme]) .main-navigation ul.nav-menu > li > a:hover,
+	html:not([data-apx-theme]) ul.menu li.current-menu-item > a,
+	html:not([data-apx-theme]) ul.menu li.current-menu-ancestor > a,
+	html:not([data-apx-theme]) ul.menu li.current-menu-parent > a {
+		color: #b8cce4;
+	}
+
+	/* Dropdown cards, cart preview, search pill button on dark header */
+	html:not([data-apx-theme]) .main-navigation ul.menu ul,
+	html:not([data-apx-theme]) .main-navigation ul.nav-menu ul,
+	html:not([data-apx-theme]) .main-navigation ul.menu > li > .sub-menu,
+	html:not([data-apx-theme]) .site-search .woocommerce-product-search button[type="submit"] {
+		background: #2c3542;
+		color: #eef2f6;
+	}
+
+	html:not([data-apx-theme]) .main-navigation ul.menu ul li a,
+	html:not([data-apx-theme]) .main-navigation ul.nav-menu ul li a {
+		color: #c9d4e0;
+	}
+
+	html:not([data-apx-theme]) .main-navigation ul.menu ul li a:hover,
+	html:not([data-apx-theme]) .main-navigation ul.menu ul li:hover > a,
+	html:not([data-apx-theme]) .main-navigation ul.nav-menu ul li a:hover,
+	html:not([data-apx-theme]) .main-navigation ul.nav-menu ul li:hover > a {
+		background: #232b36;
+		color: #eef2f6;
+	}
+
+	/* Monochrome logo: black ink vanishes on the dark header — flip it */
+	html:not([data-apx-theme]) .site-header .custom-logo-link img.apex-logo-invertable {
+		filter: invert(1) brightness(1.1);
+	}
+}
+
+html[data-apx-theme="dark"] body {
+	background-color: var(--apx-canvas);
+}
+
+html[data-apx-theme="dark"] .site-header,
+html[data-apx-theme="dark"] .storefront-handheld-footer-bar,
+html[data-apx-theme="dark"] .storefront-handheld-footer-bar ul li > a,
+html[data-apx-theme="dark"] .storefront-handheld-footer-bar ul li.search .site-search {
+	background-color: #232b36;
+}
+
+html[data-apx-theme="dark"] .site-header {
+	color: #eef2f6;
+	border-bottom-color: rgba(255, 255, 255, 0.12);
+}
+
+html[data-apx-theme="dark"] .main-navigation ul.menu > li > a,
+html[data-apx-theme="dark"] .main-navigation ul.nav-menu > li > a,
+html[data-apx-theme="dark"] .site-header-cart .cart-contents {
+	color: #eef2f6;
+}
+
+html[data-apx-theme="dark"] .main-navigation ul.menu > li > a:hover,
+html[data-apx-theme="dark"] .main-navigation ul.nav-menu > li > a:hover,
+html[data-apx-theme="dark"] ul.menu li.current-menu-item > a,
+html[data-apx-theme="dark"] ul.menu li.current-menu-ancestor > a,
+html[data-apx-theme="dark"] ul.menu li.current-menu-parent > a {
+	color: #b8cce4;
+}
+
+html[data-apx-theme="dark"] .main-navigation ul.menu ul,
+html[data-apx-theme="dark"] .main-navigation ul.nav-menu ul,
+html[data-apx-theme="dark"] .main-navigation ul.menu > li > .sub-menu,
+html[data-apx-theme="dark"] .site-search .woocommerce-product-search button[type="submit"] {
+	background: #2c3542;
+	color: #eef2f6;
+}
+
+html[data-apx-theme="dark"] .main-navigation ul.menu ul li a,
+html[data-apx-theme="dark"] .main-navigation ul.nav-menu ul li a {
+	color: #c9d4e0;
+}
+
+html[data-apx-theme="dark"] .main-navigation ul.menu ul li a:hover,
+html[data-apx-theme="dark"] .main-navigation ul.menu ul li:hover > a,
+html[data-apx-theme="dark"] .main-navigation ul.nav-menu ul li a:hover,
+html[data-apx-theme="dark"] .main-navigation ul.nav-menu ul li:hover > a {
+	background: #232b36;
+	color: #eef2f6;
+}
+
+html[data-apx-theme="dark"] .site-header .custom-logo-link img.apex-logo-invertable {
+	filter: invert(1) brightness(1.1);
+}
+
+/* --- Dark chrome: footer & handheld bar ink ---------------------------- */
+/* Footer bg comes from Customizer (#2c3540 dark — the adaptive tokens in
+   inc/design-tokens.php are already tuned for it). The handheld bar
+   inherits the header color above; only its labels need re-inking. */
+
+@media (prefers-color-scheme: dark) {
+	html:not([data-apx-theme]) .site-footer {
+		background-color: #1c2028;
+		border-top-color: rgba(255, 255, 255, 0.1);
+	}
+
+	html:not([data-apx-theme]) .storefront-handheld-footer-bar ul li a,
+	html:not([data-apx-theme]) .storefront-handheld-footer-bar ul li .my-account::before,
+	html:not([data-apx-theme]) .storefront-handheld-footer-bar ul li .search::before,
+	html:not([data-apx-theme]) .storefront-handheld-footer-bar ul li .cart::before {
+		color: #d7dee7;
+	}
+}
+
+html[data-apx-theme="dark"] .site-footer {
+	background-color: #1c2028;
+	border-top-color: rgba(255, 255, 255, 0.1);
+}
+
+html[data-apx-theme="dark"] .storefront-handheld-footer-bar ul li a,
+html[data-apx-theme="dark"] .storefront-handheld-footer-bar ul li .my-account::before,
+html[data-apx-theme="dark"] .storefront-handheld-footer-bar ul li .search::before,
+html[data-apx-theme="dark"] .storefront-handheld-footer-bar ul li .cart::before {
+	color: #d7dee7;
+}
+
+/* --- Dark hero: deepen the navy instead of the flat Customizer color --- */
+
+@media (prefers-color-scheme: dark) {
+	html:not([data-apx-theme]) .apex-hero {
+		background-image: linear-gradient(160deg, #17293b 0%, #0f1b28 100%);
+		background-color: #17293b;
+	}
+
+	html:not([data-apx-theme]) .apex-hero__eyebrow {
+		border-color: rgba(255, 255, 255, 0.16);
+	}
+}
+
+html[data-apx-theme="dark"] .apex-hero {
+	background-image: linear-gradient(160deg, #17293b 0%, #0f1b28 100%);
+	background-color: #17293b;
+}
+
+html[data-apx-theme="dark"] .apex-hero__eyebrow {
+	border-color: rgba(255, 255, 255, 0.16);
+}
+
+/* Meta theme-color follows the active mode — handled by the head script
+   (CSS cannot restyle <meta> elements). */
 
 /* ---------------------------------------------------------------------
    1. Foundations — typography & rhythm
@@ -154,7 +422,7 @@ a:hover { color: var(--apx-ink); }
 
 ::selection {
 	background: var(--apx-brand);
-	color: #fff;
+	color: var(--apx-on-accent);
 }
 
 /* Consistent focus ring (keyboard visible, mouse subtle) */
@@ -170,6 +438,13 @@ textarea:focus-visible,
 	outline: 2px solid var(--apx-accent);
 	outline-offset: 2px;
 	border-radius: 2px;
+}
+
+input:focus,
+select:focus,
+textarea:focus,
+.input-text:focus {
+	box-shadow: 0 0 0 3px var(--apx-focus-ring);
 }
 
 /* ---------------------------------------------------------------------
@@ -210,17 +485,16 @@ button:active,
 button,
 input[type="submit"],
 .single-product .button:not(.alt):not(.wc-block-components-button),
-.button:not(.alt):not(.cta) {
-	background-color: var(--apx-green);
+.button:not(.alt):not(.cta) {		background-color: var(--apx-green);
 	border-color: var(--apx-green);
-	color: var(--apx-ink);
+	color: var(--apx-on-green);
 }
 
 button:hover,
 .button:not(.alt):not(.cta):hover {
 	background-color: var(--apx-green-dark);
 	border-color: var(--apx-green-dark);
-	color: var(--apx-ink);
+	color: var(--apx-on-green);
 }
 
 /* Secondary / outline button for secondary actions */
@@ -229,7 +503,7 @@ button:hover,
 	border-color: var(--apx-ink);
 }
 
-.button.alt:hover { background-color: #000; border-color: #000; }
+.button.alt:hover { background-color: var(--apx-black); border-color: var(--apx-black); }
 
 /* ---------------------------------------------------------------------
    3. Forms & inputs
@@ -258,12 +532,12 @@ textarea:focus,
 .input-text:focus,
 .select2-container--default.select2-container--focus .select2-selection--single {
 	border-color: var(--apx-brand);
-	box-shadow: 0 0 0 3px rgba(143, 164, 191, 0.25);
-	background-color: #fff;
+	box-shadow: 0 0 0 3px var(--apx-focus-ring);
+	background-color: var(--apx-paper);
 	outline: none;
 }
 
-::placeholder { color: #9aa0a6; opacity: 1; }
+::placeholder { color: var(--apx-placeholder); opacity: 1; }
 
 /* ---------------------------------------------------------------------
    4. Header — single compact bar
@@ -345,7 +619,7 @@ textarea:focus,
 
 .site-search input.search-field:focus {
 	border-color: var(--apx-brand);
-	box-shadow: 0 0 0 3px rgba(143, 164, 191, 0.25);
+	box-shadow: 0 0 0 3px var(--apx-focus-ring);
 }
 
 .site-search .woocommerce-product-search button[type="submit"] {
@@ -381,7 +655,7 @@ textarea:focus,
 
 .site-search .woocommerce-product-search button[type="submit"]:hover {
 	background: var(--apx-brand);
-	color: #fff;
+	color: var(--apx-on-accent);
 }
 
 /* Secondary navigation (unused now, but styled if ever populated) */
@@ -446,7 +720,7 @@ textarea:focus,
 @media (min-width: 768px) {
 	.main-navigation ul.menu ul,
 	.main-navigation ul.nav-menu ul {
-		background: #fff;
+		background: var(--apx-paper);
 		border: 1px solid var(--apx-line);
 		border-radius: var(--apx-radius);
 		box-shadow: var(--apx-shadow-md);
@@ -512,7 +786,7 @@ textarea:focus,
 
 .site-header-cart .cart-contents:hover {
 	background: var(--apx-brand);
-	color: #fff;
+	color: var(--apx-on-accent);
 }
 
 /* Storefront adds the cart glyph via a floated ::after; integrate it into
@@ -545,7 +819,7 @@ textarea:focus,
 	left: auto;
 	top: calc(100% + 6px);
 	width: 300px;
-	background: #fff;
+	background: var(--apx-paper);
 	border: 1px solid var(--apx-line);
 	border-radius: var(--apx-radius);
 	box-shadow: var(--apx-shadow-md);
@@ -641,7 +915,7 @@ ul.products li.product:hover,
 .wc-block-product-template .wc-block-product:hover {
 	box-shadow: var(--apx-shadow-md);
 	transform: translateY(-2px);
-	border-color: rgba(0, 0, 0, 0.14);
+	border-color: var(--apx-line-strong);
 }
 
 ul.products li.product img,
@@ -669,7 +943,7 @@ ul.products li.product .price,
 }
 
 /* Star ratings */
-.star-rating span::before { color: #e8a33d; }
+.star-rating span::before { color: var(--apx-star); }
 
 /* Sale badge */
 span.onsale,
@@ -703,7 +977,7 @@ span.onsale,
 .woocommerce-pagination .page-numbers li .page-numbers.current {
 	background: var(--apx-ink);
 	border-color: var(--apx-ink);
-	color: #fff;
+	color: var(--apx-canvas);
 }
 
 /* Notices */
@@ -796,7 +1070,7 @@ span.onsale,
 
 /* Sidebar product category / nav lists: tidy link rows */
 .widget-area .widget ul li {
-	border-bottom: 1px dashed rgba(0, 0, 0, 0.05);
+	border-bottom: 1px dashed var(--apx-line);
 }
 
 .widget-area .widget ul li:last-child { border-bottom: 0; }
@@ -1132,7 +1406,7 @@ span.onsale,
 .apex-footer__social:focus-visible {
 	color: var(--apx-footer-link);
 	border-color: var(--apx-footer-link);
-	background: rgba(127, 127, 127, 0.08);
+	background: var(--apx-hover-wash);
 	transform: translateY(-2px);
 	box-shadow: 0 6px 14px -6px rgba(0, 0, 0, 0.35);
 }
@@ -1423,7 +1697,7 @@ table thead th {
 	font-weight: 700;
 }
 
-table tbody tr { border-bottom: 1px solid rgba(0, 0, 0, 0.04); }
+table tbody tr { border-bottom: 1px solid var(--apx-line); }
 
 .error404 .site-content .widget_product_search {
 	background: var(--apx-tint);
@@ -1474,7 +1748,7 @@ button:active,
 	background: linear-gradient(
 		105deg,
 		transparent,
-		rgba(255, 255, 255, 0.28),
+		var(--apx-sheen),
 		transparent
 	);
 	transform: skewX(-18deg);
@@ -1711,7 +1985,7 @@ ul.products li.product:hover img,
 	   (axe color-contrast failure); use the primary CTA treatment. */
 	background-color: var(--apx-green);
 	border-color: var(--apx-green-dark);
-	color: #1a2b12;
+	color: var(--apx-on-green);
 }
 
 .single-product div.product form.cart .single_add_to_cart_button:hover {
@@ -1773,7 +2047,7 @@ ul.products li.product:hover img,
 
 .woocommerce-tabs ul.tabs li.active {
 	background: var(--apx-tint);
-	border-color: rgba(0, 0, 0, 0.14) !important;
+	border-color: var(--apx-line-strong) !important;
 }
 
 .woocommerce-tabs ul.tabs li.active a {
@@ -1884,7 +2158,7 @@ ul.products li.product:hover img,
 .entry-content a {
 	color: var(--apx-accent);
 	text-decoration: underline;
-	text-decoration-color: rgba(127, 84, 179, 0.35);
+	text-decoration-color: var(--apx-accent-tint);
 	text-underline-offset: 2px;
 }
 
@@ -1933,7 +2207,7 @@ ul.products li.product:hover img,
 
 .site-main nav.navigation.post-navigation a:hover,
 .site-main nav.navigation.post-navigation a:focus-visible {
-	border-color: rgba(0, 0, 0, 0.16);
+	border-color: var(--apx-line-strong);
 	box-shadow: var(--apx-shadow-sm);
 }
 
@@ -2034,7 +2308,7 @@ ul.products li.product:hover img,
 	font-weight: 900;
 	line-height: 1;
 	letter-spacing: -0.04em;
-	color: #51677f;
+	color: var(--apx-eyebrow);
 	margin: 0 0 0.5rem;
 }
 
@@ -2072,19 +2346,19 @@ ul.products li.product:hover img,
 
 .apex-404__btn--primary {
 	background: var(--apx-accent);
-	color: #fff;
+	color: var(--apx-on-accent);
 }
 
 .apex-404__btn--primary:hover,
 .apex-404__btn--primary:focus-visible {
-	background: #6d4799;
-	color: #fff;
+	background: var(--apx-accent-hover);
+	color: var(--apx-on-accent);
 	transform: translateY(-1px);
 	box-shadow: var(--apx-shadow-sm);
 }
 
 .apex-404__btn--ghost {
-	border: 1px solid rgba(0, 0, 0, 0.16);
+	border: 1px solid var(--apx-line-strong);
 	color: var(--apx-ink);
 }
 
@@ -2199,9 +2473,9 @@ ul.products li.product:hover img,
 	box-shadow: var(--apx-shadow-sm);
 }
 
-.woocommerce-message { border-left-color: #0f834d; }
+.woocommerce-message { border-left-color: var(--apx-ok); }
 .woocommerce-info { border-left-color: var(--apx-brand); }
-.woocommerce-error { border-left-color: #e2401c; }
+.woocommerce-error { border-left-color: var(--apx-danger); }
 
 .woocommerce-message::before,
 .woocommerce-info::before,
@@ -2298,7 +2572,7 @@ input[type="radio"] {
 	padding: 0.55rem 1.15rem;
 	border-radius: 999px;
 	background: var(--apx-accent);
-	color: #fff;
+	color: var(--apx-on-accent);
 	font-weight: 600;
 	font-size: 0.875rem;
 	letter-spacing: 0.01em;
@@ -2311,7 +2585,7 @@ input[type="radio"] {
 .apex-quote-cta:hover,
 .apex-quote-cta:focus-visible {
 	background: var(--apx-brand);
-	color: #fff;
+	color: var(--apx-on-accent);
 	box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
 }
 
@@ -2325,6 +2599,83 @@ input[type="radio"] {
 	.apex-quote-cta {
 		margin-left: 0.75rem;
 	}
+}
+
+/* --- Light/dark mode toggle -------------------------------------------- */
+
+.apex-mode-toggle {
+	position: relative;
+	flex: 0 0 auto;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 36px;
+	height: 36px;
+	padding: 0;
+	border: 1px solid var(--apx-line-strong);
+	border-radius: 999px;
+	background: var(--apx-paper);
+	color: var(--apx-body);
+	cursor: pointer;
+	box-shadow: none;
+}
+
+.apex-mode-toggle:hover,
+.apex-mode-toggle:focus-visible {
+	color: var(--apx-ink);
+	border-color: var(--apx-brand);
+	transform: translateY(-1px);
+	box-shadow: var(--apx-shadow-sm);
+}
+
+.apex-mode-toggle:active {
+	transform: none;
+	box-shadow: none;
+}
+
+/* Icon cross-fade: the glyph shows the mode you'd switch TO.
+   Light (default state) → moon; dark (pinned or auto) → sun. */
+.apex-mode-toggle__icon {
+	transition: opacity 0.25s var(--apx-ease), transform 0.25s var(--apx-ease);
+}
+
+.apex-mode-toggle__icon--sun {
+	position: absolute;
+	opacity: 0;
+	transform: rotate(-90deg) scale(0.6);
+}
+
+/* Moon visible by default = "switch to dark" (auto-light or pinned light) */
+
+@media (prefers-color-scheme: dark) {
+	html:not([data-apx-theme]) .apex-mode-toggle__icon--sun {
+		opacity: 1;
+		transform: none;
+	}
+
+	html:not([data-apx-theme]) .apex-mode-toggle__icon--moon {
+		opacity: 0;
+		transform: rotate(90deg) scale(0.6);
+	}
+}
+
+html[data-apx-theme="dark"] .apex-mode-toggle__icon--sun {
+	opacity: 1;
+	transform: none;
+}
+
+html[data-apx-theme="dark"] .apex-mode-toggle__icon--moon {
+	opacity: 0;
+	transform: rotate(90deg) scale(0.6);
+}
+
+/* Desktop: nav-row instance shows; the top-row one rests.
+   Mobile: the reverse (nav row is hidden below 768px). */
+.apex-mode-toggle--top { display: none; }
+
+@media (max-width: 767.98px) {
+	.apex-mode-toggle--top { display: inline-flex; }
+	.apex-mode-toggle--nav { display: none; }
 }
 
 /* Under 768px the header bar is too crowded — the handheld footer
@@ -2349,7 +2700,7 @@ input[type="radio"] {
 	font-size: 0.5625rem;
 	font-weight: 600;
 	text-align: center;
-	color: #fff;
+	color: var(--apx-on-accent);
 	/* Contain the ::after chip's negative z-index inside this link,
 	   so it can never slip behind the bar's own background. */
 	isolation: isolate;
@@ -2483,7 +2834,7 @@ input[type="radio"] {
 .apex-card:hover {
 	box-shadow: var(--apx-shadow-md);
 	transform: translateY(-2px);
-	border-color: rgba(0, 0, 0, 0.14);
+	border-color: var(--apx-line-strong);
 }
 
 /* Product hits: mimic the loop-card internals (image frame, title scale,
@@ -2606,7 +2957,7 @@ input[type="radio"] {
 /* --- Cookie bar (SiteSEO) ------------------------------------------------ */
 
 #siteseo-cookie-bar {
-	background: var(--apx-ink);
+	background: var(--apx-cookie-bg);
 	color: #fff;
 	box-shadow: 0 -4px 18px rgba(16, 24, 40, 0.18);
 }
@@ -2684,7 +3035,7 @@ input[type="radio"] {
 	width: fit-content;
 	margin: 0.9rem auto 0;
 	padding: 0.45em 1.2em;
-	border: 1px solid rgba(0, 0, 0, 0.14);
+	border: 1px solid var(--apx-line-strong);
 	border-radius: 999px;
 	background: var(--apx-tint);
 	color: var(--apx-brand-dark);
@@ -2697,7 +3048,7 @@ input[type="radio"] {
 .wp-block-woocommerce-empty-cart-block .wc-block-grid__product:hover {
 	box-shadow: var(--apx-shadow-md);
 	transform: translateY(-2px);
-	border-color: rgba(0, 0, 0, 0.14);
+	border-color: var(--apx-line-strong);
 }
 
 /* ==========================================================================
@@ -2742,7 +3093,7 @@ input[type="radio"] {
 .apex-collection-nav__chip.is-active {
 	border-color: var(--apx-ink);
 	background: var(--apx-ink);
-	color: #fff;
+	color: var(--apx-canvas);
 }
 
 /* Mobile: let the chip row scroll sideways rather than wrap into a tall stack */
@@ -2974,7 +3325,7 @@ input[type="radio"] {
 }
 
 .apex-how__step {
-	background: #fff;
+	background: var(--apx-paper);
 	border: 1px solid var(--apx-line);
 	border-radius: var(--apx-radius);
 	box-shadow: var(--apx-shadow-sm);
@@ -3013,7 +3364,7 @@ input[type="radio"] {
 .apex-how__btn {
 	background: var(--apx-accent);
 	border-radius: var(--apx-radius-sm);
-	color: #fff;
+	color: var(--apx-on-accent);
 	display: inline-block;
 	font-weight: 600;
 	padding: 0.7rem 1.4rem;
@@ -3135,7 +3486,7 @@ input[type="radio"] {
 }
 
 .apex-brandspot__card {
-	background: #fff;
+	background: var(--apx-paper);
 	border: 1px solid var(--apx-line);
 	border-radius: var(--apx-radius);
 	box-shadow: var(--apx-shadow-sm);
@@ -3200,7 +3551,7 @@ input[type="radio"] {
 .apex-brandspot__btn {
 	background: var(--apx-accent);
 	border-radius: var(--apx-radius-sm);
-	color: #fff;
+	color: var(--apx-on-accent);
 	display: inline-block;
 	font-weight: 600;
 	padding: 0.7rem 1.4rem;
@@ -3266,7 +3617,7 @@ input[type="radio"] {
 .wc-block-components-text-input input[type="tel"] {
 	border: 1px solid var(--apx-line);
 	border-radius: var(--apx-radius-sm);
-	background-color: #fff;
+	background-color: var(--apx-paper);
 	transition: border-color var(--apx-speed) var(--apx-ease), box-shadow var(--apx-speed) var(--apx-ease);
 }
 
@@ -3290,7 +3641,7 @@ input[type="radio"] {
 
 .wc-block-components-radio-control__option:hover {
 	border-color: var(--apx-accent);
-	background: #fff;
+	background: var(--apx-paper);
 }
 
 .wc-block-components-totals-footer-item .wc-block-components-totals-item__value {

@@ -48,6 +48,34 @@ if ( ! class_exists( 'ApexValue_Theme' ) ) :
 			// assets/css/icons-subset.css keeps only the rules for glyphs this
 			// site renders (29 KB, font-display: swap, subset font URLs).
 			add_filter( 'style_loader_src', array( $this, 'swap_icons_css' ), 10, 2 );
+
+			// Tag the custom-logo <img> so dark mode can invert it (the
+			// artwork is 100% black monochrome — see the dark block in
+			// style.css).
+			add_filter( 'get_custom_logo', array( $this, 'tag_logo_for_dark_mode' ) );
+
+			// Color-mode bootstrap (metas + no-FOUC script). Registered here
+			// at priority 1 — NOT from scripts(): wp_enqueue_scripts itself
+			// fires at wp_head priority 1, and a callback added during that
+			// same-priority pass never runs for the request.
+			add_action( 'wp_head', array( $this, 'theme_mode_head' ), 1 );
+		}
+
+		/**
+		 * Tag the custom-logo <img> with a class dark mode can target.
+		 *
+		 * The site logo is 100% black monochrome artwork, so in dark mode
+		 * CSS inverts it to white (see style.css). This filter simply marks
+		 * which images are ours to touch — it changes nothing in light mode.
+		 *
+		 * @param string $html Custom logo HTML.
+		 * @return string Maybe-tagged logo HTML.
+		 */
+		public function tag_logo_for_dark_mode( $html ) {
+			if ( false !== strpos( $html, ' class="' ) ) {
+				return str_replace( ' class="', ' class="apex-logo-invertable ', $html );
+			}
+			return str_replace( '<img ', '<img class="apex-logo-invertable" ', $html );
 		}
 
 		/**
@@ -96,6 +124,25 @@ if ( ! class_exists( 'ApexValue_Theme' ) ) :
 				false
 			);
 
+		}
+
+		/**
+		 * Head markup for light/dark mode: color-scheme + theme-color metas
+		 * and the tiny no-FOUC bootstrap script.
+		 *
+		 * Must run before stylesheets print (wp_head priority 1; styles go
+		 * out around priority 8) so dark pages never flash white.
+		 *
+		 * @return void
+		 */
+		public function theme_mode_head() {
+			echo '<meta name="color-scheme" content="light dark" />' . "\n";
+			echo '<meta name="theme-color" content="#ffffff" />' . "\n";
+			echo <<<"SCRIPT"
+<script>
+(function(){try{var k='apexvalue:mode',t=localStorage.getItem(k),h=document.documentElement,m=t||(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');if(t){h.setAttribute('data-apx-theme',t)}var c=m==='dark'?'#101418':'#ffffff',n=document.querySelector('meta[name="theme-color"]');if(n){n.setAttribute('content',c)}}catch(e){}})();
+</script>
+SCRIPT;
 		}
 
 		/**

@@ -140,6 +140,51 @@ function apexvalue_quote_cta_render() {
 		esc_html( $text )
 	);
 }
+
+/**
+ * Light/dark mode toggle — header top row (visible below 768px).
+ *
+ * A real button with aria-pressed, driven by apexvalue.js. Rendering is
+ * server-side and state-free; the script syncs aria/icon to the effective
+ * mode (auto-detected or persisted) right after the DOM is ready.
+ *
+ * @return void
+ */
+function apexvalue_mode_toggle_top() {
+	apexvalue_mode_toggle_button( 'apex-mode-toggle--top' );
+}
+add_action( 'storefront_header', 'apexvalue_mode_toggle_top', 34 );
+
+/**
+ * Light/dark mode toggle — primary-nav row beside the cart chip (768px+).
+ *
+ * @return void
+ */
+function apexvalue_mode_toggle_nav() {
+	apexvalue_mode_toggle_button( 'apex-mode-toggle--nav' );
+}
+add_action( 'storefront_header', 'apexvalue_mode_toggle_nav', 66 );
+
+/**
+ * Print one theme-mode toggle button.
+ *
+ * @param string $extra_class Positioning class for the instance.
+ * @return void
+ */
+function apexvalue_mode_toggle_button( $extra_class ) {
+	if ( is_admin() ) {
+		return;
+	}
+	?>
+	<button type="button"
+		class="apex-mode-toggle <?php echo esc_attr( $extra_class ); ?>"
+		aria-pressed="false"
+		aria-label="<?php esc_attr_e( 'Switch between light and dark mode', 'apexvalue' ); ?>">
+		<svg class="apex-mode-toggle__icon apex-mode-toggle__icon--moon" viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z" /></svg>
+		<svg class="apex-mode-toggle__icon apex-mode-toggle__icon--sun" viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4.4" /><path d="M12 2v2.3M12 19.7V22M2 12h2.3M19.7 12H22M4.9 4.9l1.7 1.7M17.4 17.4l1.7 1.7M4.9 19.1l1.7-1.7M17.4 6.6l1.7-1.7" /></svg>
+	</button>
+	<?php
+}
 add_action( 'storefront_header', 'apexvalue_quote_cta_render', 62 );
 
 /**
