@@ -100,6 +100,29 @@ Every CTA in that path defaults to `/inquiry/` (the Airtable inquiry form) or th
 
 ## Recent updates
 
+- **1.13.2** — Subtle mode-switch polish and a render-blocking fix.
+  Toggling light/dark now cross-fades surfaces for ~300 ms via an
+  `.apex-mode-anim` class that JS adds only around an actual toggle
+  click (never on page load — no fade flash) and removes ~450 ms
+  later; `prefers-reduced-motion` forces the duration to 0. Also
+  deferred Post Views Counter's JS-mode counter, which printed in
+  `<head>` with no `defer` — a render-blocking parser stall on every
+  page (and a cost we introduced in 1.12.5). The `script_loader_tag`
+  filter anchors on the `src` tag inside WP's whole script *block*
+  (WP passes the inline localize tag + src tag as one string) and
+  leaves the inline config tag untouched. Counting re-verified
+  end-to-end: fresh visit → DB total 371 → 372 across all five
+  aggregates. Lighthouse mobile: TBT 170 → 120 ms, performance
+  78 → 82, a11y/best-practices/SEO still 100, CLS 0. Suites:
+  11/11 transition checks (incl. reduced-motion), 20/20 mode smoke.
+
+- **1.13.1** — Dark-mode forms fix: Storefront inks inputs `#43454b`
+  with no dark variant, so typed text was nearly invisible on dark
+  paper (~1.8:1). Added a dark forms block covering all field types,
+  checkbox/radio `accent-color`, `<select>` options and the full
+  select2 surfaces. Light mode untouched (re-verified). Found by the
+  mobile dark review (24/24 checks at 390×844 and 360×640).
+
 - **1.13.0** — Light/dark mode with OS auto-detection. The site follows
   the visitor's system preference by default (pure CSS, works without
   JS); the header toggle pins a choice in `localStorage`, and a tiny

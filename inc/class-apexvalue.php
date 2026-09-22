@@ -54,6 +54,14 @@ if ( ! class_exists( 'ApexValue_Theme' ) ) :
 			// style.css).
 			add_filter( 'get_custom_logo', array( $this, 'tag_logo_for_dark_mode' ) );
 
+			// Post Views Counter prints its JS-mode counter in <head> with no
+			// defer — a render-blocking parser stall on every page (and we
+			// deliberately enabled JS mode for page-cache compatibility).
+			// It is safe to defer: its config var is an inline script that
+			// runs during parse (before any deferred file), it waits for
+			// DOMContentLoaded itself, and init() touches no DOM nodes.
+			add_filter( 'script_loader_tag', array( $this, 'defer_pvc_counter' ), 10, 3 );
+
 			// Color-mode bootstrap (metas + no-FOUC script). Registered here
 			// at priority 1 — NOT from scripts(): wp_enqueue_scripts itself
 			// fires at wp_head priority 1, and a callback added during that
@@ -76,6 +84,43 @@ if ( ! class_exists( 'ApexValue_Theme' ) ) :
 				return str_replace( ' class="', ' class="apex-logo-invertable ', $html );
 			}
 			return str_replace( '<img ', '<img class="apex-logo-invertable" ', $html );
+		}
+
+		/**
+		 * Add defer to Post Views Counter's front-end script.
+		 *
+		 * PVC enqueues frontend.js in <head> without a defer strategy, so
+		 * the browser blocks HTML parsing to fetch+eval this 4 KB ping
+		 * script on every view. Deferring it:
+		 *   - keeps pvcArgsFrontend correct (the inline localize script
+		 *     runs during parse, before any deferred file executes),
+		 *   - keeps counting correct (the script waits for DOMContentLoaded
+		 *     itself when still parsing; init() only reads cookies and
+		 *     fires the count request).
+		 * Verified live after v1.13.2: views still increment through the
+		 * page cache in JS mode.
+		 *
+		 * @param string $tag    Script HTML tag.
+		 * @param string $handle Script handle.
+		 * @param string $src    Script URL (unused).
+		 * @return string Maybe-deferred tag.
+		 */
+		public function defer_pvc_counter( $tag, $handle, $src ) {
+			// Note: WP passes the whole *block* — the inline `-before`
+			// localize script plus the src script — as one $tag, and the
+			// handle carries no `-js` suffix (that is only the tag id).
+			// So anchor on the src tag itself: match `<script` that has
+			// src= before the first `>` and isn't already deferred, and
+			// touch nothing else in the block.
+			if ( 'post-views-counter-frontend' === $handle ) {
+				$tag = preg_replace(
+					'/<script(?![^>]*\bdefer\b)(?=[^>]*\ssrc=)([^>]*)>/',
+					'<script defer$1>',
+					$tag,
+					1
+				);
+			}
+			return $tag;
 		}
 
 		/**

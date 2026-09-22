@@ -294,14 +294,30 @@
 		}
 	}
 
+	var animTimer;
+
 	function onClick() {
 		var next = effective() === 'dark' ? 'light' : 'dark';
+
+		// Cross-fade the surfaces (~300ms): add the anim class, force one
+		// reflow so the transition is registered in the before-change style,
+		// then flip. The class is removed shortly after, so it never exists
+		// on initial page load — no fade flash on ordinary views.
+		root.classList.add( 'apex-mode-anim' );
+		void root.offsetHeight; // force style/layout flush
 		root.setAttribute( 'data-apx-theme', next );
+
 		try {
 			localStorage.setItem( KEY, next );
 		} catch ( e ) {
 			/* Storage unavailable (private mode) — pin for this pageview only. */
 		}
+
+		clearTimeout( animTimer );
+		animTimer = setTimeout( function () {
+			root.classList.remove( 'apex-mode-anim' );
+		}, 450 );
+
 		sync();
 	}
 

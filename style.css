@@ -4,7 +4,7 @@ Theme URI:    https://www.apexvalue.com
 Description:  Apex Value child theme of Storefront. Modern, refined evolution of the default look: cleaner typography, tighter header, card-based product grids and accessible interactions.
 Author:       Apex Value
 Template:     storefront
-Version:      1.13.1
+Version:      1.13.2
 License:      GNU General Public License v2 or later
 License URI:  http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain:  apexvalue
@@ -2755,6 +2755,27 @@ html[data-apx-theme="dark"] .apex-mode-toggle__icon--sun {
 html[data-apx-theme="dark"] .apex-mode-toggle__icon--moon {
 	opacity: 0;
 	transform: rotate(90deg) scale(0.6);
+}
+
+/* Mode switch: cross-fade surfaces for ~300ms while toggling.
+   The .apex-mode-anim class is added by JS only around an actual
+   toggle click and removed ~450ms later — it is never present on
+   initial load, so there is no fade-in flash on ordinary page views.
+   Honors prefers-reduced-motion (durations forced to 0 below). */
+html.apex-mode-anim *,
+html.apex-mode-anim *::before,
+html.apex-mode-anim *::after {
+	transition-property: background-color, border-color, color, fill, stroke, outline-color, box-shadow;
+	transition-duration: 0.3s;
+	transition-timing-function: var(--apx-ease, ease);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	html.apex-mode-anim *,
+	html.apex-mode-anim *::before,
+	html.apex-mode-anim *::after {
+		transition-duration: 0s !important;
+	}
 }
 
 /* Desktop: nav-row instance shows; the top-row one rests.
