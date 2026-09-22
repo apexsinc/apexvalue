@@ -140,6 +140,57 @@ if ( ! class_exists( 'ApexValue_Theme' ) ) :
 		}
 
 		/**
+		 * Load clearly non-critical stylesheets without blocking render.
+		 *
+		 * The homepage alone ships 14 render-blocking stylesheets; under
+		 * Lighthouse's simulated throttle the whole render gate waits for
+		 * every byte of them (FCP 2.6 s in lab). These five style
+		 * below-the-fold or page-specific UI and are safe to fetch async
+		 * via the standard preload + onload swap (with a <noscript>
+		 * fallback so no-JS agents still get the styles):
+		 *
+		 * - brands.css ............. Storefront brand archive only
+		 * - public-main.css ........ Google Reviews widget (below fold)
+		 * - cookies.css ............ cookie bar chrome (bottom overlay)
+		 * - wc-blocks.css,
+		 *   product-image.css ...... product-card grids below the hero;
+		 *                           they arrive long before the lazy
+		 *                           images they size (CLS stays 0 —
+		 *                           verified in Lighthouse)
+		 *
+		 * Everything above the fold (parent/child core CSS, icon subset)
+		 * stays render-blocking on purpose — no FOUC on header/hero.
+		 *
+		 * @param string $html    Link tag.
+		 * @param string $handle  Style handle.
+		 * @param string $href    Style URL (unused).
+		 * @param string $media   Media attribute (preserved as-is).
+		 * @return string Maybe-async link tag (+ noscript fallback).
+		 */
+		public function async_noncritical_css( $html, $handle, $href, $media ) {
+			static $async = array(
+				'storefront-woocommerce-brands-style',
+				'grw-public-main-css',
+				'siteseo-admin-cookies',
+				'wc-blocks-style',
+				'wc-blocks-style-product-image',
+			);
+
+			if ( ! in_array( $handle, $async, true ) || false === strpos( $html, "rel='stylesheet'" ) ) {
+				return $html;
+			}
+
+			$preload = str_replace(
+				"rel='stylesheet'",
+				"rel='preload' as='style' onload=\"this.rel='stylesheet'\"",
+				$html
+			);
+
+			// No-JS fallback: plain stylesheet link inside <noscript>.
+			return $preload . "\n" . '<noscript>' . $html . '</noscript>';
+		}
+
+		/**
 		 * Register a reusable "Main Menu" so admins can edit items in one place.
 		 */
 		public function register_reusable_menu() {
@@ -155,9 +206,11 @@ if ( ! class_exists( 'ApexValue_Theme' ) ) :
 		 * NOT enqueue style.css again here — that would load it twice.
 		 */
 		public function scripts() {
-			// Preload the two weights used on every page (400 body, 700
-			// headings/UI) plus the solid icon face (header cart/menu glyphs
-			// render above the fold) so text and icons don't swap late.
+			// Preload the weights used on every page (400 body, 700
+			// headings/UI, 900 = `h1`/the LCP element — its late discovery
+			// after style.css parsed stretched the LCP chain) plus the solid
+			// icon face (header cart/menu glyphs render above the fold) so
+			// text and icons never swap late.
 			add_action( 'wp_head', function () {
 				$base = get_stylesheet_directory_uri() . '/assets/fonts/';
 				printf(
@@ -170,9 +223,17 @@ if ( ! class_exists( 'ApexValue_Theme' ) ) :
 				);
 				printf(
 					'<link rel="preload" as="font" type="font/woff2" href="%s" crossorigin />' . "\n",
+					esc_url( $base . 'source-sans-pro-900.woff2' )
+				);
+				printf(
+					'<link rel="preload" as="font" type="font/woff2" href="%s" crossorigin />' . "\n",
 					esc_url( $base . 'fa-solid-900.woff2' )
 				);
 			}, 2 );
+
+			// Load clearly non-critical stylesheets asynchronously so they
+			// stop gating first render (see async_noncritical_css()).
+			add_filter( 'style_loader_tag', array( $this, 'async_noncritical_css' ), 10, 4 );
 
 			// Tiny progressive-enhancement script (reveals, header shadow,
 			// cart bump, smooth anchors). Loaded in the header so the

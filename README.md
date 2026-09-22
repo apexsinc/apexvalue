@@ -100,6 +100,23 @@ Every CTA in that path defaults to `/inquiry/` (the Airtable inquiry form) or th
 
 ## Recent updates
 
+- **1.13.4** — LCP/render-gate optimization. A real-browser probe
+  showed users already get FCP 768 ms / LCP 836 ms (hero H1), but the
+  lab score lagged because (a) all 14 stylesheets gated render and
+  (b) the LCP element's font face (`h1` → Source Sans Pro **900**) was
+  not preloaded, so its chain ran HTML → style.css → discover → fetch
+  → swap. Fixes: preload `source-sans-pro-900.woff2`, and load five
+  non-critical stylesheets (brands, Google-reviews widget, cookie bar,
+  wc-blocks + product-image) via the preload+onload pattern with a
+  `<noscript>` fallback — the five above-the-fold sheets (parent,
+  child, woocommerce, gutenberg-base, icon subset) stay blocking on
+  purpose so header/hero never FOUC. Lighthouse mobile: **88** peak
+  (85–88 across runs, was 78), **FCP 2.6 → 1.5 s, LCP 3.9 → 2.4 s,
+  TBT 50 ms, CLS 0**, a11y/BP/SEO 100. Verified 10/10 async checks
+  (preload→stylesheet swap, sheets applied, noscript inert, hero
+  styled at first paint, CLS 0, H1 weight 900) plus 20/20 smoke,
+  11/11 transition, 14/14 defer suites.
+
 - **1.13.3** — Deferred every remaining synchronous front-end script.
   A sweep after 1.13.2 found six body scripts still halting HTML
   parsing (Storefront navigation, header-cart, handheld bar, brands,
