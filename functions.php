@@ -14,7 +14,18 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'APEXVALUE_VERSION', '1.13.4' );
+define( 'APEXVALUE_VERSION', '1.13.5' );
+
+/**
+ * Image CDN cache epoch.
+ *
+ * Cloudflare caches /wp-content/uploads for 182 days by URL. When we
+ * re-encode an upload in place, bump this constant: the theme appends
+ * it as ?v= to image URLs (collection-card srcs and generated srcsets),
+ * which is a new Cloudflare cache key and therefore fresh bytes — no
+ * purge token needed.
+ */
+define( 'APEXVALUE_IMG_EPOCH', 2 );
 
 /**
  * Pluggable Storefront overrides (cart icon + header cart markup).

@@ -100,6 +100,27 @@ Every CTA in that path defaults to `/inquiry/` (the Airtable inquiry form) or th
 
 ## Recent updates
 
+- **1.13.5** — Image-delivery pass (PSNR-gated recompression + CDN
+  cache-busting). Lighthouse flagged 67.6 KB of waste in six homepage
+  images; each was re-encoded in place with a **PSNR ≥ 36 dB floor**
+  (quality ladder, smallest passing candidate selected): the three
+  featured-collection 768px webps (q45, PSNR ≈ 41 dB), WindTrak-15
+  324px jpg (q75, 36.7 dB), tipping-spoon 324px jpg (q45, 37.98 dB),
+  6313-324px webp (q45, 37.83 dB) — **81.4 KB → 43.2 KB (−47%)**,
+  originals backed up to /tmp/imgbackup. Because Cloudflare caches
+  uploads **182 days by URL** (and the stored CDN purge token is
+  invalid), fresh bytes are delivered under a new URL instead: a new
+  `APEXVALUE_IMG_EPOCH` constant (2) is appended as `?v=2` by (a) a
+  `wp_calculate_image_srcset` filter — the featured images' srcset is
+  *generated at render*, not stored in content, so no post content
+  was touched — and (b) the collection-card `src` in
+  template-overrides.php. Verified: `?v=2` → CF MISS → exact new
+  bytes → HIT; 10/10 cards + 3/3 srcsets busted; 0 broken images;
+  suites 20/20 + 11/11. Lighthouse image-delivery waste:
+  **67.6 → 18.8 KB (−72%)**, remaining items are LH's ideal-encoder
+  estimates on other card thumbnails (already at the PSNR floor for
+  GD). Perf 81–88 across runs (baseline 78), TBT 50–160 ms, CLS 0.
+
 - **1.13.4** — LCP/render-gate optimization. A real-browser probe
   showed users already get FCP 768 ms / LCP 836 ms (hero H1), but the
   lab score lagged because (a) all 14 stylesheets gated render and

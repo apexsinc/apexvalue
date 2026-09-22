@@ -493,7 +493,7 @@ function apexvalue_home_collections() {
 					<a class="apex-collections__card" href="<?php echo esc_url( get_term_link( $term ) ); ?>">
 						<span class="apex-collections__media" aria-hidden="true">
 							<?php if ( $img['url'] ) : ?>
-								<img src="<?php echo esc_url( $img['url'] ); ?>" alt="" loading="lazy" decoding="async"
+								<img src="<?php echo esc_url( add_query_arg( 'v', APEXVALUE_IMG_EPOCH, $img['url'] ) ); ?>" alt="" loading="lazy" decoding="async"
 									<?php if ( $img['width'] && $img['height'] ) : ?>width="<?php echo (int) $img['width']; ?>" height="<?php echo (int) $img['height']; ?>"<?php endif; ?> />
 							<?php else : ?>
 								<span class="apex-collections__mono"><?php echo esc_html( mb_substr( $term->name, 0, 1 ) ); ?></span>
