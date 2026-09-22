@@ -100,6 +100,25 @@ Every CTA in that path defaults to `/inquiry/` (the Airtable inquiry form) or th
 
 ## Recent updates
 
+- **1.13.3** — Deferred every remaining synchronous front-end script.
+  A sweep after 1.13.2 found six body scripts still halting HTML
+  parsing (Storefront navigation, header-cart, handheld bar, brands,
+  sourcebuster, order-attribution) on top of PVC's head script. Each
+  file was audited before whitelisting: no `document.write`, no
+  mid-parse DOM writes; navigation waits for `DOMContentLoaded` itself;
+  sourcebuster only defines `window.sbjs`; the attribution scripts read
+  location/referrer/sessionStorage (stable post-parse); deferred files
+  keep document order (sourcebuster still precedes order-attribution,
+  jQuery in head still runs first). The single `defer_safe_scripts`
+  filter anchors on the `src` tag inside WP's whole script block so
+  inline localize tags stay untouched. Result: **0 sync scripts left
+  (19/19 deferred or module)**. Verified in browsers: cart dropdown
+  reveals on hover, mobile hamburger opens the menu, handheld bar
+  intact, `sbjs`/`wc_order_attribution`/`PostViewsCounter` all execute,
+  zero JS errors; suites 20/20 smoke + 11/11 mode-transition + 14/14
+  defer checks. Lighthouse mobile: 81/100/100/100, TBT 150 ms (run
+  variance ±40 ms), CLS 0.
+
 - **1.13.2** — Subtle mode-switch polish and a render-blocking fix.
   Toggling light/dark now cross-fades surfaces for ~300 ms via an
   `.apex-mode-anim` class that JS adds only around an actual toggle
