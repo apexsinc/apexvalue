@@ -339,7 +339,7 @@ function apexvalue_hero_render() {
 		<div class="col-full apex-hero__inner">
 			<div class="apex-hero__copy">
 			<?php if ( '' !== trim( (string) $kicker ) ) : ?>
-				<p class="apex-hero__kicker"><span class="apex-hero__kicker-dot" aria-hidden="true"></span><span class="apex-hero__kicker-text"><?php echo esc_html( $kicker ); ?></span></p>
+				<p class="apex-hero__kicker"><span class="apex-hero__kicker-text"><?php echo esc_html( $kicker ); ?></span></p>
 			<?php endif; ?>
 
 			<h1 class="apex-hero__title"><?php echo wp_kses_post( $headline_html ); ?></h1>

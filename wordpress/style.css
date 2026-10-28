@@ -4,7 +4,7 @@ Theme URI:    https://www.apexvalue.com
 Description:  Apex Value child theme of Storefront. Modern, refined evolution of the default look: cleaner typography, tighter header, card-based product grids and accessible interactions.
 Author:       Apex Value
 Template:     storefront
-Version:      1.22.0
+Version:      1.23.0
 License:      GNU General Public License v2 or later
 License URI:  http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain:  apexvalue
@@ -1697,24 +1697,13 @@ span.onsale,
 }
 
 .apex-hero__kicker {
-	display: inline-flex;
-	align-items: center;
-	gap: 0.65em;
+	display: inline-block;
 	font-size: 0.8125rem;
 	font-weight: 700;
 	letter-spacing: 0.16em;
 	text-transform: uppercase;
 	color: #9fc4e2;
 	margin: 0 0 1.25rem;
-}
-
-.apex-hero__kicker-dot {
-	width: 0.55em;
-	height: 0.55em;
-	border-radius: 999px;
-	background: var(--apx-green);
-	box-shadow: 0 0 0 4px rgba(129, 215, 66, 0.18);
-	flex: 0 0 auto;
 }
 
 .apex-hero__title {
@@ -3136,11 +3125,9 @@ ul.products li.product:hover img,
 .woocommerce-info { border-left-color: var(--apx-brand); }
 .woocommerce-error { border-left-color: var(--apx-danger); }
 
-.woocommerce-message::before,
-.woocommerce-info::before,
-.woocommerce-error::before {
-	color: inherit;
-}
+.woocommerce-message::before { color: var(--apx-ok); }
+.woocommerce-info::before { color: var(--apx-brand); }
+.woocommerce-error::before { color: var(--apx-danger); }
 
 /* My Account: navigation as a soft card list */
 .woocommerce-MyAccount-navigation ul {
@@ -3204,6 +3191,62 @@ ul.products li.product:hover img,
 .wc-block-components-text-input input,
 .wc-block-components-combobox-control .components-combobox-control__input {
 	border-radius: var(--apx-radius-sm);
+}
+
+/* Classic cart table: small-caps header, ink product links, quiet remove */
+table.shop_table.cart thead th {
+	font-size: 0.75rem;
+	font-weight: 700;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: var(--apx-muted);
+	border-bottom: 1px solid var(--apx-line);
+}
+
+table.shop_table.cart td.product-name a {
+	color: var(--apx-ink);
+	font-weight: 600;
+}
+
+table.shop_table.cart td.product-name a:hover,
+table.shop_table.cart td.product-name a:focus-visible {
+	color: var(--apx-accent);
+}
+
+table.shop_table.cart .quantity .qty {
+	border-radius: var(--apx-radius-sm);
+	padding: 0.65em 0.5em;
+}
+
+table.shop_table.cart td.product-remove a.remove {
+	color: var(--apx-muted);
+	transition: color var(--apx-speed) var(--apx-ease);
+}
+
+table.shop_table.cart td.product-remove a.remove:hover,
+table.shop_table.cart td.product-remove a.remove:focus-visible {
+	color: var(--apx-danger);
+}
+
+/* Classic totals panel as a card */
+.cart_totals {
+	background: var(--apx-paper);
+	border: 1px solid var(--apx-line);
+	border-radius: var(--apx-radius-lg);
+	box-shadow: var(--apx-shadow-sm);
+	padding: 1.5rem;
+}
+
+.cart_totals h2 {
+	font-family: var(--apx-display);
+}
+
+/* Cart/checkout-page buttons keep green primary; pill shape only.
+   Scoped to page body classes so single-product add-to-cart is untouched. */
+.woocommerce-cart .button,
+.woocommerce-checkout .button {
+	border-radius: 999px;
+	padding: 0.85em 1.75em;
 }
 
 /* Native controls follow the accent color everywhere */
@@ -4475,6 +4518,13 @@ html.apex-mode-anim *::after {
 	cursor: not-allowed;
 }
 
+/* Block cart/checkout actions: pill shape only, green primary untouched. */
+.wc-block-cart .wc-block-components-button:not(.is-link),
+.wc-block-checkout .wc-block-components-button:not(.is-link) {
+	border-radius: 999px;
+	padding: 0.85em 1.75em;
+}
+
 .wc-block-components-text-input input[type="text"],
 .wc-block-components-text-input input[type="email"],
 .wc-block-components-text-input input[type="tel"] {
@@ -4487,7 +4537,7 @@ html.apex-mode-anim *::after {
 .wc-block-components-text-input input:focus,
 .wc-block-components-text-input input[type="text"]:focus {
 	border-color: var(--apx-accent);
-	box-shadow: 0 0 0 1px var(--apx-accent);
+	box-shadow: 0 0 0 3px var(--apx-focus-ring);
 	outline: none;
 }
 
@@ -4637,4 +4687,100 @@ html.apex-mode-anim *::after {
 	.home .entry-content .wp-block-button__link:hover {
 		transform: none;
 	}
+}
+
+/* ---------------------------------------------------------------------
+   24. Blog reading polish — archive cards & single-post measure
+   (CSS-only editorial pass. Scoped to body.blog / body.archive /
+   body.search / body.single-post — .home, shop, product, cart and
+   checkout selectors untouched. The `.site-main` segment outranks the
+   generic §15 `.blog .site-main .hentry` rule (0,3,0) so these values
+   win by specificity, without !important.)
+   --------------------------------------------------------------------- */
+
+/* Archive cards: paper, 1px line, radius-lg, fluid padding, hover lift. */
+body.blog .site-main article.hentry,
+body.archive .site-main article.hentry,
+body.search .site-main article.hentry {
+	background: var(--apx-paper);
+	border: 1px solid var(--apx-line);
+	border-radius: var(--apx-radius-lg);
+	box-shadow: var(--apx-shadow-sm);
+	padding: clamp(1.5rem, 4vw, 2.25rem);
+	margin-bottom: 1.75rem;
+	transition: box-shadow var(--apx-speed) var(--apx-ease),
+		transform var(--apx-speed) var(--apx-ease),
+		border-color var(--apx-speed) var(--apx-ease);
+}
+
+body.blog .site-main article.hentry:hover,
+body.archive .site-main article.hentry:hover,
+body.search .site-main article.hentry:hover {
+	box-shadow: var(--apx-shadow-md);
+	transform: translateY(-2px);
+	border-color: var(--apx-line-strong);
+}
+
+body.blog .site-main article.hentry img.wp-post-image,
+body.archive .site-main article.hentry img.wp-post-image,
+body.search .site-main article.hentry img.wp-post-image {
+	border-radius: var(--apx-radius-sm);
+	margin-bottom: 1.25rem;
+}
+
+/* Archive titles: display face is already global; tighten tracking + leading. */
+body.blog .site-main article.hentry .entry-title,
+body.archive .site-main article.hentry .entry-title,
+body.search .site-main article.hentry .entry-title {
+	letter-spacing: -0.015em;
+	line-height: 1.15;
+}
+
+/* Archive excerpts: body ink, comfortable measure. */
+body.blog .site-main article.hentry .entry-content,
+body.archive .site-main article.hentry .entry-content,
+body.search .site-main article.hentry .entry-content {
+	color: var(--apx-body);
+	max-width: 62ch;
+}
+
+/* Post meta row: already 0.8125rem muted via `.posted-on, .byline,
+   .post-author` (§15) — and no `.entry-meta` wrapper exists in the
+   theme, so the uppercase-label treatment is skipped per brief. */
+
+/* Single post: editorial measure + airy prose, strictly under body.single-post. */
+body.single-post .site-main .entry-content {
+	max-width: 68ch;
+}
+
+body.single-post .site-main .entry-content p,
+body.single-post .site-main .entry-content li {
+	font-size: 1.125rem;
+	line-height: 1.8;
+}
+
+body.single-post .site-main .entry-content h2,
+body.single-post .site-main .entry-content h3 {
+	margin-top: 2em;
+}
+
+body.single-post .site-main .entry-content blockquote {
+	border-left: 3px solid var(--apx-accent);
+	background: var(--apx-tint);
+	border-radius: var(--apx-radius-sm);
+	padding: 1em 1.25em;
+}
+
+body.single-post .site-main .entry-content img {
+	border-radius: var(--apx-radius-lg);
+	box-shadow: var(--apx-shadow-sm);
+}
+
+/* Posts pagination: pill buttons (blog/archive/search only — the shared
+   §5 rule also serves WooCommerce, so shop styling is left untouched). */
+body.blog .pagination .page-numbers li .page-numbers,
+body.archive .pagination .page-numbers li .page-numbers,
+body.search .pagination .page-numbers li .page-numbers {
+	border-radius: 999px;
+	padding: 0.5em 1.05em;
 }

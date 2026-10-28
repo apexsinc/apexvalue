@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'APEXVALUE_VERSION', '1.22.0' );
+define( 'APEXVALUE_VERSION', '1.23.0' );
 
 /**
  * Image CDN cache epoch.
