@@ -230,6 +230,12 @@ function apexvalue_hero_render() {
 					<a class="apex-hero__btn apex-hero__btn--ghost" href="<?php echo esc_url( $cta2_u ); ?>"><?php echo esc_html( $cta2_t ); ?></a>
 				<?php endif; ?>
 			</div>
+
+			<ul class="apex-hero__trust" aria-label="<?php esc_attr_e( 'Why shop with us', 'apexvalue' ); ?>">
+				<li><?php esc_html_e( 'Genuine Davis Instruments hardware', 'apexvalue' ); ?></li>
+				<li><?php esc_html_e( 'Ships from our Philippine warehouse', 'apexvalue' ); ?></li>
+				<li><?php esc_html_e( 'Local expert support', 'apexvalue' ); ?></li>
+			</ul>
 		</div>
 	</section>
 	<?php

@@ -79,13 +79,13 @@ function apexvalue_how_customize_register( $wp_customize ) {
 			'type'              => 'textarea',
 		),
 		'apexvalue_how_btn_text'   => array(
-			'default'           => __( 'Request a quotation', 'apexvalue' ),
+			'default'           => __( 'Browse the catalogue', 'apexvalue' ),
 			'sanitize_callback' => 'sanitize_text_field',
 			'label'             => __( 'Button text', 'apexvalue' ),
 			'type'              => 'text',
 		),
 		'apexvalue_how_btn_url'    => array(
-			'default'           => home_url( '/inquiry/' ),
+			'default'           => home_url( '/products/' ),
 			'sanitize_callback' => 'esc_url_raw',
 			'label'             => __( 'Button URL', 'apexvalue' ),
 			'type'              => 'url',
@@ -127,8 +127,8 @@ function apexvalue_how_it_works() {
 	}
 
 	$lede    = get_theme_mod( 'apexvalue_how_lede', __( 'Everything ships from our Philippine warehouse — request a quotation and our team replies with availability, pricing and lead times.', 'apexvalue' ) );
-	$btn_txt = get_theme_mod( 'apexvalue_how_btn_text', __( 'Request a quotation', 'apexvalue' ) );
-	$btn_url = get_theme_mod( 'apexvalue_how_btn_url', home_url( '/inquiry/' ) );
+	$btn_txt = get_theme_mod( 'apexvalue_how_btn_text', __( 'Browse the catalogue', 'apexvalue' ) );
+	$btn_url = get_theme_mod( 'apexvalue_how_btn_url', home_url( '/products/' ) );
 
 	$steps = array(
 		array(
