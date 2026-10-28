@@ -670,8 +670,9 @@ textarea:focus,
 }
 
 /* Storefront reserves a ~68px header gap on the blog-style homepage —
-   on our composed front page it reads as a broken empty band. */
-.home .site-header {
+   on our composed front page it reads as a broken empty band.
+   (Mirror their exact selector so source order decides: ours loads last.) */
+.home.page:not(.page-template-template-homepage) .site-header {
 	margin-bottom: 0;
 }
 
