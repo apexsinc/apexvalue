@@ -4,7 +4,7 @@ Theme URI:    https://www.apexvalue.com
 Description:  Apex Value child theme of Storefront. Modern, refined evolution of the default look: cleaner typography, tighter header, card-based product grids and accessible interactions.
 Author:       Apex Value
 Template:     storefront
-Version:      1.18.0
+Version:      1.19.0
 License:      GNU General Public License v2 or later
 License URI:  http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain:  apexvalue
@@ -649,19 +649,34 @@ textarea:focus,
 }
 
 /* Sticky header on tablet+ (whole header stays reachable while scrolling) */
+/* Light glass header (light mode only — dark modes keep their chrome below) */
+.site-header {
+	background: rgba(255, 255, 255, 0.92);
+	backdrop-filter: blur(12px);
+	-webkit-backdrop-filter: blur(12px);
+}
+
+html[data-apx-theme="dark"] .site-header {
+	background: rgba(35, 43, 54, 0.9);
+}
+
 @media (min-width: 768px) {
 	.site-header {
 		position: sticky;
 		top: 0;
 		z-index: 50;
-		background: var(--apx-header-bg, var(--apx-paper));
-		background: color-mix(in srgb, var(--apx-header-bg, var(--apx-paper)) 88%, transparent);
-		backdrop-filter: blur(10px);
-		-webkit-backdrop-filter: blur(10px);
 		box-shadow: var(--apx-shadow-sm);
 	}
 
 	body.admin-bar .site-header { top: 32px; }
+}
+
+/* Auto dark mode follows the manual dark header (kept separate because
+   the light glass rule above would otherwise win by source order). */
+@media (prefers-color-scheme: dark) {
+	html:not([data-apx-theme]) .site-header {
+		background: rgba(35, 43, 54, 0.9);
+	}
 }
 
 .site-header .col-full {
@@ -1601,8 +1616,8 @@ span.onsale,
 .apex-hero__title {
 	font-family: var(--apx-display);
 	font-weight: 700;
-	font-size: clamp(2.2rem, 5vw, 3.6rem);
-	line-height: 1.08;
+	font-size: clamp(2.4rem, 5.5vw, 4rem);
+	line-height: 1.06;
 	letter-spacing: -0.025em;
 	margin: 0 0 1rem;
 	color: #ffffff;
@@ -3705,7 +3720,82 @@ html.apex-mode-anim *::after {
 /* 22c. Footer "Collections" links reuse the existing .apex-footer__menu
    link treatment — no extra rules needed. */
 
-/* 22d. Homepage collections strip (front page, under the hero). */
+/* 22d. Solutions marquee ticker (front page, under the hero) ----------- */
+.apex-marquee {
+	background: var(--apx-paper);
+	border-bottom: 1px solid var(--apx-line);
+	overflow: hidden;
+}
+
+.apex-marquee__track {
+	display: flex;
+	width: max-content;
+	animation: apex-marquee 45s linear infinite;
+}
+
+.apex-marquee:hover .apex-marquee__track,
+.apex-marquee:focus-within .apex-marquee__track {
+	animation-play-state: paused;
+}
+
+.apex-marquee__list {
+	display: flex;
+	align-items: center;
+	flex-shrink: 0;
+	list-style: none;
+	margin: 0;
+	padding: 0.8rem 0;
+}
+
+.apex-marquee__item {
+	display: flex;
+	align-items: center;
+	white-space: nowrap;
+}
+
+.apex-marquee__item::before {
+	content: "";
+	width: 0.45em;
+	height: 0.45em;
+	border-radius: 999px;
+	background: var(--apx-green);
+	margin: 0 1.5rem;
+	flex: 0 0 auto;
+}
+
+.apex-marquee__item a {
+	color: var(--apx-ink);
+	font-size: 0.75rem;
+	font-weight: 700;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	text-decoration: none;
+}
+
+.apex-marquee__item a:hover,
+.apex-marquee__item a:focus-visible {
+	color: var(--apx-accent);
+	text-decoration: underline;
+}
+
+@keyframes apex-marquee {
+	to {
+		transform: translateX(-50%);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.apex-marquee {
+		overflow-x: auto;
+	}
+
+	.apex-marquee__track {
+		animation: none;
+		width: auto;
+	}
+}
+
+/* 22e. Homepage collections strip (front page, under the hero). */
 .apex-collections {
 	background: var(--apx-tint);
 	border-bottom: 1px solid var(--apx-line);

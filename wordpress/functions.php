@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'APEXVALUE_VERSION', '1.18.0' );
+define( 'APEXVALUE_VERSION', '1.19.0' );
 
 /**
  * Image CDN cache epoch.
@@ -67,6 +67,11 @@ require get_stylesheet_directory() . '/inc/hero.php';
  * Top utility bar (distributor note + contact shortcuts).
  */
 require get_stylesheet_directory() . '/inc/topbar.php';
+
+/**
+ * Solutions marquee ticker (curated solution-kit pages).
+ */
+require get_stylesheet_directory() . '/inc/marquee.php';
 
 /**
  * Three-column footer (pluggable storefront_footer_widgets override).
