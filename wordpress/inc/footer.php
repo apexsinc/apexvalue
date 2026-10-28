@@ -252,31 +252,13 @@ function storefront_default_footer_widgets() {
 }
 
 /**
- * Site-info bar (pluggable override of Storefront's storefront_credit,
- * which only renders because the parent guards it with function_exists).
- *
- * Keeps the parent's copyright-text filter, but lays the bar out as a flex
- * row: copyright left, Privacy Policy + Contact links right. Both URLs
- * resolve to their pages with home_url() fallbacks so the links never 404.
+ * Site-info bar: owned by the storefront-footer plugin (its guarded
+ * storefront_credit() reads the "Footer Credit" field under Settings).
+ * Do NOT redeclare storefront_credit() here — plugins load before the
+ * child theme, so a second declaration is a fatal error. Edit the text
+ * in wp-admin instead; it supports the .site-info__copy and
+ * .site-info__links spans styled below.
  */
-function storefront_credit() {
-	$copyright = apply_filters( 'storefront_copyright_text', '&copy; ' . get_bloginfo( 'name' ) . ' ' . gmdate( 'Y' ) );
-
-	$privacy_page = get_page_by_path( 'privacy-policy' );
-	$privacy_url  = $privacy_page ? get_permalink( $privacy_page ) : home_url( '/privacy-policy/' );
-
-	$contact_page = get_page_by_path( 'contact' );
-	$contact_url  = $contact_page ? get_permalink( $contact_page ) : home_url( '/contact/' );
-	?>
-	<div class="site-info">
-		<span class="site-info__copy"><?php echo esc_html( $copyright ); ?></span>
-		<span class="site-info__links">
-			<a href="<?php echo esc_url( $privacy_url ); ?>"><?php esc_html_e( 'Privacy Policy', 'apexvalue' ); ?></a>
-			<a href="<?php echo esc_url( $contact_url ); ?>"><?php esc_html_e( 'Contact', 'apexvalue' ); ?></a>
-		</span>
-	</div><!-- .site-info -->
-	<?php
-}
 
 /**
  * Floating back-to-top button (revealed after scrolling).
