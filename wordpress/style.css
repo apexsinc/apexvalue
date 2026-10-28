@@ -4,7 +4,7 @@ Theme URI:    https://www.apexvalue.com
 Description:  Apex Value child theme of Storefront. Modern, refined evolution of the default look: cleaner typography, tighter header, card-based product grids and accessible interactions.
 Author:       Apex Value
 Template:     storefront
-Version:      1.15.0
+Version:      1.16.0
 License:      GNU General Public License v2 or later
 License URI:  http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain:  apexvalue
@@ -717,11 +717,33 @@ textarea:focus,
 	text-decoration: underline;
 }
 
+.apex-topbar__promo {
+	margin: 0;
+}
+
+.apex-topbar__promo a,
+.apex-topbar__promo span {
+	display: inline-block;
+	background: rgba(232, 163, 61, 0.16);
+	border: 1px solid rgba(232, 163, 61, 0.5);
+	color: #f4f7fa;
+	border-radius: 999px;
+	font-size: 0.6875rem;
+	font-weight: 700;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+	padding: 0.3em 0.9em;
+	text-decoration: none;
+}
+
+.apex-topbar__promo a:hover,
+.apex-topbar__promo a:focus-visible {
+	background: rgba(232, 163, 61, 0.3);
+}
+
 @media (max-width: 767px) {
 	.apex-topbar__note {
-		white-space: nowrap;
-		overflow: hidden;
-		text-overflow: ellipsis;
+		display: none;
 	}
 
 	.apex-topbar__email {
@@ -1764,6 +1786,33 @@ span.onsale,
 	font-size: 0.9375rem;
 }
 
+.apex-footer__trust {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem 1.5rem;
+	list-style: none;
+	margin: 0 0 1.5rem;
+	padding: 0;
+	font-size: 0.8125rem;
+	color: var(--apx-footer-muted);
+	grid-column: 1 / -1;
+}
+
+.apex-footer__trust li {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.45rem;
+}
+
+.apex-footer__trust li::before {
+	content: "";
+	width: 0.5em;
+	height: 0.5em;
+	flex: 0 0 auto;
+	border-radius: 999px;
+	background: var(--apx-green);
+}
+
 .apex-footer__social {
 	display: inline-flex;
 	align-items: center;
@@ -1782,9 +1831,9 @@ span.onsale,
 
 .apex-footer__social:hover,
 .apex-footer__social:focus-visible {
-	color: var(--apx-footer-link);
-	border-color: var(--apx-footer-link);
-	background: var(--apx-hover-wash);
+	color: #fff;
+	border-color: var(--apx-accent);
+	background: var(--apx-accent);
 	transform: translateY(-2px);
 	box-shadow: 0 6px 14px -6px rgba(0, 0, 0, 0.35);
 }
@@ -1915,7 +1964,7 @@ span.onsale,
 
 .apex-footer__social:hover,
 .apex-footer__social:focus-visible {
-	color: var(--apx-footer-link);
+	color: #fff;
 }
 
 .apex-footer__menu,
@@ -3763,6 +3812,17 @@ html.apex-mode-anim *::after {
 	border-radius: calc(var(--apx-radius) - 4px);
 	margin-bottom: 0.25rem;
 	overflow: hidden;
+	position: relative;
+}
+
+.apex-collections__media::after {
+	background: linear-gradient(180deg, transparent 55%, rgba(26, 28, 32, 0.18));
+	content: "";
+	inset: 0;
+	opacity: 0.55;
+	pointer-events: none;
+	position: absolute;
+	transition: opacity 0.3s var(--apx-ease);
 }
 
 .apex-collections__media img {
@@ -3776,6 +3836,11 @@ html.apex-mode-anim *::after {
 .apex-collections__card:hover .apex-collections__media img,
 .apex-collections__card:focus-visible .apex-collections__media img {
 	transform: scale(1.05);
+}
+
+.apex-collections__card:hover .apex-collections__media::after,
+.apex-collections__card:focus-visible .apex-collections__media::after {
+	opacity: 0.85;
 }
 
 .apex-collections__mono {
@@ -3806,6 +3871,9 @@ html.apex-mode-anim *::after {
 	.apex-collections__card:hover,
 	.apex-collections__card:focus-visible {
 		transform: none;
+	}
+	.apex-collections__media::after {
+		transition: none;
 	}
 }
 

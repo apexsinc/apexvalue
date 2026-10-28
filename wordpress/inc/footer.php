@@ -126,6 +126,11 @@ function storefront_footer_widgets() {
 	);
 	?>
 	<div class="footer-widgets col-3 apex-footer fix">
+		<ul class="apex-footer__trust">
+			<li><?php esc_html_e( 'Genuine Davis Instruments hardware', 'apexvalue' ); ?></li>
+			<li><?php esc_html_e( 'Ships from our Philippine warehouse', 'apexvalue' ); ?></li>
+			<li><?php esc_html_e( 'Local expert support', 'apexvalue' ); ?></li>
+		</ul>
 		<div class="block apex-footer__brand">
 			<span class="apex-footer__logo">Apex Value</span>
 			<?php if ( '' !== trim( (string) $about ) ) : ?>
