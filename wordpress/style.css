@@ -4,7 +4,7 @@ Theme URI:    https://www.apexvalue.com
 Description:  Apex Value child theme of Storefront. Modern, refined evolution of the default look: cleaner typography, tighter header, card-based product grids and accessible interactions.
 Author:       Apex Value
 Template:     storefront
-Version:      1.21.1
+Version:      1.22.0
 License:      GNU General Public License v2 or later
 License URI:  http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain:  apexvalue
@@ -1339,31 +1339,60 @@ span.onsale,
    6. Single product
    --------------------------------------------------------------------- */
 
-/* Shop archive header & toolbar */
-.woocommerce-products-header__title.page-title {
+/* Shop archive header & toolbar (archives only: these hooks don't render on single/cart/checkout) */
+.woocommerce-products-header {
+	background: var(--apx-tint);
+	border: 1px solid var(--apx-line);
+	border-radius: var(--apx-radius-lg);
+	padding: clamp(1.5rem, 4vw, 2.5rem);
+	margin-bottom: 2rem;
+}
+
+.woocommerce-products-header__title.page-title,
+.woocommerce-products-header h1 {
+	font-family: var(--apx-display);
 	font-size: 2em;
-	letter-spacing: -0.015em;
+	letter-spacing: -0.02em;
 	margin-bottom: 0.4em;
 }
 
-.woocommerce-products-header { margin-bottom: 1.2rem; }
+.woocommerce-products-header .term-description,
+.woocommerce-products-header .term-description p {
+	color: var(--apx-muted);
+	max-width: 60ch;
+}
+
+.storefront-sorting {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 1rem;
+	flex-wrap: wrap;
+	margin-bottom: 1.5rem;
+}
 
 .woocommerce-result-count {
 	color: var(--apx-muted);
+	font-size: 0.9em;
+	margin: 0;
 	padding-top: 0.4em;
 }
 
 .woocommerce-ordering select.orderby {
 	border: 1px solid var(--apx-line);
 	background-color: var(--apx-paper);
-	border-radius: var(--apx-radius-sm);
-	padding: 0.55em 1.8em 0.55em 0.8em;
+	border-radius: 999px;
+	padding: 0.5em 2.2em 0.5em 1.1em;
 	box-shadow: none;
+	font: inherit;
 	font-weight: 600;
 }
 
-.storefront-sorting {
-	margin-bottom: 1.5rem;
+.woocommerce-ordering select.orderby:focus,
+.woocommerce-ordering select.orderby:focus-visible {
+	outline: none;
+	box-shadow: 0 0 0 3px var(--apx-focus-ring);
+	border-color: var(--apx-line);
 }
 
 .single-product div.product .woocommerce-product-gallery img {
@@ -2519,9 +2548,10 @@ ul.products li.product:hover img,
 /* Gallery */
 .single-product div.product .woocommerce-product-gallery {
 	border: 1px solid var(--apx-line);
-	border-radius: var(--apx-radius);
+	border-radius: var(--apx-radius-lg);
 	background: var(--apx-paper);
 	overflow: hidden;
+	box-shadow: var(--apx-shadow-md);
 	transition: opacity 0.25s ease-in-out; /* keep theme's fade-in */
 }
 
@@ -2557,7 +2587,7 @@ ul.products li.product:hover img,
 
 /* Summary column */
 .single-product div.product .product_title {
-	margin-bottom: 0.4em;
+	margin-bottom: 0.5rem;
 }
 
 .single-product div.product .woocommerce-product-details__short-description {
@@ -2565,11 +2595,16 @@ ul.products li.product:hover img,
 	line-height: 1.7;
 	padding-bottom: 1.1em;
 	border-bottom: 1px solid var(--apx-line);
-	margin-bottom: 1.3em;
+	margin-bottom: 1.25rem;
 }
 
 .single-product div.product p.price {
-	padding-bottom: 1.1em;
+	font-family: var(--apx-display);
+	font-size: 1.5rem;
+	color: var(--apx-ink);
+	letter-spacing: -0.01em;
+	margin-bottom: 1rem;
+	padding-bottom: 0;
 }
 
 .single-product div.product p.price ins {
@@ -2586,16 +2621,24 @@ ul.products li.product:hover img,
 	flex-wrap: wrap;
 	gap: 0.6rem;
 	align-items: stretch;
-	margin-bottom: 1.4em;
+	margin-bottom: 1.5rem;
 }
 
 .single-product div.product form.cart .quantity {
 	margin: 0;
 }
 
+.single-product div.product form.cart .quantity .qty {
+	border-radius: var(--apx-radius-sm);
+	padding: 1em 0.75em;
+	font-size: 1.0625rem;
+}
+
 .single-product div.product form.cart .single_add_to_cart_button {
 	flex: 1 1 auto;
-	padding: 0.85em 2em;
+	padding: 1em 2em;
+	border-radius: 999px;
+	font-size: 1.0625rem;
 	/* Storefront's default renders dark text on a near-dark background
 	   (axe color-contrast failure); use the primary CTA treatment. */
 	background-color: var(--apx-green);
@@ -2612,7 +2655,7 @@ ul.products li.product:hover img,
 .single-product div.product .product_meta {
 	padding-top: 1.2em;
 	border-top: 1px solid var(--apx-line);
-	font-size: 0.875rem;
+	font-size: 0.8125rem;
 	color: var(--apx-muted);
 }
 
@@ -2622,7 +2665,7 @@ ul.products li.product:hover img,
 }
 
 .single-product div.product .product_meta a {
-	color: var(--apx-muted);
+	color: var(--apx-accent);
 	text-decoration: none;
 	border-bottom: 1px solid transparent;
 	transition: color var(--apx-speed) var(--apx-ease),
@@ -2663,6 +2706,7 @@ ul.products li.product:hover img,
 .woocommerce-tabs ul.tabs li.active {
 	background: var(--apx-tint);
 	border-color: var(--apx-line-strong) !important;
+	box-shadow: inset 0 -2px 0 var(--apx-accent);
 }
 
 .woocommerce-tabs ul.tabs li.active a {
