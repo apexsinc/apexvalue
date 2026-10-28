@@ -216,12 +216,17 @@ add_filter( 'storefront_handheld_footer_bar_links', 'apexvalue_handheld_quote_li
 
 /**
  * Handheld bar quote link callback.
+ *
+ * The bar's four items share a quarter of a phone width each; the full
+ * "Request a Quote" label wrapped onto two lines and overlapped its
+ * neighbour, so the mobile bar uses the short label. The desktop header
+ * pill keeps the full wording.
  */
 function apexvalue_handheld_quote_callback() {
 	printf(
 		'<a href="%1$s">%2$s</a>',
 		esc_url( apexvalue_quote_url() ),
-		esc_html__( 'Request a Quote', 'apexvalue' )
+		esc_html__( 'Quote', 'apexvalue' )
 	);
 }
 

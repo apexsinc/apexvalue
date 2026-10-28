@@ -4,7 +4,7 @@ Theme URI:    https://www.apexvalue.com
 Description:  Apex Value child theme of Storefront. Modern, refined evolution of the default look: cleaner typography, tighter header, card-based product grids and accessible interactions.
 Author:       Apex Value
 Template:     storefront
-Version:      1.24.1
+Version:      1.37.3
 License:      GNU General Public License v2 or later
 License URI:  http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain:  apexvalue
@@ -4823,4 +4823,1066 @@ body.home .entry-content .wp-gr {
 	body.home .entry-content a.wp-block-button__link[href*="faqs"] {
 		transition: none;
 	}
+}
+
+/* =====================================================================
+   26. HOMEPAGE COMPOSITION — layout, rhythm and card system
+   Section rhythm is owned here; post content no longer carries spacers.
+   ===================================================================== */
+
+/* 26a. Kill the stacked legacy paddings that left a dead band above the
+   first section (site-main 1.5rem + type-page 2.5rem). */
+.home .site-main,
+.page-template-template-homepage .site-main {
+	padding-top: 0;
+	margin-bottom: 0;
+}
+
+.home .type-page,
+.page-template-template-homepage .type-page {
+	padding-top: 0;
+	padding-bottom: 0;
+}
+
+/* 26b. The block body becomes one vertical rhythm: every direct block
+   gets the same separation, and groups stop double-stacking margins. */
+.home .entry-content > * + * {
+	margin-top: clamp(1.75rem, 4vw, 3rem);
+}
+
+.home .entry-content > .wp-block-group,
+.home .entry-content > .wp-block-columns,
+.home .entry-content > .wp-block-woocommerce-product-collection {
+	margin-top: 0;
+	margin-bottom: 0;
+}
+
+/* 26c. Section headers: consistent eyebrow-less but strong hierarchy.
+   The green underline only appears on section H2s, never on card titles. */
+.home .entry-content > h2,
+.home .entry-content > .wp-block-group > .wp-block-group__inner-container > h2 {
+	font-family: var(--apx-display);
+	font-size: clamp(1.5rem, 3vw, 2.05rem);
+	letter-spacing: -0.02em;
+	line-height: 1.15;
+	margin: 0 0 1.5rem;
+	color: var(--apx-ink);
+}
+
+/* 26d. Category cards (5 collection tiles): one clean card each. */
+.home .entry-content .wp-block-column:has(.apex-collection-title) {
+	background: var(--apx-paper);
+	border: 1px solid var(--apx-line);
+	border-radius: var(--apx-radius-lg);
+	box-shadow: var(--apx-shadow-sm);
+	overflow: hidden;
+	padding: 0;
+	transition: box-shadow var(--apx-speed) var(--apx-ease),
+		transform var(--apx-speed) var(--apx-ease),
+		border-color var(--apx-speed) var(--apx-ease);
+}
+
+.home .entry-content .wp-block-column:has(.apex-collection-title):hover,
+.home .entry-content .wp-block-column:has(.apex-collection-title):focus-within {
+	border-color: var(--apx-line-strong);
+	box-shadow: var(--apx-shadow-md);
+	transform: translateY(-3px);
+}
+
+/* Image tile: fixed aspect, images cover, no letterboxing. */
+.home .entry-content .wp-block-column:has(.apex-collection-title) .wp-block-image {
+	margin: 0;
+	overflow: hidden;
+	background: var(--apx-tint);
+}
+
+.home .entry-content .wp-block-column:has(.apex-collection-title) .wp-block-image img {
+	aspect-ratio: 4 / 3;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: block;
+	border-radius: 0;
+	transition: transform 0.5s var(--apx-ease-out);
+}
+
+.home .entry-content .wp-block-column:has(.apex-collection-title):hover .wp-block-image img {
+	transform: scale(1.04);
+}
+
+/* Card label: compact, padded, no underline, arrow affordance. */
+.home .entry-content .apex-collection-title {
+	font-family: var(--apx-display);
+	font-size: 1.0625rem;
+	font-weight: 700;
+	letter-spacing: -0.01em;
+	line-height: 1.3;
+	margin: 0;
+	padding: 0.95rem 1.15rem 1.05rem;
+}
+
+.home .entry-content .apex-collection-title a {
+	color: var(--apx-ink);
+	text-decoration: none;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 0.5rem;
+}
+
+.home .entry-content .apex-collection-title a::after {
+	content: "\2192";
+	font-weight: 400;
+	color: var(--apx-accent);
+	transition: transform var(--apx-speed) var(--apx-ease);
+}
+
+.home .entry-content .apex-collection-title a:hover {
+	color: var(--apx-accent);
+}
+
+.home .entry-content .apex-collection-title a:hover::after {
+	transform: translateX(3px);
+}
+
+/* 26e. Category grid: even gutters, no ragged wrap. */
+.home .entry-content .wp-block-columns:has(.apex-collection-title) {
+	gap: 1.25rem;
+	align-items: stretch;
+}
+
+.home .entry-content .wp-block-columns:has(.apex-collection-title) > .wp-block-column {
+	display: flex;
+	flex-direction: column;
+	margin: 0;
+	flex-basis: calc(20% - 1rem);
+}
+
+.home .entry-content .wp-block-columns:has(.apex-collection-title) > .wp-block-column > .apex-collection-title {
+	margin-top: auto;
+}
+
+@media (max-width: 1023px) {
+	.home .entry-content .wp-block-columns:has(.apex-collection-title) {
+		flex-wrap: wrap;
+	}
+
+	.home .entry-content .wp-block-columns:has(.apex-collection-title) > .wp-block-column {
+		flex-basis: calc(33.333% - 1rem);
+	}
+}
+
+@media (max-width: 599px) {
+	.home .entry-content .wp-block-columns:has(.apex-collection-title) > .wp-block-column {
+		flex-basis: calc(50% - 0.75rem);
+	}
+}
+
+/* 26f. Featured product grid: uniform cards, aligned titles/buttons. */
+.home .entry-content .wc-block-product-template {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+	gap: 1.25rem;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.home .entry-content .wc-block-product-template .wc-block-product {
+	display: flex;
+	flex-direction: column;
+	margin: 0;
+	padding: 0 0 1rem;
+	background: var(--apx-paper);
+	border: 1px solid var(--apx-line);
+	border-radius: var(--apx-radius-lg);
+	box-shadow: var(--apx-shadow-sm);
+	overflow: hidden;
+}
+
+.home .entry-content .wc-block-product-template .wc-block-product > a {
+	display: block;
+}
+
+.home .entry-content .wc-block-product-template .wc-block-product img {
+	aspect-ratio: 1 / 1;
+	width: 100%;
+	height: auto;
+	object-fit: contain;
+	background: var(--apx-tint);
+	padding: 0.75rem;
+}
+
+/* Title: two-line clamp keeps every card's price/button row aligned. */
+.home .entry-content .wc-block-product-template .wp-block-post-title {
+	display: block;
+	max-height: 2.9em;
+	overflow: hidden;
+	min-height: 2.9em;
+	font-family: var(--apx-display);
+	font-size: 0.9375rem;
+	font-weight: 600;
+	line-height: 1.45;
+	letter-spacing: -0.005em;
+	margin: 0.85rem 1rem 0.35rem;
+	padding: 0;
+}
+
+.home .entry-content .wc-block-product-template .wp-block-post-title a {
+	color: var(--apx-ink);
+	text-decoration: none;
+}
+
+.home .entry-content .wc-block-product-template .wc-block-product:hover .wp-block-post-title a {
+	color: var(--apx-accent);
+}
+
+/* Button pinned to the card bottom in every column. */
+.home .entry-content .wc-block-product-template .wc-block-components-product-button {
+	margin: auto 1rem 0;
+	padding-top: 0.35rem;
+}
+
+.home .entry-content .wc-block-product-template .wc-block-components-product-button__button {
+	width: 100%;
+	border-radius: 999px;
+	padding: 0.7em 1.1em;
+	font-size: 0.875rem;
+	font-weight: 700;
+	background: var(--apx-green);
+	color: var(--apx-on-green);
+	border: 1px solid var(--apx-green);
+	transition: background var(--apx-speed) var(--apx-ease),
+		color var(--apx-speed) var(--apx-ease),
+		border-color var(--apx-speed) var(--apx-ease);
+}
+
+.home .entry-content .wc-block-product-template .wc-block-components-product-button__button:hover,
+.home .entry-content .wc-block-product-template .wc-block-components-product-button__button:focus-visible {
+	background: var(--apx-ink);
+	border-color: var(--apx-ink);
+	color: var(--apx-paper);
+}
+
+/* 26g. Shop link after the grid: a quiet text link, not a green slab. */
+.home .entry-content .wp-block-button__link[href*="/products"] {
+	background: transparent;
+	color: var(--apx-accent);
+	border: 1px solid var(--apx-line-strong);
+	border-radius: 999px;
+	font-weight: 600;
+	padding: 0.7em 1.6em;
+	box-shadow: none;
+}
+
+.home .entry-content .wp-block-button__link[href*="/products"]:hover,
+.home .entry-content .wp-block-button__link[href*="/products"]:focus-visible {
+	background: var(--apx-accent);
+	border-color: var(--apx-accent);
+	color: var(--apx-on-accent);
+	transform: none;
+}
+
+/* 26h. Reduced motion. */
+@media (prefers-reduced-motion: reduce) {
+	.home .entry-content .wp-block-column:has(.apex-collection-title),
+	.home .entry-content .wp-block-column:has(.apex-collection-title):hover {
+		transform: none;
+	}
+
+	.home .entry-content .wp-block-column:has(.apex-collection-title) .wp-block-image img,
+	.home .entry-content .wp-block-column:has(.apex-collection-title):hover .wp-block-image img {
+		transition: none;
+		transform: none;
+	}
+}
+
+/* 26i. Homepage canvas: one container width for the block body.
+   Patterns in the post carry their own inline horizontal padding, which
+   stacked on top of ours and squeezed the grid to ~960px inside a 1200px
+   wrapper. Neutralise those inline paddings and own the measure here. */
+@media (min-width: 768px) {
+	.home .site-content > .col-full,
+	.page-template-template-homepage .site-content > .col-full {
+		max-width: none;
+		margin: 0;
+		padding: 0;
+	}
+
+	.home .site-content .content-area,
+	.home .site-content .widget-area {
+		float: none;
+		width: 100%;
+		margin: 0;
+	}
+
+	.home .entry-content {
+		max-width: 78rem;
+		margin-left: auto;
+		margin-right: auto;
+		padding-left: 2.5rem;
+		padding-right: 2.5rem;
+	}
+
+	/* Kill pattern-supplied side padding so every section shares gutters. */
+	.home .entry-content > *,
+	.home .entry-content .wp-block-group > .wp-block-group__inner-container,
+	.home .entry-content .wp-block-columns {
+		padding-left: 0 !important;
+		padding-right: 0 !important;
+		max-width: none !important;
+	}
+}
+
+/* =====================================================================
+   27. CLEARFIX-PSEUDO FIX (real layout bug)
+   Storefront's .col-full adds ::before/::after { content:""; display:table }
+   as a float clearfix. Our section wrappers reuse .col-full AND are
+   display:grid/flex, so those pseudos become grid/flex ITEMS and occupy
+   the first cell — which pushed the hero copy into column 2 and the photo
+   into a second row, and added phantom items to the flex bars.
+   ===================================================================== */
+.apex-hero__inner::before,
+.apex-hero__inner::after,
+.apex-how__inner::before,
+.apex-how__inner::after,
+.apex-collections__inner::before,
+.apex-collections__inner::after,
+.apexvalue-cta__inner::before,
+.apexvalue-cta__inner::after,
+.apex-topbar__inner::before,
+.apex-topbar__inner::after {
+	content: none;
+	display: none;
+}
+
+/* 26j. Product-collection section heading. Woo's own block stylesheet
+   forces `h2.wp-block-heading { font-size: 14px }` inside the collection,
+   which made a section title look like a caption. Re-assert the scale and
+   align it with every other section header (left, not centred). */
+.home .entry-content .wp-block-woocommerce-product-collection h2.wp-block-heading {
+	font-family: var(--apx-display);
+	font-size: clamp(1.5rem, 3vw, 2.05rem);
+	font-weight: 700;
+	letter-spacing: -0.02em;
+	line-height: 1.15;
+	text-align: left;
+	margin: 0 0 1.5rem;
+}
+
+.home .entry-content .wp-block-woocommerce-product-collection h2.wp-block-heading::after {
+	margin-left: 0;
+	margin-right: auto;
+}
+
+/* 26k. Product cards: uniform white image tile, calm ink buttons.
+   Photos come from mixed sources (studio white, grey, outdoor) — a white
+   tile with contain keeps every card reading at the same weight. */
+.home .entry-content .wc-block-product-template .wc-block-product img {
+	background: #ffffff;
+	box-shadow: inset 0 0 0 1px var(--apx-line);
+}
+
+.home .entry-content .wc-block-product-template .wc-block-components-product-button__button {
+	background: var(--apx-ink);
+	border-color: var(--apx-ink);
+	color: var(--apx-paper);
+}
+
+.home .entry-content .wc-block-product-template .wc-block-components-product-button__button:hover,
+.home .entry-content .wc-block-product-template .wc-block-components-product-button__button:focus-visible {
+	background: var(--apx-accent);
+	border-color: var(--apx-accent);
+	color: var(--apx-on-accent);
+}
+
+/* 26l. Four-up catalogue on desktop: nine products in 3 rows of 3 left a
+   long, sparse tail; 4 columns keeps the section to two full rows. */
+@media (min-width: 1100px) {
+	.home .entry-content .wc-block-product-template__responsive.columns-3 {
+		grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+	}
+}
+
+/* 26m. Cookie "manage" pill: keep it reachable without parking it over
+   page content at the left edge. Sits above the back-to-top button. */
+#siteseo-cookie-bar-manage-btn {
+	left: auto !important;
+	right: 1.25rem !important;
+	bottom: 4.5rem !important;
+	opacity: 0.9;
+	transition: opacity var(--apx-speed) var(--apx-ease);
+}
+
+#siteseo-cookie-bar-manage-btn:hover,
+#siteseo-cookie-bar-manage-btn:focus-visible {
+	opacity: 1;
+}
+
+/* =====================================================================
+   28. ALIGNMENT HARMONY + remaining card fixes
+   Every section (custom PHP sections and block-body sections) now shares
+   ONE measure: 78rem with 2.5rem gutters. Custom sections previously used
+   Storefront's 66.5em .col-full, so their content started ~20px left/right
+   of the block body — visible as columns that never quite line up.
+   ===================================================================== */
+.apex-hero__inner,
+.apex-how__inner,
+.apex-collections__inner,
+.apexvalue-cta__inner {
+	max-width: 78rem;
+	margin-left: auto;
+	margin-right: auto;
+	padding-left: 2.5rem;
+	padding-right: 2.5rem;
+	box-sizing: border-box;
+}
+
+/* Hero: media column should not stretch to the very edge on ultrawide. */
+@media (min-width: 1280px) {
+	.apex-hero--media .apex-hero__inner {
+		gap: 4.5rem;
+	}
+}
+
+/* 28a. Footer trust row: no bullet dots (they read as decoration). */
+.apex-footer__trust li::before {
+	content: none;
+	display: none;
+}
+
+.apex-footer__trust {
+	gap: 0.35rem 2rem;
+}
+
+.apex-footer__trust li {
+	position: relative;
+	padding-left: 0;
+	color: var(--apx-footer-muted);
+	font-size: 0.8125rem;
+	letter-spacing: 0.01em;
+}
+
+/* 28b. FAQ cards: no underlined questions, equal heights, calmer marker. */
+.home .entry-content ul.wp-block-latest-posts__list {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+	gap: 1rem;
+	align-items: stretch;
+	margin: 0 0 1.5rem;
+	padding: 0;
+}
+
+.home .entry-content ul.wp-block-latest-posts__list li {
+	display: flex;
+	flex-direction: column;
+	margin: 0;
+	border-bottom: 0;
+	padding: 1.25rem 1.5rem;
+	background: var(--apx-paper);
+	border: 1px solid var(--apx-line);
+	border-radius: var(--apx-radius-lg);
+	box-shadow: var(--apx-shadow-sm);
+}
+
+.home .entry-content .wp-block-latest-posts__post-title {
+	text-decoration: none;
+	font-family: var(--apx-display);
+	font-size: 1.0625rem;
+	font-weight: 700;
+	letter-spacing: -0.01em;
+	line-height: 1.35;
+}
+
+.home .entry-content .wp-block-latest-posts__post-title:hover,
+.home .entry-content .wp-block-latest-posts__post-title:focus-visible {
+	color: var(--apx-accent);
+}
+
+/* Marker: short neutral rule instead of a saturated dot/bar. */
+body.home .entry-content .wp-block-latest-posts__post-title::before {
+	width: 18px;
+	height: 2px;
+	background: var(--apx-line-strong);
+	top: -0.6rem;
+	left: 0;
+	transform: none;
+}
+
+.home .entry-content .wp-block-latest-posts__post-title:hover::before {
+	background: var(--apx-accent);
+}
+
+.home .entry-content .wp-block-latest-posts__post-excerpt {
+	color: var(--apx-body);
+	font-size: 0.9375rem;
+	line-height: 1.65;
+	margin: 0.6rem 0 0;
+	flex: 1;
+}
+
+.home .entry-content .wp-block-latest-posts__read-more {
+	margin-top: 0.75rem;
+	align-self: flex-start;
+	font-weight: 600;
+	font-size: 0.875rem;
+	text-decoration: none;
+	color: var(--apx-accent);
+}
+
+.home .entry-content .wp-block-latest-posts__read-more:hover {
+	text-decoration: underline;
+}
+
+/* 28c. Product titles: exactly two lines. Chromium now computes
+   -webkit-box as flow-root, so line-clamp no longer truncates; a
+   max-height cap is deterministic and keeps every card row aligned. */
+.home .entry-content .wc-block-product-template .wp-block-post-title {
+	display: block !important;
+	max-height: 2.8em;
+	overflow: hidden;
+	font-size: 1rem;
+	line-height: 1.4;
+	min-height: 2.8em;
+}
+
+/* 28d. Reviews block: share the section measure and centre the row. */
+.home .entry-content .wp-gr {
+	max-width: 78rem;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.home .entry-content h3.alignwide {
+	max-width: none;
+}
+
+/* 28e. Footer shares the same 78rem measure as every other section
+   (was Storefront's 66.5em .col-full, ~20px narrower each side). */
+.site-footer > .col-full {
+	max-width: 78rem;
+	margin-left: auto;
+	margin-right: auto;
+	padding-left: 2.5rem;
+	padding-right: 2.5rem;
+	box-sizing: border-box;
+}
+
+@media (max-width: 767px) {
+	.site-footer > .col-full {
+		padding-left: 1.25rem;
+		padding-right: 1.25rem;
+	}
+}
+
+/* 28f. Footer column rhythm: stacked headings need air above them. */
+.apex-footer__heading:not(:first-child) {
+	margin-top: 1.75rem;
+}
+
+.apex-footer__menu + .apex-footer__heading {
+	margin-top: 1.75rem;
+}
+
+/* 28g. Footer bottom bar matches the container and reads as a footer. */
+.site-footer .site-info {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 0.75rem 1.5rem;
+	flex-wrap: wrap;
+	border-top: 1px solid var(--apx-footer-line);
+	margin-top: 2.5rem;
+	padding-top: 1.25rem;
+	padding-bottom: 1.25rem;
+	font-size: 0.8125rem;
+}
+
+.site-footer .site-info__links {
+	display: inline-flex;
+	gap: 1.25rem;
+}
+
+.site-footer .site-info__links a {
+	text-decoration: none;
+}
+
+.site-footer .site-info__links a:hover,
+.site-footer .site-info__links a:focus-visible {
+	text-decoration: underline;
+}
+
+@media (max-width: 767px) {
+	.site-footer .site-info {
+		flex-direction: column;
+		align-items: flex-start;
+	}
+}
+
+/* =====================================================================
+   29. MOBILE — overlap and scale corrections
+   ===================================================================== */
+
+/* 29a. Hero stat cards: on narrow screens the 3-up overlay grid was
+   taller than the photo and the labels wrapped into 4 lines. Below 640px
+   the stats become a static strip under the photo, three equal cells. */
+@media (max-width: 639px) {
+	.apex-hero__media {
+		margin-bottom: 0;
+	}
+
+	.apex-hero__figures {
+		position: static;
+		margin: 1rem 0 0;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 0.5rem;
+	}
+
+	.apex-hero__figures li {
+		padding: 0.6rem 0.55rem;
+		border-radius: 10px;
+		min-width: 0;
+	}
+
+	.apex-hero__figures strong {
+		font-size: 1.05rem;
+	}
+
+	.apex-hero__figures span {
+		font-size: 0.5625rem;
+		letter-spacing: 0.04em;
+		line-height: 1.25;
+		overflow-wrap: anywhere;
+	}
+
+	/* One chip is enough beside the photo on a phone. */
+	.apex-hero__chips .apex-hero__chip:nth-child(n + 2) {
+		display: none;
+	}
+}
+
+/* 29b. Section headings: block presets (`has-huge-font-size`, fit-text)
+   could render an H2 at 40px+ on a 390px screen. Cap the scale. */
+.home .entry-content > h2,
+.home .entry-content > .wp-block-group > .wp-block-group__inner-container > h2,
+.home .entry-content .wp-block-woocommerce-product-collection h2.wp-block-heading,
+.home .entry-content h2.wp-block-heading {
+	font-size: clamp(1.4rem, 4.2vw, 2.05rem) !important;
+	line-height: 1.2;
+	letter-spacing: -0.015em;
+}
+
+@media (max-width: 639px) {
+	.home .entry-content > h2,
+	.home .entry-content h2.wp-block-heading {
+		font-size: 1.3rem !important;
+		margin-bottom: 1.1rem;
+	}
+
+	.home .entry-content .wp-block-heading.has-huge-font-size,
+	.home .entry-content .wp-block-heading.has-fit-text {
+		font-size: 1.3rem !important;
+	}
+}
+
+/* 29c. Cookie manage pill must clear the handheld footer bar (≈64px). */
+@media (max-width: 767px) {
+	#siteseo-cookie-bar-manage-btn {
+		bottom: 5.25rem !important;
+		right: 0.9rem !important;
+		font-size: 0.75rem !important;
+		padding: 0.5em 0.9em !important;
+	}
+}
+
+/* 29d. Collections rail: keep the next card peeking inside the gutter. */
+@media (max-width: 767px) {
+	.apex-collections__viewport--scroll .apex-collections__item {
+		flex-basis: min(78vw, 300px);
+	}
+}
+
+/* 29e. The consent "manage" pill is a fixed overlay; on phones it landed
+   on top of section headings. Hide it below the tablet breakpoint — the
+   consent bar itself (Accept / Close) stays fully available. */
+@media (max-width: 767px) {
+	#siteseo-cookie-bar-manage-btn {
+		display: none !important;
+	}
+}
+
+/* =====================================================================
+   30. SHOP ARCHIVE — flow and layout
+   The product archive was rendering the blog sidebar (Recent Posts /
+   FAQ links) next to the catalogue, squeezing it to 3 columns, and the
+   breadcrumb carried a 63px bottom margin that read as a dead band.
+   ===================================================================== */
+
+/* 30a. No blog sidebar on product archives. */
+.post-type-archive-product .widget-area,
+.tax-product_cat .widget-area,
+.tax-product_tag .widget-area,
+.tax-product_brand .widget-area {
+	display: none;
+}
+
+.post-type-archive-product .content-area,
+.tax-product_cat .content-area,
+.tax-product_tag .content-area,
+.tax-product_brand .content-area {
+	float: none;
+	width: 100%;
+	margin-right: 0;
+}
+
+/* 30b. Breadcrumb: tight and quiet. */
+.storefront-breadcrumb {
+	margin-bottom: 1.25rem;
+	padding-top: 1rem;
+}
+
+.storefront-breadcrumb .woocommerce-breadcrumb {
+	padding-top: 0;
+	margin-bottom: 0;
+	font-size: 0.8125rem;
+}
+
+/* 30c. Catalogue grid: even columns, four-up on desktop. */
+.post-type-archive-product ul.products,
+.tax-product_cat ul.products,
+.tax-product_tag ul.products,
+.tax-product_brand ul.products {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 1.25rem;
+	margin: 0 0 2rem;
+	padding: 0;
+	list-style: none;
+}
+
+/* Woo's `.site-main ul.products.columns-3 li.product { width: 29.4% }`
+   (0,3,2) outranks a plain archive selector, so the grid cells were being
+   filled to 29% of their own column. These must be forced. */
+.post-type-archive-product ul.products li.product,
+.tax-product_cat ul.products li.product,
+.tax-product_tag ul.products li.product,
+.tax-product_brand ul.products li.product {
+	width: 100% !important;
+	float: none !important;
+	margin: 0 !important;
+	padding-bottom: 1rem;
+	display: flex;
+	flex-direction: column;
+}
+
+@media (min-width: 768px) {
+	.post-type-archive-product ul.products,
+	.tax-product_cat ul.products,
+	.tax-product_tag ul.products,
+	.tax-product_brand ul.products {
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+	}
+}
+
+@media (min-width: 1100px) {
+	.post-type-archive-product ul.products,
+	.tax-product_cat ul.products,
+	.tax-product_tag ul.products,
+	.tax-product_brand ul.products {
+		grid-template-columns: repeat(4, minmax(0, 1fr));
+	}
+}
+
+/* 30d. Archive toolbar: sorting and count on one line, aligned. */
+.post-type-archive-product .storefront-sorting,
+.tax-product_cat .storefront-sorting,
+.tax-product_tag .storefront-sorting,
+.tax-product_brand .storefront-sorting {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	flex-wrap: wrap;
+	gap: 1rem;
+	margin-bottom: 1.5rem;
+}
+
+.post-type-archive-product .storefront-sorting::before,
+.post-type-archive-product .storefront-sorting::after {
+	content: none;
+	display: none;
+}
+
+/* 30e. Category chips row: breathing room under the archive panel. */
+.post-type-archive-product .woocommerce-products-header + .storefront-sorting,
+.tax-product_cat .woocommerce-products-header + .storefront-sorting {
+	margin-top: 0;
+}
+
+/* 30f. Product card titles on archives: same two-line cap. */
+.post-type-archive-product ul.products li.product .woocommerce-loop-product__title,
+.tax-product_cat ul.products li.product .woocommerce-loop-product__title,
+.tax-product_tag ul.products li.product .woocommerce-loop-product__title,
+.tax-product_brand ul.products li.product .woocommerce-loop-product__title {
+	display: block;
+	max-height: 2.9em;
+	overflow: hidden;
+	padding: 0 1rem;
+	margin: 0.9rem 0 0.5rem;
+}
+
+.post-type-archive-product ul.products li.product .button,
+.tax-product_cat ul.products li.product .button,
+.tax-product_tag ul.products li.product .button,
+.tax-product_brand ul.products li.product .button {
+	margin: 0 1rem;
+	width: calc(100% - 2rem);
+	border-radius: 999px;
+	padding: 0.7em 1.1em;
+	font-size: 0.875rem;
+}
+
+/* =====================================================================
+   31. PSEUDO-ELEMENT GRID ITEMS (systemic guard)
+   Storefront/Woo add float-clearfix ::before / ::after to list and grid
+   wrappers. In a grid container those pseudos become real grid items and
+   eat the first cell (empty column) or add phantom rows. Disable them on
+   every wrapper this theme turns into a grid or flex layout.
+   ===================================================================== */
+ul.products::before,
+ul.products::after,
+.home .entry-content .wc-block-product-template::before,
+.home .entry-content .wc-block-product-template::after,
+.home .entry-content ul.wp-block-latest-posts__list::before,
+.home .entry-content ul.wp-block-latest-posts__list::after,
+.home .entry-content .wp-block-columns::before,
+.home .entry-content .wp-block-columns::after,
+.storefront-sorting::before,
+.storefront-sorting::after,
+.apex-collections__grid::before,
+.apex-collections__grid::after,
+.apex-how__steps::before,
+.apex-how__steps::after,
+.apex-brandspot__grid::before,
+.apex-brandspot__grid::after {
+	content: none;
+	display: none;
+}
+
+/* =====================================================================
+   32. SINGLE PRODUCT — tabs and sidebar
+   The tab list had been styled as a vertical card stack floating left
+   with the panel floating right, which broke the reading flow (you read
+   a "Description" label, then the panel somewhere else). Tabs belong on
+   one horizontal bar above the panel. The blog sidebar also has no place
+   on a product page.
+   ===================================================================== */
+
+/* 32a. No blog sidebar on single products. */
+.single-product .widget-area {
+	display: none;
+}
+
+.single-product .content-area {
+	float: none;
+	width: 100%;
+	margin-right: 0;
+}
+
+/* 32b. Horizontal tab bar. */
+.single-product .woocommerce-tabs {
+	clear: both;
+	padding-top: 2rem;
+	margin-bottom: 2rem;
+}
+
+.single-product .woocommerce-tabs ul.tabs {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.25rem;
+	float: none;
+	width: 100%;
+	margin: 0 0 1.5rem;
+	padding: 0 0 0.5rem;
+	border-bottom: 1px solid var(--apx-line);
+	list-style: none;
+}
+
+.single-product .woocommerce-tabs ul.tabs::before,
+.single-product .woocommerce-tabs ul.tabs::after {
+	content: none;
+	display: none;
+}
+
+.single-product .woocommerce-tabs ul.tabs li {
+	float: none;
+	display: block;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	border-radius: 0;
+	background: none;
+	box-shadow: none;
+}
+
+.single-product .woocommerce-tabs ul.tabs li::before,
+.single-product .woocommerce-tabs ul.tabs li::after {
+	content: none;
+	display: none;
+}
+
+.single-product .woocommerce-tabs ul.tabs li a {
+	display: block;
+	padding: 0.6em 1em;
+	border-radius: 999px;
+	font-weight: 600;
+	font-size: 0.9375rem;
+	color: var(--apx-muted);
+	text-decoration: none;
+	transition: background var(--apx-speed) var(--apx-ease),
+		color var(--apx-speed) var(--apx-ease);
+}
+
+.single-product .woocommerce-tabs ul.tabs li a:hover,
+.single-product .woocommerce-tabs ul.tabs li a:focus-visible {
+	background: var(--apx-tint);
+	color: var(--apx-ink);
+}
+
+.single-product .woocommerce-tabs ul.tabs li.active a {
+	background: var(--apx-ink);
+	color: var(--apx-paper);
+}
+
+.single-product .woocommerce-tabs .panel {
+	float: none;
+	width: 100%;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	box-shadow: none;
+	background: none;
+}
+
+.single-product .woocommerce-tabs .panel > h2:first-child {
+	display: none; /* the tab label already says it */
+}
+
+/* 32c. Storefront's floating prev/next product thumbnails sat at the very
+   edges of the viewport as stray image slivers on wide screens. */
+.single-product .storefront-product-pagination {
+	display: none !important;
+}
+
+/* 33. CONSENT BAR — stacking and density
+   The consent bar is fixed at the viewport bottom, exactly where the
+   Storefront handheld bar sits, so on phones it covered the primary
+   navigation (and the hero CTAs on first visit). Lift it above the
+   handheld bar and make it compact on small screens. */
+@media (max-width: 767px) {
+	#siteseo-cookie-bar {
+		bottom: 64px !important;
+		padding: 0.7rem 0.9rem !important;
+	}
+
+	#siteseo-cookie-bar .siteseo-cookie-bar-content {
+		font-size: 0.75rem !important;
+		line-height: 1.45 !important;
+		gap: 0.5rem !important;
+	}
+
+	#siteseo-cookie-bar .siteseo-cookie-bar-buttons {
+		gap: 0.4rem !important;
+	}
+
+	#siteseo-cookie-bar .siteseo-cookie-bar-button {
+		padding: 0.45em 0.9em !important;
+		font-size: 0.75rem !important;
+	}
+}
+
+/* On desktop the bar is a slim strip, not a wall. */
+@media (min-width: 768px) {
+	#siteseo-cookie-bar {
+		padding: 0.6rem 0 !important;
+	}
+
+	#siteseo-cookie-bar .siteseo-cookie-bar-content {
+		font-size: 0.8125rem !important;
+	}
+}
+
+/* 34. Handheld bar: keep labels on one line and stop the quote chip from
+   painting over its neighbour. */
+.storefront-handheld-footer-bar ul li > a {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	font-size: 0.6875rem;
+	letter-spacing: 0.01em;
+}
+
+.storefront-handheld-footer-bar ul li.quote > a {
+	font-weight: 700;
+}
+
+.storefront-handheld-footer-bar ul li.quote {
+	position: relative;
+	z-index: 1;
+}
+
+/* 35. Handheld search panel was painting inside the bar's first cell:
+   Storefront's `.storefront-handheld-footer-bar ul li.search .site-search
+   { display:block }` outranked our generic `.site-search { display:none }`.
+   Hide it properly and only reveal it when its own button is active. */
+.storefront-handheld-footer-bar ul li.search .site-search {
+	display: none;
+}
+
+.storefront-handheld-footer-bar ul li.search.active .site-search {
+	display: block;
+	bottom: 100%;
+	background: var(--apx-paper);
+	padding: 0.75rem;
+}
+
+.storefront-handheld-footer-bar ul li.search.active .site-search input.search-field {
+	width: 100%;
+}
+
+/* 36. Handheld labels are not links in the prose sense — no underline. */
+.storefront-handheld-footer-bar ul li > a,
+.storefront-handheld-footer-bar ul li > a:hover,
+.storefront-handheld-footer-bar ul li > a:focus-visible {
+	text-decoration: none;
+}
+
+/* 37. Collection cards: labels are pinned to the card's bottom edge so a
+   row always reads on one line, whatever the photo's aspect ratio. The
+   photo keeps its natural shape (no cropping, no forced tile height). */
+.home .entry-content .wp-block-column:has(.apex-collection-title) {
+	position: relative;
+	padding-bottom: 3.4rem;
+	overflow: hidden;
+}
+
+.home .entry-content .wp-block-column:has(.apex-collection-title) .wp-block-image img {
+	width: 100% !important;
+	height: auto !important;
+	display: block;
+	background: var(--apx-tint);
+}
+
+.home .entry-content .wp-block-column:has(.apex-collection-title) .apex-collection-title {
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	margin: 0 !important;
+	padding: 0.95rem 1.15rem 1.05rem;
+}
+
+/* 38. Kill the stray hairline some block groups carry above sections on
+   the home page (it read as an accidental box edge). */
+.home .entry-content > .wp-block-group {
+	border-top: 0 !important;
 }
