@@ -351,3 +351,114 @@
 		bind();
 	}
 } )();
+
+/* ------------------------------------------------------------------
+ * 6. Collections carousel (progressive enhancement)
+ *
+ * The collections strip is a plain grid without JS. With JS, it
+ * becomes a scroll-snap rail with prev/next buttons. Buttons stay
+ * `hidden` until JS confirms the rail actually overflows.
+ * ------------------------------------------------------------------ */
+( function () {
+	var track = document.getElementById( 'apexCollectionsTrack' );
+
+	if ( ! track ) {
+		return;
+	}
+
+	var reduceMotion = window.matchMedia && window.matchMedia( '(prefers-reduced-motion: reduce)' ).matches;
+	var viewport = track.closest( '.apex-collections__viewport' );
+	var section = track.closest( '.apex-collections' );
+	var prev = section ? section.querySelector( '.apex-collections__nav-btn--prev' ) : null;
+	var next = section ? section.querySelector( '.apex-collections__nav-btn--next' ) : null;
+
+	if ( ! viewport || ! prev || ! next ) {
+		return;
+	}
+
+	viewport.classList.add( 'apex-collections__viewport--scroll' );
+
+	var updateButtons = function () {
+		var maxScroll = track.scrollWidth - track.clientWidth;
+		prev.disabled = track.scrollLeft <= 2;
+		next.disabled = track.scrollLeft >= maxScroll - 2;
+		var overflows = maxScroll > 2;
+		prev.hidden = ! overflows;
+		next.hidden = ! overflows;
+	};
+
+	var scrollByPage = function ( dir ) {
+		track.scrollBy( {
+			left: dir * track.clientWidth * 0.8,
+			behavior: reduceMotion ? 'auto' : 'smooth'
+		} );
+	};
+
+	prev.addEventListener( 'click', function () {
+		scrollByPage( -1 );
+	} );
+	next.addEventListener( 'click', function () {
+		scrollByPage( 1 );
+	} );
+
+	var ticking = false;
+	track.addEventListener(
+		'scroll',
+		function () {
+			if ( ! ticking ) {
+				ticking = true;
+				window.requestAnimationFrame( function () {
+					updateButtons();
+					ticking = false;
+				} );
+			}
+		},
+		{ passive: true }
+	);
+
+	window.addEventListener( 'resize', updateButtons );
+	updateButtons();
+} )();
+
+/* ------------------------------------------------------------------
+ * 7. Back-to-top button
+ * ------------------------------------------------------------------ */
+( function () {
+	var btn = document.querySelector( '.apex-top' );
+
+	if ( ! btn ) {
+		return;
+	}
+
+	var reduceMotion = window.matchMedia && window.matchMedia( '(prefers-reduced-motion: reduce)' ).matches;
+	var ticking = false;
+
+	var update = function () {
+		var show = window.scrollY > 600;
+		if ( show && btn.hidden ) {
+			btn.hidden = false;
+		}
+		btn.classList.toggle( 'apex-top--show', show );
+		ticking = false;
+	};
+
+	window.addEventListener(
+		'scroll',
+		function () {
+			if ( ! ticking ) {
+				ticking = true;
+				window.requestAnimationFrame( update );
+			}
+		},
+		{ passive: true }
+	);
+
+	btn.addEventListener( 'click', function () {
+		window.scrollTo( {
+			top: 0,
+			behavior: reduceMotion ? 'auto' : 'smooth'
+		} );
+	} );
+
+	update();
+} )();

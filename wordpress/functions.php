@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'APEXVALUE_VERSION', '1.14.0' );
+define( 'APEXVALUE_VERSION', '1.15.0' );
 
 /**
  * Image CDN cache epoch.
@@ -61,6 +61,11 @@ require get_stylesheet_directory() . '/inc/brand-spotlight.php';
  * Homepage hero (Customizer-editable).
  */
 require get_stylesheet_directory() . '/inc/hero.php';
+
+/**
+ * Top utility bar (distributor note + contact shortcuts).
+ */
+require get_stylesheet_directory() . '/inc/topbar.php';
 
 /**
  * Three-column footer (pluggable storefront_footer_widgets override).

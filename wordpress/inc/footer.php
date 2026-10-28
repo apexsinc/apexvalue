@@ -245,3 +245,13 @@ function storefront_default_footer_widgets() {
 		endif;
 	endfor;
 }
+
+/**
+ * Floating back-to-top button (revealed after scrolling).
+ */
+function apexvalue_back_to_top() {
+	?>
+	<button type="button" class="apex-top" aria-label="<?php esc_attr_e( 'Back to top', 'apexvalue' ); ?>" hidden>&uarr;</button>
+	<?php
+}
+add_action( 'storefront_after_footer', 'apexvalue_back_to_top' );

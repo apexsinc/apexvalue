@@ -248,10 +248,9 @@ if ( ! class_exists( 'ApexValue_Theme' ) ) :
 		 */
 		public function scripts() {
 			// Preload the weights used on every page (400 body, 700
-			// headings/UI, 900 = `h1`/the LCP element — its late discovery
-			// after style.css parsed stretched the LCP chain) plus the solid
-			// icon face (header cart/menu glyphs render above the fold) so
-			// text and icons never swap late.
+			// headings/UI, display face for hero + section headings) plus
+			// the solid icon face (header cart/menu glyphs render above
+			// the fold) so text and icons never swap late.
 			add_action( 'wp_head', function () {
 				$base = get_stylesheet_directory_uri() . '/assets/fonts/';
 				printf(
@@ -264,7 +263,7 @@ if ( ! class_exists( 'ApexValue_Theme' ) ) :
 				);
 				printf(
 					'<link rel="preload" as="font" type="font/woff2" href="%s" crossorigin />' . "\n",
-					esc_url( $base . 'source-sans-pro-900.woff2' )
+					esc_url( $base . 'space-grotesk-latin.woff2' )
 				);
 				printf(
 					'<link rel="preload" as="font" type="font/woff2" href="%s" crossorigin />' . "\n",

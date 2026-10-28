@@ -480,13 +480,20 @@ function apexvalue_home_collections() {
 		<div class="col-full apex-collections__inner">
 			<div class="apex-collections__head">
 				<h2 class="apex-collections__title"><?php esc_html_e( 'Shop by collection', 'apexvalue' ); ?></h2>
-				<?php if ( $shop_url ) : ?>
-					<a class="apex-collections__all" href="<?php echo esc_url( $shop_url ); ?>">
-						<?php esc_html_e( 'View all products', 'apexvalue' ); ?><span aria-hidden="true">&nbsp;&rarr;</span>
-					</a>
-				<?php endif; ?>
+				<div class="apex-collections__head-actions">
+					<?php if ( $shop_url ) : ?>
+						<a class="apex-collections__all" href="<?php echo esc_url( $shop_url ); ?>">
+							<?php esc_html_e( 'View all products', 'apexvalue' ); ?><span aria-hidden="true">&nbsp;&rarr;</span>
+						</a>
+					<?php endif; ?>
+					<div class="apex-collections__nav" role="group" aria-label="<?php esc_attr_e( 'Scroll collections', 'apexvalue' ); ?>">
+						<button type="button" class="apex-collections__nav-btn apex-collections__nav-btn--prev" data-dir="-1" aria-label="<?php esc_attr_e( 'Scroll collections backward', 'apexvalue' ); ?>" hidden>&larr;</button>
+						<button type="button" class="apex-collections__nav-btn apex-collections__nav-btn--next" data-dir="1" aria-label="<?php esc_attr_e( 'Scroll collections forward', 'apexvalue' ); ?>" hidden>&rarr;</button>
+					</div>
+				</div>
 			</div>
-			<ul class="apex-collections__grid">
+			<div class="apex-collections__viewport">
+			<ul class="apex-collections__grid" id="apexCollectionsTrack" tabindex="0">
 				<?php foreach ( $terms as $term ) : ?>
 				<?php $img = apexvalue_collection_image( $term ); ?>
 				<li class="apex-collections__item">
@@ -515,6 +522,7 @@ function apexvalue_home_collections() {
 					</li>
 				<?php endforeach; ?>
 			</ul>
+			</div>
 		</div>
 	</section>
 	<?php

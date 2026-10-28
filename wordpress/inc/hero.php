@@ -242,6 +242,52 @@ function apexvalue_hero_image_url() {
 }
 
 /**
+ * Hero stat counters (real catalogue counts, no hardcoded claims).
+ *
+ * @return array List of [value, label] pairs.
+ */
+function apexvalue_hero_stats() {
+	$stats = array();
+
+	if ( ! function_exists( 'wc_get_page_id' ) ) {
+		return $stats;
+	}
+
+	$products = wp_count_posts( 'product' );
+	if ( ! empty( $products->publish ) ) {
+		$stats[] = array(
+			'value' => number_format_i18n( (int) $products->publish ),
+			'label' => __( 'Products in catalogue', 'apexvalue' ),
+		);
+	}
+
+	if ( function_exists( 'apexvalue_get_collections' ) ) {
+		$collections = apexvalue_get_collections();
+		if ( ! empty( $collections ) ) {
+			$stats[] = array(
+				'value' => number_format_i18n( count( $collections ) ),
+				'label' => __( 'Collections', 'apexvalue' ),
+			);
+		}
+	}
+
+	$solutions = 0;
+	foreach ( get_pages( array( 'post_status' => 'publish' ) ) as $page ) {
+		if ( 0 === strpos( $page->post_name, 'solution-' ) ) {
+			$solutions++;
+		}
+	}
+	if ( $solutions > 0 ) {
+		$stats[] = array(
+			'value' => number_format_i18n( $solutions ),
+			'label' => __( 'Curated solutions', 'apexvalue' ),
+		);
+	}
+
+	return $stats;
+}
+
+/**
  * Render the hero on the front page.
  */
 function apexvalue_hero_render() {
@@ -285,6 +331,18 @@ function apexvalue_hero_render() {
 				<li><?php esc_html_e( 'Ships from our Philippine warehouse', 'apexvalue' ); ?></li>
 				<li><?php esc_html_e( 'Local expert support', 'apexvalue' ); ?></li>
 			</ul>
+
+			<?php $stats = apexvalue_hero_stats(); ?>
+			<?php if ( ! empty( $stats ) ) : ?>
+				<ul class="apex-hero__stats">
+					<?php foreach ( $stats as $stat ) : ?>
+						<li class="apex-hero__stat">
+							<strong><?php echo esc_html( $stat['value'] ); ?></strong>
+							<span><?php echo esc_html( $stat['label'] ); ?></span>
+						</li>
+					<?php endforeach; ?>
+				</ul>
+			<?php endif; ?>
 			</div>
 			<?php if ( '' !== $media ) : ?>
 			<figure class="apex-hero__media">

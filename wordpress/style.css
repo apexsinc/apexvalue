@@ -4,7 +4,7 @@ Theme URI:    https://www.apexvalue.com
 Description:  Apex Value child theme of Storefront. Modern, refined evolution of the default look: cleaner typography, tighter header, card-based product grids and accessible interactions.
 Author:       Apex Value
 Template:     storefront
-Version:      1.14.0
+Version:      1.15.0
 License:      GNU General Public License v2 or later
 License URI:  http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain:  apexvalue
@@ -19,6 +19,7 @@ Text Domain:  apexvalue
 :root {
 	/* Typography */
 	--apx-font: "Source Sans Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
+	--apx-display: "Space Grotesk", "Source Sans Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
 
 	/* Brand colors (kept from Customizer) */
 	--apx-brand: #8fa4bf;            /* steel blue — header / footer */
@@ -469,6 +470,15 @@ html[data-apx-theme="dark"] .apex-hero__eyebrow {
 	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
+@font-face {
+	font-family: "Space Grotesk";
+	font-style: normal;
+	font-weight: 400 700;
+	font-display: swap;
+	src: url("assets/fonts/space-grotesk-latin.woff2") format("woff2");
+	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
 body {
 	font-family: var(--apx-font);
 	font-size: 1.0625rem;              /* 17px base — calmer long-form */
@@ -658,6 +668,65 @@ textarea:focus,
 	align-items: center;
 	flex-wrap: wrap;
 	gap: 0.5rem 1.5rem;
+}
+
+/* --- Top utility bar --- */
+
+.apex-topbar {
+	background: #101418;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+	color: rgba(244, 247, 250, 0.72);
+	font-size: 0.75rem;
+}
+
+.apex-topbar__inner {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 0.5rem 1.5rem;
+	padding-top: 0.4rem;
+	padding-bottom: 0.4rem;
+}
+
+.apex-topbar__note {
+	margin: 0;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+	font-size: 0.6875rem;
+	font-weight: 600;
+}
+
+.apex-topbar__links {
+	display: flex;
+	align-items: center;
+	gap: 1.25rem;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.apex-topbar__links a {
+	color: rgba(244, 247, 250, 0.85);
+	text-decoration: none;
+	font-weight: 600;
+}
+
+.apex-topbar__links a:hover,
+.apex-topbar__links a:focus-visible {
+	color: #ffffff;
+	text-decoration: underline;
+}
+
+@media (max-width: 767px) {
+	.apex-topbar__note {
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	.apex-topbar__email {
+		display: none;
+	}
 }
 
 /* Beat Storefront's percentage-width floats with equal-or-higher specificity.
@@ -1326,9 +1395,10 @@ span.onsale,
 }
 
 .apexvalue-cta__heading {
+	font-family: var(--apx-display);
+	font-weight: 700;
 	color: #ffffff;
 	font-size: 1.6em;
-	font-weight: 700;
 	letter-spacing: -0.015em;
 	margin: 0 0 0.35em;
 	text-wrap: balance;
@@ -1459,6 +1529,8 @@ span.onsale,
 }
 
 .apex-hero__title {
+	font-family: var(--apx-display);
+	font-weight: 700;
 	font-size: clamp(2.2rem, 5vw, 3.6rem);
 	line-height: 1.08;
 	letter-spacing: -0.025em;
@@ -1608,6 +1680,39 @@ span.onsale,
 	background-size: 0.7em 0.7em;
 }
 
+/* Stat counters: real catalogue scale, right under the proof row */
+.apex-hero__stats {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 1rem 2.5rem;
+	list-style: none;
+	margin: 1.75rem 0 0;
+	padding: 1.25rem 0 0;
+	border-top: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.apex-hero__stat {
+	display: flex;
+	flex-direction: column;
+	gap: 0.15rem;
+}
+
+.apex-hero__stat strong {
+	font-family: var(--apx-display);
+	font-weight: 700;
+	font-size: 1.625rem;
+	line-height: 1.1;
+	color: #ffffff;
+}
+
+.apex-hero__stat span {
+	font-size: 0.75rem;
+	font-weight: 600;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: rgba(244, 247, 250, 0.65);
+}
+
 /* Hero owns the visible H1 — hide the a11y fallback one. */
 .apex-has-hero .apx-h1 { display: none; }
 
@@ -1642,6 +1747,8 @@ span.onsale,
 }
 
 .apex-footer__logo {
+	font-family: var(--apx-display);
+	font-weight: 700;
 	display: inline-block;
 	font-size: 1.125rem;
 	font-weight: 700;
@@ -1685,6 +1792,55 @@ span.onsale,
 .apex-footer__social:active {
 	transform: translateY(0);
 	box-shadow: none;
+}
+
+/* Floating back-to-top (JS reveals it after scrolling) */
+.apex-top {
+	position: fixed;
+	right: 1.25rem;
+	bottom: 1.25rem;
+	z-index: 60;
+	width: 2.75rem;
+	height: 2.75rem;
+	border-radius: 999px;
+	border: 1px solid var(--apx-line-strong);
+	background: var(--apx-paper);
+	color: var(--apx-ink);
+	box-shadow: var(--apx-shadow-md);
+	cursor: pointer;
+	font-size: 1.1rem;
+	line-height: 1;
+	opacity: 0;
+	visibility: hidden;
+	transform: translateY(8px);
+	transition: opacity var(--apx-speed) var(--apx-ease),
+		transform var(--apx-speed) var(--apx-ease),
+		visibility var(--apx-speed),
+		background-color var(--apx-speed) var(--apx-ease),
+		color var(--apx-speed) var(--apx-ease);
+}
+
+.apex-top[hidden] {
+	display: none;
+}
+
+.apex-top--show {
+	opacity: 1;
+	visibility: visible;
+	transform: none;
+}
+
+.apex-top:hover,
+.apex-top:focus-visible {
+	background: var(--apx-ink);
+	color: var(--apx-paper);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.apex-top {
+		transition: none;
+		transform: none;
+	}
 }
 
 /* Footer menu links: sliding underline on hover */
@@ -3472,6 +3628,8 @@ html.apex-mode-anim *::after {
 }
 
 .apex-collections__title {
+	font-family: var(--apx-display);
+	font-weight: 700;
 	color: var(--apx-ink);
 	font-size: clamp(1.35rem, 1.1rem + 1vw, 1.75rem);
 	margin: 0;
@@ -3483,9 +3641,56 @@ html.apex-mode-anim *::after {
 	text-decoration: none;
 }
 
-.apex-collections__all:hover,
-.apex-collections__all:focus-visible {
-	text-decoration: underline;
+.apex-collections__head-actions {
+	align-items: center;
+	display: flex;
+	gap: 1rem;
+	margin-left: auto;
+}
+
+.apex-collections__nav {
+	display: flex;
+	gap: 0.5rem;
+}
+
+.apex-collections__nav[hidden],
+.apex-collections__nav-btn[hidden] {
+	display: none;
+}
+
+.apex-collections__nav-btn {
+	align-items: center;
+	background: var(--apx-paper);
+	border: 1px solid var(--apx-line-strong);
+	border-radius: 999px;
+	color: var(--apx-ink);
+	cursor: pointer;
+	display: inline-flex;
+	height: 2.5rem;
+	justify-content: center;
+	transition: background var(--apx-speed) var(--apx-ease),
+		color var(--apx-speed) var(--apx-ease),
+		border-color var(--apx-speed) var(--apx-ease),
+		opacity var(--apx-speed) var(--apx-ease);
+	width: 2.5rem;
+}
+
+.apex-collections__nav-btn:hover:not(:disabled),
+.apex-collections__nav-btn:focus-visible:not(:disabled) {
+	background: var(--apx-ink);
+	border-color: var(--apx-ink);
+	color: var(--apx-paper);
+}
+
+.apex-collections__nav-btn:disabled {
+	cursor: default;
+	opacity: 0.35;
+}
+
+.apex-collections__viewport {
+	overflow: hidden;
+	margin: 0 calc(-1 * var(--wp--style--root--padding-right, 1rem));
+	padding: 0 var(--wp--style--root--padding-right, 1rem) 0.5rem;
 }
 
 .apex-collections__grid {
@@ -3495,6 +3700,23 @@ html.apex-mode-anim *::after {
 	list-style: none;
 	margin: 0;
 	padding: 0;
+}
+
+/* Carousel mode (JS-enabled): horizontal scroll-snap rail */
+.apex-collections__viewport--scroll .apex-collections__grid {
+	display: flex;
+	gap: 1rem;
+	overflow-x: auto;
+	padding-bottom: 0.75rem;
+	scroll-padding-inline: 0.25rem;
+	scroll-snap-type: x mandatory;
+	scrollbar-width: thin;
+	scrollbar-color: var(--apx-line-strong) transparent;
+}
+
+.apex-collections__viewport--scroll .apex-collections__item {
+	flex: 0 0 clamp(220px, 30vw, 300px);
+	scroll-snap-align: start;
 }
 
 .apex-collections__card {
@@ -3548,6 +3770,12 @@ html.apex-mode-anim *::after {
 	height: 100%;
 	object-fit: cover;
 	width: 100%;
+	transition: transform 0.45s var(--apx-ease);
+}
+
+.apex-collections__card:hover .apex-collections__media img,
+.apex-collections__card:focus-visible .apex-collections__media img {
+	transform: scale(1.05);
 }
 
 .apex-collections__mono {
@@ -3595,6 +3823,8 @@ html.apex-mode-anim *::after {
 }
 
 .apex-how__heading {
+	font-family: var(--apx-display);
+	font-weight: 700;
 	color: var(--apx-ink);
 	font-size: clamp(1.5rem, 3vw, 2rem);
 	line-height: 1.2;
@@ -3767,6 +3997,8 @@ html.apex-mode-anim *::after {
 }
 
 .apex-brandspot__heading {
+	font-family: var(--apx-display);
+	font-weight: 700;
 	color: var(--apx-ink);
 	font-size: clamp(1.5rem, 3vw, 2rem);
 	line-height: 1.2;
