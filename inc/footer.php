@@ -189,8 +189,13 @@ function storefront_footer_widgets() {
 						<a href="mailto:<?php echo esc_attr( antispambot( $email ) ); ?>"><?php echo esc_html( antispambot( $email ) ); ?></a>
 					</li>
 				<?php endif; ?>
-				<?php if ( '' !== trim( (string) $phone ) ) : ?>
-					<li class="apex-footer__contact-item apex-footer__contact-item--phone"><?php echo esc_html( $phone ); ?></li>
+				<?php if ( '' !== trim( (string) $phone ) ) :
+					$phone_href = preg_replace( '/[^0-9+]/', '', (string) $phone );
+					if ( '' !== $phone_href && '0' === $phone_href[0] ) {
+						$phone_href = '+63' . substr( $phone_href, 1 );
+					}
+					?>
+					<li class="apex-footer__contact-item apex-footer__contact-item--phone"><a href="tel:<?php echo esc_attr( $phone_href ); ?>"><?php echo esc_html( $phone ); ?></a></li>
 				<?php endif; ?>
 				<?php if ( '' !== trim( (string) $address ) ) : ?>
 					<li class="apex-footer__contact-item apex-footer__contact-item--address"><?php echo esc_html( $address ); ?></li>

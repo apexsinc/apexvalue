@@ -4,7 +4,7 @@ Theme URI:    https://www.apexvalue.com
 Description:  Apex Value child theme of Storefront. Modern, refined evolution of the default look: cleaner typography, tighter header, card-based product grids and accessible interactions.
 Author:       Apex Value
 Template:     storefront
-Version:      1.13.5
+Version:      1.13.6
 License:      GNU General Public License v2 or later
 License URI:  http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain:  apexvalue
@@ -41,7 +41,7 @@ Text Domain:  apexvalue
 	--apx-on-green: #1a1c20;
 	--apx-star: #e8a33d;
 	--apx-line-strong: rgba(0, 0, 0, 0.16);
-	--apx-focus-ring: rgba(143, 164, 191, 0.25);
+	--apx-focus-ring: rgba(143, 164, 191, 0.45);
 	--apx-placeholder: #9aa0a6;
 	--apx-on-accent: #ffffff;
 	--apx-black: #000000;
@@ -642,6 +642,7 @@ textarea:focus,
 	.site-header {
 		position: sticky;
 		top: 0;
+		z-index: 50;
 		box-shadow: var(--apx-shadow-sm);
 	}
 
@@ -872,9 +873,12 @@ textarea:focus,
 	transition: background var(--apx-speed) var(--apx-ease), color var(--apx-speed) var(--apx-ease);
 }
 
-.site-header-cart .cart-contents:hover {
+.site-header-cart .cart-contents:hover,
+.site-header-cart .cart-contents:focus-visible {
 	background: var(--apx-brand);
 	color: var(--apx-on-accent);
+	outline: 2px solid var(--apx-accent);
+	outline-offset: 2px;
 }
 
 /* Storefront adds the cart glyph via a floated ::after; integrate it into
@@ -3401,8 +3405,9 @@ html.apex-mode-anim *::after {
 /* --- How quoting works (homepage) ---------------------------------------- */
 
 .apex-how {
-	background: var(--apx-tint);
+	background: var(--apx-paper);
 	border-top: 1px solid var(--apx-line);
+	border-bottom: 1px solid var(--apx-line);
 	padding: clamp(2.75rem, 6vw, 4.5rem) 0;
 }
 
