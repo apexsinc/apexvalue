@@ -336,6 +336,59 @@ function apexvalue_empty_cart_cta( $block_content, $block ) {
 add_filter( 'render_block', 'apexvalue_empty_cart_cta', 10, 2 );
 
 /**
+ * Label the Product Button block "Request Quote" on the front end.
+ *
+ * The quotation plugin renames classic-loop buttons through
+ * `woocommerce_product_add_to_cart_text`, which the block's visible label
+ * inherits — but the block's `aria-label` ("Add to cart: …"), its
+ * `data-wp-context` text and its non-AJAX `<a>` fallback keep WooCommerce's
+ * default, and the homepage grid carries no `text` attribute to override
+ * it. Swap those leftovers for the quotation label, leaving every class,
+ * attribute and wrapper exactly as rendered. Admin screens are untouched.
+ *
+ * @param string $block_content Rendered block HTML.
+ * @param array  $block         Block name and attributes.
+ * @return string
+ */
+function apexvalue_quote_product_button_label( $block_content, $block ) {
+	if ( is_admin() ) {
+		return $block_content;
+	}
+
+	if ( empty( $block['blockName'] ) || 'woocommerce/product-button' !== $block['blockName'] ) {
+		return $block_content;
+	}
+
+	if ( '' === trim( (string) $block_content ) ) {
+		return $block_content;
+	}
+
+	$label = __( 'Request Quote', 'apexvalue' );
+
+	// Visible label: covers `<a>Add to cart</a>` and `<span>Add to cart</span>`.
+	$block_content = str_replace(
+		array( '>Add to Cart<', '>Add to cart<' ),
+		'>' . esc_html( $label ) . '<',
+		$block_content
+	);
+
+	$block_content = str_replace(
+		array( 'aria-label="Add to Cart:', 'aria-label="Add to cart:' ),
+		'aria-label="' . esc_attr( $label ) . ':',
+		$block_content
+	);
+
+	$block_content = str_replace(
+		array( '"addToCartText":"Add to Cart"', '"addToCartText":"Add to cart"' ),
+		'"addToCartText":"' . esc_attr( $label ) . '"',
+		$block_content
+	);
+
+	return $block_content;
+}
+add_filter( 'render_block', 'apexvalue_quote_product_button_label', 10, 2 );
+
+/**
  * Remove WooCommerce's "Process your orders on the go. Get the app." block
  * from order emails.
  *

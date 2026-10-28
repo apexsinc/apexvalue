@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'APEXVALUE_VERSION', '1.23.1' );
+define( 'APEXVALUE_VERSION', '1.24.0' );
 
 /**
  * Image CDN cache epoch.
@@ -52,11 +52,6 @@ require get_stylesheet_directory() . '/inc/cta-band.php';
  */
 require get_stylesheet_directory() . '/inc/how-it-works.php';
 
-
-/**
- * Homepage brand spotlight (generated from product_brand terms).
- */
-require get_stylesheet_directory() . '/inc/brand-spotlight.php';
 
 /**
  * Homepage hero (Customizer-editable).

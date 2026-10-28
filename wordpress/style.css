@@ -4,7 +4,7 @@ Theme URI:    https://www.apexvalue.com
 Description:  Apex Value child theme of Storefront. Modern, refined evolution of the default look: cleaner typography, tighter header, card-based product grids and accessible interactions.
 Author:       Apex Value
 Template:     storefront
-Version:      1.23.1
+Version:      1.24.0
 License:      GNU General Public License v2 or later
 License URI:  http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain:  apexvalue
@@ -1287,6 +1287,27 @@ ul.products li.product .price,
 	margin-top: auto;
 }
 
+/* Block product titles: display face, centered like the grid. */
+.wc-block-product-template .wp-block-post-title {
+	font-family: var(--apx-display);
+	text-align: center;
+	color: var(--apx-ink);
+}
+
+/* Block product button: pill + green, reusing the button tokens. */
+.wc-block-product-template .wc-block-components-product-button__button {
+	border-radius: 999px;
+	background-color: var(--apx-green);
+	border-color: var(--apx-green);
+	color: var(--apx-on-green);
+}
+
+.wc-block-product-template .wc-block-components-product-button__button:hover {
+	background-color: var(--apx-green-dark);
+	border-color: var(--apx-green-dark);
+	color: var(--apx-on-green);
+}
+
 /* Star ratings */
 .star-rating span::before { color: var(--apx-star); }
 
@@ -1907,10 +1928,11 @@ span.onsale,
 
 .site-footer {
 	border-top: 1px solid var(--apx-line);
+	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 
 .apex-footer {
-	padding: 3.5rem 0 3rem;
+	padding: 4rem 0 3rem;
 	border-bottom: 0;
 	color: var(--apx-footer-muted);
 }
@@ -2164,10 +2186,27 @@ span.onsale,
 	text-decoration: none;
 }
 
+.apex-footer__contact-list li {
+	margin-bottom: 0.7em;
+}
+
 .apex-footer__contact-item a:hover,
 .apex-footer__contact-item a:focus-visible {
 	color: var(--apx-footer-link);
 	text-decoration: underline;
+}
+
+/* Collections list (10 links) flows into two columns on desktop so the
+   middle footer column doesn't run overlong. Mobile stays single-column. */
+@media (min-width: 768px) {
+	.apex-footer__menu--collections {
+		columns: 2;
+		column-gap: 2rem;
+	}
+
+	.apex-footer__menu--collections > li {
+		break-inside: avoid;
+	}
 }
 
 /* Stack gracefully below the desktop grid breakpoint */
@@ -2184,11 +2223,31 @@ span.onsale,
 }
 
 .site-footer .site-info {
-	padding: 1.5rem 0;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	flex-wrap: wrap;
+	gap: 0.5rem 1.5rem;
+	padding: 1.25rem 0;
 	border-top: 1px solid var(--apx-footer-line);
 	color: var(--apx-footer-muted);
-	font-size: 0.875rem;
-	text-align: center;
+	font-size: 0.8125rem;
+	text-align: left;
+}
+
+.site-footer .site-info__links {
+	display: inline-flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 0.25rem 1.25rem;
+}
+
+@media (max-width: 767px) {
+	.site-footer .site-info {
+		flex-direction: column;
+		justify-content: center;
+		text-align: center;
+	}
 }
 
 .site-footer .site-info a {
@@ -3670,9 +3729,14 @@ html.apex-mode-anim *::after {
 /* --- Cookie bar (SiteSEO) ------------------------------------------------ */
 
 #siteseo-cookie-bar {
-	background: var(--apx-cookie-bg);
-	color: #fff;
+	background: var(--apx-cookie-bg) !important; /* beats plugin inline background-color */
+	color: #fff !important; /* beats plugin inline color */
 	box-shadow: 0 -4px 18px rgba(16, 24, 40, 0.18);
+}
+
+#siteseo-cookie-bar,
+#siteseo-cookie-bar button {
+	font-family: inherit;
 }
 
 #siteseo-cookie-bar .siteseo-cookie-bar-content {
@@ -3693,9 +3757,9 @@ html.apex-mode-anim *::after {
 }
 
 #siteseo-cookie-bar-accept {
-	background: var(--apx-green);
-	border-color: var(--apx-green);
-	color: var(--apx-ink);
+	background-color: var(--apx-green) !important; /* beats plugin inline background-color */
+	border-color: var(--apx-green) !important;
+	color: var(--apx-on-green) !important; /* beats plugin inline color; stays readable in dark mode */
 	border-radius: 999px;
 	font-weight: 700;
 	transition: background var(--apx-speed) var(--apx-ease),
@@ -3704,28 +3768,38 @@ html.apex-mode-anim *::after {
 
 #siteseo-cookie-bar-accept:hover,
 #siteseo-cookie-bar-accept:focus-visible {
-	background: var(--apx-green-dark);
+	background: var(--apx-green-dark) !important; /* inline style also applies on hover */
 	border-color: var(--apx-green-dark);
-	color: var(--apx-ink);
+	color: var(--apx-on-green);
 	transform: translateY(-1px);
 }
 
 #siteseo-cookie-bar-manage-btn {
-	background: transparent;
-	border-color: rgba(255, 255, 255, 0.35);
-	color: #fff;
+	position: fixed; /* re-asserted: plugin parks it bottom-left over the page */
+	bottom: 1.25rem;
+	left: 1.25rem;
+	z-index: 9999;
+	background-color: var(--apx-cookie-bg) !important; /* beats plugin inline purple; solid so it stays legible over page content */
+	border: 1px solid rgba(255, 255, 255, 0.35);
+	color: #fff !important; /* beats plugin inline color */
 	border-radius: 999px;
+	font-size: 0.8125rem;
+	padding: 0.5em 1.1em;
+	box-shadow: var(--apx-shadow-md);
 	transition: border-color var(--apx-speed) var(--apx-ease),
 		background var(--apx-speed) var(--apx-ease);
 }
 
 #siteseo-cookie-bar-manage-btn:hover,
 #siteseo-cookie-bar-manage-btn:focus-visible {
-	background: rgba(255, 255, 255, 0.1);
 	border-color: rgba(255, 255, 255, 0.6);
 }
 
 #siteseo-cookie-bar-close {
+	background: transparent !important; /* beats plugin inline #cccccc */
+	border: 1px solid rgba(255, 255, 255, 0.35);
+	color: #fff !important; /* beats plugin inline #000000 */
+	border-radius: 999px;
 	opacity: 0.75;
 }
 
@@ -3870,7 +3944,8 @@ html.apex-mode-anim *::after {
 }
 
 /* 22c. Footer "Collections" links reuse the existing .apex-footer__menu
-   link treatment — no extra rules needed. */
+   link treatment; the --collections modifier only adds the desktop 2-col
+   flow (see the footer section above). */
 
 /* 22d. Solutions marquee ticker (front page, under the hero) ----------- */
 .apex-marquee {
@@ -4347,142 +4422,6 @@ html.apex-mode-anim *::after {
 	}
 }
 
-/* --- Brand spotlight (data-driven from product_brand terms) --------------- */
-
-.apex-brandspot {
-	background: var(--apx-tint);
-	border-top: 1px solid var(--apx-line);
-	padding: clamp(2.75rem, 6vw, 4.5rem) 0;
-}
-
-.apex-brandspot__heading {
-	font-family: var(--apx-display);
-	font-weight: 700;
-	color: var(--apx-ink);
-	font-size: clamp(1.5rem, 3vw, 2rem);
-	line-height: 1.2;
-	margin: 0 0 0.5rem;
-}
-
-.apex-brandspot__lede {
-	color: var(--apx-muted);
-	font-size: 1.0625rem;
-	margin: 0 0 2rem;
-	max-width: 44rem;
-}
-
-.apex-brandspot__grid {
-	display: grid;
-	gap: 1.25rem;
-	grid-template-columns: 1fr;
-	list-style: none;
-	margin: 0 0 1.75rem;
-	padding: 0;
-}
-
-.apex-brandspot__card {
-	background: var(--apx-paper);
-	border: 1px solid var(--apx-line);
-	border-radius: var(--apx-radius);
-	box-shadow: var(--apx-shadow-sm);
-	transition: box-shadow var(--apx-speed) var(--apx-ease), transform var(--apx-speed) var(--apx-ease);
-}
-
-.apex-brandspot__card:hover,
-.apex-brandspot__card:focus-within {
-	box-shadow: var(--apx-shadow-md);
-	transform: translateY(-2px);
-}
-
-.apex-brandspot__link {
-	align-items: center;
-	display: flex;
-	flex-direction: column;
-	gap: 0.35rem;
-	padding: 1.5rem 1.25rem;
-	text-align: center;
-	text-decoration: none;
-}
-
-.apex-brandspot__thumb {
-	align-items: center;
-	display: flex;
-	height: 4.5rem;
-	justify-content: center;
-	margin-bottom: 0.35rem;
-	width: 100%;
-}
-
-.apex-brandspot__thumb img {
-	height: 100%;
-	object-fit: contain;
-	width: auto;
-}
-
-.apex-brandspot__monogram {
-	align-items: center;
-	background: var(--apx-tint);
-	border-radius: 999px;
-	color: var(--apx-accent);
-	display: inline-flex;
-	font-size: 1.5rem;
-	font-weight: 700;
-	height: 3.5rem;
-	justify-content: center;
-	width: 3.5rem;
-	box-shadow: 0 0 0 2px var(--apx-paper), 0 0 0 4px var(--apx-accent-tint);
-}
-
-.apex-brandspot__name {
-	color: var(--apx-ink);
-	font-size: 1.0625rem;
-	font-weight: 600;
-}
-
-.apex-brandspot__count {
-	color: var(--apx-muted);
-	font-size: 0.8125rem;
-}
-
-.apex-brandspot__btn {
-	background: var(--apx-accent);
-	border-radius: var(--apx-radius-sm);
-	color: var(--apx-on-accent);
-	display: inline-block;
-	font-weight: 600;
-	padding: 0.7rem 1.4rem;
-	text-decoration: none;
-	transition: background var(--apx-speed) var(--apx-ease);
-}
-
-.apex-brandspot__btn:hover,
-.apex-brandspot__btn:focus-visible {
-	background: var(--apx-accent-dark);
-}
-
-@media (min-width: 480px) {
-	.apex-brandspot__grid {
-		grid-template-columns: repeat(2, minmax(0, 1fr));
-	}
-}
-
-@media (min-width: 900px) {
-	.apex-brandspot__grid {
-		grid-template-columns: repeat(3, minmax(0, 1fr));
-	}
-}
-
-@media (prefers-reduced-motion: reduce) {
-	.apex-brandspot,
-	.apex-brandspot__card {
-		transition: none;
-	}
-	.apex-brandspot__card:hover,
-	.apex-brandspot__card:focus-within {
-		transform: none;
-	}
-}
-
 /* ---------------------------------------------------------------------
    WooCommerce blocks (cart / checkout) on the design system.
    Components render client-side; classes verified against WC 10.7 build.
@@ -4773,4 +4712,115 @@ body.archive .pagination .page-numbers li .page-numbers,
 body.search .pagination .page-numbers li .page-numbers {
 	border-radius: 999px;
 	padding: 0.5em 1.05em;
+}
+
+/* ---------------------------------------------------------------------
+   25. Homepage FAQ + customer reviews (scoped to body.home)
+   Evidence (live homepage HTML): there is NO FAQ plugin and NO h3/p
+   accordion. The FAQ list is a core Latest Posts block over the `faqs`
+   category — h2 "Frequently Asked Questions" followed by
+   ul.wp-block-latest-posts__list > li > a.wp-block-latest-posts__post-title
+   (the question, linked) + div.wp-block-latest-posts__post-excerpt
+   (truncated "…") + a.wp-block-latest-posts__read-more ("Read more" +
+   a11y screen-reader ": Question") pointing at the full FAQ post.
+   Reviews are two Rich Showcase for Google Reviews feeds (.wp-gr.rpi,
+   data-id 2384 + 2405). No .apex-reviews wrapper exists, so only the
+   content output is styled below.
+   --------------------------------------------------------------------- */
+
+/* FAQ cards: paper surface, 1px line border, radius-lg, shadow-sm. */
+body.home .entry-content ul.wp-block-latest-posts__list li {
+	background: var(--apx-paper);
+	border: 1px solid var(--apx-line);
+	border-radius: var(--apx-radius-lg);
+	box-shadow: var(--apx-shadow-sm);
+	padding: 1.25rem 1.5rem;
+	margin-bottom: 0.75rem;
+}
+
+/* FAQ question (the linked post title — NOT an h3 in the markup):
+   display face at 1.0625rem in ink, with a small solid green bar
+   marker (::before). Deliberately a flat bar, not a glowing dot. */
+body.home .entry-content .wp-block-latest-posts__post-title {
+	position: relative;
+	display: inline-block;
+	padding-left: 0.9em;
+	font-family: var(--apx-display);
+	font-size: 1.0625rem;
+	color: var(--apx-ink);
+}
+
+body.home .entry-content .wp-block-latest-posts__post-title::before {
+	content: "";
+	position: absolute;
+	left: 0;
+	top: 50%;
+	width: 4px;
+	height: 1.2em;
+	border-radius: 2px;
+	background: var(--apx-green);
+	transform: translateY(-50%);
+}
+
+body.home .entry-content .wp-block-latest-posts__post-title:hover {
+	color: var(--apx-accent);
+}
+
+/* FAQ answer excerpt: body color, readable measure. */
+body.home .entry-content .wp-block-latest-posts__post-excerpt {
+	color: var(--apx-body);
+	max-width: 68ch;
+	margin-top: 0.5em;
+}
+
+/* Per-item "Read more" links: intentionally NOT hidden. The visible
+   text is just "Read more" (it never repeats the question — the
+   question survives only inside .screen-reader-text for assistive
+   tech), and each link targets its full FAQ post while the excerpt
+   above is truncated, so the links navigate somewhere meaningful.
+   Hiding them would strand readers on the excerpt. */
+
+/* "Show more FAQs" toggle → accent pill. */
+body.home .entry-content a.wp-block-button__link[href*="faqs"] {
+	background-color: var(--apx-accent);
+	border-color: var(--apx-accent);
+	color: var(--apx-on-accent);
+	border-radius: 999px;
+	padding: 0.7em 1.6em;
+	transition: background-color var(--apx-speed) var(--apx-ease),
+		border-color var(--apx-speed) var(--apx-ease),
+		color var(--apx-speed) var(--apx-ease);
+}
+
+body.home .entry-content a.wp-block-button__link[href*="faqs"]:hover,
+body.home .entry-content a.wp-block-button__link[href*="faqs"]:focus-visible {
+	background-color: var(--apx-accent-hover);
+	border-color: var(--apx-accent-hover);
+	color: var(--apx-on-accent);
+}
+
+/* Review headings ("What our customers say:" plus the sibling
+   company-profile h3 — both carry .alignwide): centered display face.
+   The trailing colon is content text, which CSS cannot remove, so the
+   text itself is left untouched. */
+body.home .entry-content h3.alignwide {
+	font-family: var(--apx-display);
+	text-align: center;
+	margin-bottom: 1.25rem;
+}
+
+/* GRW feed shells: outer spacing rhythm + content measure + a
+   horizontal overflow guard. The plugin's inner card styles are
+   deliberately untouched. */
+body.home .entry-content .wp-gr {
+	max-width: 72rem;
+	margin: 0 auto 2rem;
+	overflow-x: clip;
+}
+
+/* Reduced motion: transitions added above go flat. */
+@media (prefers-reduced-motion: reduce) {
+	body.home .entry-content a.wp-block-button__link[href*="faqs"] {
+		transition: none;
+	}
 }
