@@ -4,7 +4,7 @@ Theme URI:    https://www.apexvalue.com
 Description:  Apex Value child theme of Storefront. Modern, refined evolution of the default look: cleaner typography, tighter header, card-based product grids and accessible interactions.
 Author:       Apex Value
 Template:     storefront
-Version:      1.23.0
+Version:      1.23.1
 License:      GNU General Public License v2 or later
 License URI:  http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain:  apexvalue
@@ -1818,7 +1818,6 @@ span.onsale,
 .apex-hero__chip {
 	display: inline-flex;
 	align-items: center;
-	gap: 0.4rem;
 	background: rgba(16, 20, 26, 0.82);
 	backdrop-filter: blur(6px);
 	color: #f4f7fa;
@@ -1829,15 +1828,6 @@ span.onsale,
 	letter-spacing: 0.02em;
 	padding: 0.45em 0.95em;
 	box-shadow: 0 10px 24px -10px rgba(0, 0, 0, 0.6);
-}
-
-.apex-hero__chip::before {
-	content: "";
-	width: 0.5em;
-	height: 0.5em;
-	border-radius: 999px;
-	background: var(--apx-green);
-	flex: 0 0 auto;
 }
 
 /* Glass stat cards overlapping the photo's lower edge */
