@@ -4,7 +4,7 @@ Theme URI:    https://www.apexvalue.com
 Description:  Apex Value child theme of Storefront. Modern, refined evolution of the default look: cleaner typography, tighter header, card-based product grids and accessible interactions.
 Author:       Apex Value
 Template:     storefront
-Version:      1.20.0
+Version:      1.21.0
 License:      GNU General Public License v2 or later
 License URI:  http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain:  apexvalue
@@ -664,6 +664,15 @@ textarea:focus,
 	background: rgba(255, 255, 255, 0.92);
 	backdrop-filter: blur(12px);
 	-webkit-backdrop-filter: blur(12px);
+	position: sticky;
+	top: 0;
+	z-index: 50;
+}
+
+/* Storefront reserves a ~68px header gap on the blog-style homepage —
+   on our composed front page it reads as a broken empty band. */
+.home .site-header {
+	margin-bottom: 0;
 }
 
 html[data-apx-theme="dark"] .site-header {
@@ -672,13 +681,19 @@ html[data-apx-theme="dark"] .site-header {
 
 @media (min-width: 768px) {
 	.site-header {
-		position: sticky;
-		top: 0;
-		z-index: 50;
 		box-shadow: var(--apx-shadow-sm);
 	}
 
+	/* Deeper shadow once the page scrolls under the glass */
+	.site-header.apex-header--scrolled {
+		box-shadow: var(--apx-shadow-md);
+	}
+
 	body.admin-bar .site-header { top: 32px; }
+}
+
+@media (max-width: 781px) {
+	body.admin-bar .site-header { top: 46px; }
 }
 
 /* Auto dark mode follows the manual dark header (kept separate because
@@ -689,11 +704,24 @@ html[data-apx-theme="dark"] .site-header {
 	}
 }
 
+/* Slimmer header chrome: tighter than Storefront's airy defaults */
+.site-header {
+	padding-top: 1rem;
+	padding-bottom: 1rem;
+}
+
 .site-header .col-full {
 	display: flex;
 	align-items: center;
 	flex-wrap: wrap;
 	gap: 0.5rem 1.5rem;
+}
+
+@media (min-width: 768px) {
+	.site-header {
+		padding-top: 1.25rem;
+		padding-bottom: 0;
+	}
 }
 
 /* --- Top utility bar --- */
@@ -802,7 +830,7 @@ html[data-apx-theme="dark"] .site-header {
 .site-header .custom-logo-link img {
 	width: auto;
 	max-width: 190px;
-	max-height: 56px;
+	max-height: 48px;
 	height: auto;
 }
 
@@ -913,7 +941,7 @@ html[data-apx-theme="dark"] .site-header {
 	.main-navigation ul.menu > li > a,
 	.main-navigation ul.nav-menu > li > a {
 		position: relative;
-		padding: 0.9em 1em;
+		padding: 0.75em 1em;
 		font-weight: 600;
 		font-size: 0.9375rem;
 		letter-spacing: 0.01em;
@@ -973,6 +1001,21 @@ html[data-apx-theme="dark"] .site-header {
 	.main-navigation ul.menu ul li:hover > a {
 		background: var(--apx-tint);
 		color: var(--apx-ink);
+	}
+}
+
+/* Wide submenus (e.g. Shop's 10 collections) split into two columns */
+@media (min-width: 768px) {
+	.main-navigation ul.menu > li > ul:has(> li:nth-child(7)),
+	.main-navigation ul.nav-menu > li > ul:has(> li:nth-child(7)) {
+		columns: 2;
+		column-gap: 0.25rem;
+		min-width: 400px;
+	}
+
+	.main-navigation ul.menu > li > ul:has(> li:nth-child(7)) > li,
+	.main-navigation ul.nav-menu > li > ul:has(> li:nth-child(7)) > li {
+		break-inside: avoid;
 	}
 }
 
@@ -1115,13 +1158,17 @@ button.menu-toggle:hover { background: var(--apx-tint); }
 
 .handheld-navigation ul.menu li:last-child a { border-bottom: 0; }
 
-/* Open mobile menu: quick, clean reveal */
+/* Open mobile menu: dropdown sheet with rounded bottom + shadow */
 .handheld-navigation {
 	transition: max-height 320ms var(--apx-ease);
 }
 
 .main-navigation.toggled .handheld-navigation {
 	padding-bottom: 0.75rem;
+	border-bottom: 1px solid var(--apx-line);
+	border-radius: 0 0 20px 20px;
+	box-shadow: var(--apx-shadow-lg);
+	background: var(--apx-paper);
 }
 
 /* Staggered handheld item entrance — hidden start scoped to JS
