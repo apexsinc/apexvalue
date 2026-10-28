@@ -65,6 +65,25 @@ function apexvalue_hero_customize_register( $wp_customize ) {
 	);
 
 	$wp_customize->add_setting(
+		'apexvalue_hero_accent',
+		array(
+			'default'           => __( 'weather & marine', 'apexvalue' ),
+			'sanitize_callback' => 'sanitize_text_field',
+			'transport'         => 'postMessage',
+		)
+	);
+
+	$wp_customize->add_control(
+		'apexvalue_hero_accent',
+		array(
+			'label'       => __( 'Headline accent (serif italic)', 'apexvalue' ),
+			'description' => __( 'A phrase from the headline to set in italic serif. Leave empty for no accent.', 'apexvalue' ),
+			'section'     => 'apexvalue_hero',
+			'type'        => 'text',
+		)
+	);
+
+	$wp_customize->add_setting(
 		'apexvalue_hero_text',
 		array(
 			'default'           => __( 'From Vantage Vue stations to complete EnviroMonitor networks — genuine hardware, expert advice and local support for homes, farms, coastlines and vessels.', 'apexvalue' ),
@@ -303,15 +322,27 @@ function apexvalue_hero_render() {
 	$cta2_t = get_theme_mod( 'apexvalue_hero_cta2_text', __( 'Browse products', 'apexvalue' ) );
 	$cta2_u = get_theme_mod( 'apexvalue_hero_cta2_url', home_url( '/products/' ) );
 	$media  = apexvalue_hero_image_url();
+	$accent = trim( (string) get_theme_mod( 'apexvalue_hero_accent', __( 'weather & marine', 'apexvalue' ) ) );
+
+	$headline_html = esc_html( $headline );
+	if ( '' !== $accent && str_contains( $headline, $accent ) ) {
+		$headline_html = str_replace(
+			esc_html( $accent ),
+			'<em class="apex-hero__accent">' . esc_html( $accent ) . '</em>',
+			$headline_html
+		);
+	}
+
+	$stats = apexvalue_hero_stats();
 	?>
 	<section class="apex-hero<?php echo '' !== $media ? ' apex-hero--media' : ''; ?>" aria-label="<?php esc_attr_e( 'Introduction', 'apexvalue' ); ?>">
 		<div class="col-full apex-hero__inner">
 			<div class="apex-hero__copy">
 			<?php if ( '' !== trim( (string) $kicker ) ) : ?>
-				<p class="apex-hero__kicker"><?php echo esc_html( $kicker ); ?></p>
+				<p class="apex-hero__kicker"><span class="apex-hero__kicker-dot" aria-hidden="true"></span><span class="apex-hero__kicker-text"><?php echo esc_html( $kicker ); ?></span></p>
 			<?php endif; ?>
 
-			<h1 class="apex-hero__title"><?php echo esc_html( $headline ); ?></h1>
+			<h1 class="apex-hero__title"><?php echo wp_kses_post( $headline_html ); ?></h1>
 
 			<?php if ( '' !== trim( (string) $text ) ) : ?>
 				<p class="apex-hero__text"><?php echo esc_html( $text ); ?></p>
@@ -319,30 +350,12 @@ function apexvalue_hero_render() {
 
 			<div class="apex-hero__actions">
 				<?php if ( '' !== trim( (string) $cta1_t ) && '' !== trim( (string) $cta1_u ) ) : ?>
-					<a class="apex-hero__btn apex-hero__btn--primary" href="<?php echo esc_url( $cta1_u ); ?>"><?php echo esc_html( $cta1_t ); ?></a>
+					<a class="apex-hero__btn apex-hero__btn--primary" href="<?php echo esc_url( $cta1_u ); ?>"><?php echo esc_html( $cta1_t ); ?><span aria-hidden="true">&nbsp;&rarr;</span></a>
 				<?php endif; ?>
 				<?php if ( '' !== trim( (string) $cta2_t ) && '' !== trim( (string) $cta2_u ) ) : ?>
 					<a class="apex-hero__btn apex-hero__btn--ghost" href="<?php echo esc_url( $cta2_u ); ?>"><?php echo esc_html( $cta2_t ); ?></a>
 				<?php endif; ?>
 			</div>
-
-			<ul class="apex-hero__trust" aria-label="<?php esc_attr_e( 'Why shop with us', 'apexvalue' ); ?>">
-				<li><?php esc_html_e( 'Genuine Davis Instruments hardware', 'apexvalue' ); ?></li>
-				<li><?php esc_html_e( 'Ships from our Philippine warehouse', 'apexvalue' ); ?></li>
-				<li><?php esc_html_e( 'Local expert support', 'apexvalue' ); ?></li>
-			</ul>
-
-			<?php $stats = apexvalue_hero_stats(); ?>
-			<?php if ( ! empty( $stats ) ) : ?>
-				<ul class="apex-hero__stats">
-					<?php foreach ( $stats as $stat ) : ?>
-						<li class="apex-hero__stat">
-							<strong><?php echo esc_html( $stat['value'] ); ?></strong>
-							<span><?php echo esc_html( $stat['label'] ); ?></span>
-						</li>
-					<?php endforeach; ?>
-				</ul>
-			<?php endif; ?>
 			</div>
 			<?php if ( '' !== $media ) : ?>
 			<figure class="apex-hero__media">
@@ -351,6 +364,16 @@ function apexvalue_hero_render() {
 					<span class="apex-hero__chip"><?php esc_html_e( 'Solar-powered wireless sensors', 'apexvalue' ); ?></span>
 					<span class="apex-hero__chip"><?php esc_html_e( 'Genuine Davis hardware', 'apexvalue' ); ?></span>
 				</figcaption>
+				<?php if ( ! empty( $stats ) ) : ?>
+				<ul class="apex-hero__figures">
+					<?php foreach ( $stats as $stat ) : ?>
+						<li>
+							<strong><?php echo esc_html( $stat['value'] ); ?></strong>
+							<span><?php echo esc_html( $stat['label'] ); ?></span>
+						</li>
+					<?php endforeach; ?>
+				</ul>
+				<?php endif; ?>
 			</figure>
 			<?php endif; ?>
 		</div>

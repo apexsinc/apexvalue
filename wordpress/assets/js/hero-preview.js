@@ -42,11 +42,48 @@
 		} );
 	}
 
-	bindField( 'apexvalue_hero_kicker', '.apex-hero__kicker', 'text' );
-	bindField( 'apexvalue_hero_headline', '.apex-hero__title', 'text' );
+	bindField( 'apexvalue_hero_kicker', '.apex-hero__kicker-text', 'text' );
 	bindField( 'apexvalue_hero_text', '.apex-hero__text', 'text' );
 	bindField( 'apexvalue_hero_cta_text', '.apex-hero__btn--primary', 'text' );
 	bindField( 'apexvalue_hero_cta_url', '.apex-hero__btn--primary', 'href' );
 	bindField( 'apexvalue_hero_cta2_text', '.apex-hero__btn--ghost', 'text' );
 	bindField( 'apexvalue_hero_cta2_url', '.apex-hero__btn--ghost', 'href' );
+
+	/**
+	 * Headline + accent render together: the accent phrase is wrapped in
+	 * <em class="apex-hero__accent">, mirroring apexvalue_hero_render().
+	 */
+	function renderHeadline() {
+		var $title = $( '.apex-hero__title' );
+
+		if ( ! $title.length ) {
+			return;
+		}
+
+		var headline = String( api( 'apexvalue_hero_headline' )() );
+		var accent = String( api( 'apexvalue_hero_accent' )() ).trim();
+
+		if ( '' === headline.trim() ) {
+			$title.hide();
+			return;
+		}
+
+		var escaped = $( '<span>' ).text( headline ).html();
+		var escapedAccent = $( '<span>' ).text( accent ).html();
+
+		if ( '' !== accent && -1 !== headline.indexOf( accent ) ) {
+			escaped = escaped.split( escapedAccent ).join(
+				'<em class="apex-hero__accent">' + escapedAccent + '</em>'
+			);
+		}
+
+		$title.html( escaped ).show();
+	}
+
+	api( 'apexvalue_hero_headline', function ( value ) {
+		value.bind( renderHeadline );
+	} );
+	api( 'apexvalue_hero_accent', function ( value ) {
+		value.bind( renderHeadline );
+	} );
 } )( window.wp && window.wp.customize, window.jQuery );

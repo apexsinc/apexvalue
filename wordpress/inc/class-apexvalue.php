@@ -267,6 +267,10 @@ if ( ! class_exists( 'ApexValue_Theme' ) ) :
 				);
 				printf(
 					'<link rel="preload" as="font" type="font/woff2" href="%s" crossorigin />' . "\n",
+					esc_url( $base . 'fraunces-italic-latin.woff2' )
+				);
+				printf(
+					'<link rel="preload" as="font" type="font/woff2" href="%s" crossorigin />' . "\n",
 					esc_url( $base . 'fa-solid-900.woff2' )
 				);
 			}, 2 );

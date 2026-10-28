@@ -4,7 +4,7 @@ Theme URI:    https://www.apexvalue.com
 Description:  Apex Value child theme of Storefront. Modern, refined evolution of the default look: cleaner typography, tighter header, card-based product grids and accessible interactions.
 Author:       Apex Value
 Template:     storefront
-Version:      1.19.0
+Version:      1.20.0
 License:      GNU General Public License v2 or later
 License URI:  http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain:  apexvalue
@@ -20,6 +20,7 @@ Text Domain:  apexvalue
 	/* Typography */
 	--apx-font: "Source Sans Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
 	--apx-display: "Space Grotesk", "Source Sans Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
+	--apx-serif: "Fraunces", Georgia, "Times New Roman", serif;
 
 	/* Brand colors (kept from Customizer) */
 	--apx-brand: #8fa4bf;            /* steel blue — header / footer */
@@ -476,6 +477,15 @@ html[data-apx-theme="dark"] .apex-hero__eyebrow {
 	font-weight: 400 700;
 	font-display: swap;
 	src: url("assets/fonts/space-grotesk-latin.woff2") format("woff2");
+	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+	font-family: "Fraunces";
+	font-style: italic;
+	font-weight: 500;
+	font-display: swap;
+	src: url("assets/fonts/fraunces-italic-latin.woff2") format("woff2");
 	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
@@ -1571,6 +1581,17 @@ span.onsale,
 	background-size: 44px 44px;
 	mask-image: radial-gradient(48rem 26rem at 70% 20%, black 30%, transparent 75%);
 	pointer-events: none;
+	animation: apex-grid-drift 26s ease-in-out infinite alternate;
+}
+
+@keyframes apex-grid-drift {
+	from {
+		transform: translate3d(0, 0, 0);
+	}
+
+	to {
+		transform: translate3d(-22px, 14px, 0);
+	}
 }
 
 .apex-hero__inner {
@@ -1599,18 +1620,24 @@ span.onsale,
 }
 
 .apex-hero__kicker {
-	display: inline-block;
+	display: inline-flex;
+	align-items: center;
+	gap: 0.65em;
 	font-size: 0.8125rem;
 	font-weight: 700;
-	letter-spacing: 0.14em;
+	letter-spacing: 0.16em;
 	text-transform: uppercase;
 	color: #9fc4e2;
-	border: 1px solid rgba(159, 196, 226, 0.35);
-	background: rgba(255, 255, 255, 0.06);
-	backdrop-filter: blur(4px);
-	padding: 0.4em 1em;
+	margin: 0 0 1.25rem;
+}
+
+.apex-hero__kicker-dot {
+	width: 0.55em;
+	height: 0.55em;
 	border-radius: 999px;
-	margin-bottom: 1.25rem;
+	background: var(--apx-green);
+	box-shadow: 0 0 0 4px rgba(129, 215, 66, 0.18);
+	flex: 0 0 auto;
 }
 
 .apex-hero__title {
@@ -1622,6 +1649,15 @@ span.onsale,
 	margin: 0 0 1rem;
 	color: #ffffff;
 	text-wrap: balance;
+}
+
+.apex-hero__accent {
+	font-family: var(--apx-serif);
+	font-style: italic;
+	font-weight: 500;
+	font-size: 1.03em;
+	letter-spacing: -0.01em;
+	color: var(--apx-green);
 }
 
 .apex-hero__text {
@@ -1636,7 +1672,6 @@ span.onsale,
 	display: flex;
 	flex-wrap: wrap;
 	gap: 1rem;
-	margin-bottom: 1.75rem;
 }
 
 .apex-hero__btn {
@@ -1677,25 +1712,36 @@ span.onsale,
 	color: #fff;
 }
 
-/* Side media: studio photo in a floating product card */
+/* Side media: studio photo in a framed card with glass stat overlays */
 .apex-hero__media {
 	position: relative;
-	margin: 0;
+	margin: 0 0 2.75rem;
+}
+
+.apex-hero__media::before {
+	content: "";
+	position: absolute;
+	inset: 0;
+	transform: translate(14px, 14px);
+	border: 1px solid rgba(255, 255, 255, 0.22);
+	border-radius: 20px;
+	pointer-events: none;
 }
 
 .apex-hero__photo {
 	display: block;
+	position: relative;
 	width: 100%;
 	height: auto;
-	border-radius: var(--apx-radius-lg);
+	border-radius: 20px;
 	box-shadow: 0 30px 60px -18px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.14);
 }
 
 .apex-hero__chips {
 	position: absolute;
+	top: 1rem;
 	left: 1rem;
 	right: 1rem;
-	bottom: -1rem;
 	display: flex;
 	flex-wrap: wrap;
 	gap: 0.5rem;
@@ -1728,75 +1774,52 @@ span.onsale,
 	flex: 0 0 auto;
 }
 
-@media (min-width: 900px) {
-	.apex-hero__media {
-		transform: perspective(1200px) rotateY(-4deg);
-	}
-}
-
-/* Trust signals below the CTAs — proof without imagery */
-.apex-hero__trust {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 0.5rem 1.5rem;
+/* Glass stat cards overlapping the photo's lower edge */
+.apex-hero__figures {
+	position: absolute;
+	left: 1rem;
+	right: 1rem;
+	bottom: -2.25rem;
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 0.6rem;
 	list-style: none;
 	margin: 0;
 	padding: 0;
-	font-size: 0.875rem;
-	color: rgba(244, 247, 250, 0.75);
 }
 
-.apex-hero__trust li {
-	display: inline-flex;
-	align-items: center;
-	gap: 0.45rem;
-}
-
-.apex-hero__trust li::before {
-	content: "";
-	width: 1.1em;
-	height: 1.1em;
-	flex: 0 0 auto;
-	border-radius: 999px;
-	background: rgba(129, 215, 66, 0.18);
-	border: 1px solid rgba(129, 215, 66, 0.55);
-	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2.5 6.2 5 8.5 9.5 3.5' fill='none' stroke='%2381d742' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-	background-repeat: no-repeat;
-	background-position: center;
-	background-size: 0.7em 0.7em;
-}
-
-/* Stat counters: real catalogue scale, right under the proof row */
-.apex-hero__stats {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 1rem 2.5rem;
-	list-style: none;
-	margin: 1.75rem 0 0;
-	padding: 1.25rem 0 0;
-	border-top: 1px solid rgba(255, 255, 255, 0.15);
-}
-
-.apex-hero__stat {
+.apex-hero__figures li {
+	background: rgba(16, 20, 26, 0.8);
+	backdrop-filter: blur(8px);
+	border: 1px solid rgba(255, 255, 255, 0.14);
+	border-radius: 14px;
+	box-shadow: 0 18px 36px -14px rgba(0, 0, 0, 0.65);
 	display: flex;
 	flex-direction: column;
-	gap: 0.15rem;
+	gap: 0.1rem;
+	padding: 0.7rem 0.9rem;
 }
 
-.apex-hero__stat strong {
+.apex-hero__figures strong {
 	font-family: var(--apx-display);
 	font-weight: 700;
-	font-size: 1.625rem;
+	font-size: 1.25rem;
 	line-height: 1.1;
 	color: #ffffff;
 }
 
-.apex-hero__stat span {
-	font-size: 0.75rem;
+.apex-hero__figures span {
+	font-size: 0.6875rem;
 	font-weight: 600;
-	letter-spacing: 0.08em;
+	letter-spacing: 0.07em;
 	text-transform: uppercase;
 	color: rgba(244, 247, 250, 0.65);
+}
+
+@media (min-width: 900px) {
+	.apex-hero__media {
+		transform: perspective(1200px) rotateY(-4deg);
+	}
 }
 
 /* Hero owns the visible H1 — hide the a11y fallback one. */
@@ -1815,6 +1838,10 @@ span.onsale,
 	.apex-hero__media {
 		animation: none;
 		transform: none;
+	}
+
+	.apex-hero::after {
+		animation: none;
 	}
 }
 
