@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'APEXVALUE_VERSION', '1.17.0' );
+define( 'APEXVALUE_VERSION', '1.18.0' );
 
 /**
  * Image CDN cache epoch.
@@ -52,10 +52,6 @@ require get_stylesheet_directory() . '/inc/cta-band.php';
  */
 require get_stylesheet_directory() . '/inc/how-it-works.php';
 
-/**
- * Homepage reviews strip (reuses Google-reviews feed).
- */
-require get_stylesheet_directory() . '/inc/reviews.php';
 
 /**
  * Homepage brand spotlight (generated from product_brand terms).

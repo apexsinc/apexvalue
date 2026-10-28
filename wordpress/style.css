@@ -4,7 +4,7 @@ Theme URI:    https://www.apexvalue.com
 Description:  Apex Value child theme of Storefront. Modern, refined evolution of the default look: cleaner typography, tighter header, card-based product grids and accessible interactions.
 Author:       Apex Value
 Template:     storefront
-Version:      1.17.0
+Version:      1.18.0
 License:      GNU General Public License v2 or later
 License URI:  http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain:  apexvalue
@@ -1573,9 +1573,13 @@ span.onsale,
 }
 
 @media (min-width: 900px) {
+	.apex-hero {
+		padding: clamp(4.5rem, 10vw, 7.5rem) 0 clamp(4.5rem, 9vw, 7rem);
+	}
+
 	.apex-hero--media .apex-hero__inner {
 		grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
-		gap: 3.5rem;
+		gap: 4rem;
 	}
 }
 
@@ -1587,6 +1591,8 @@ span.onsale,
 	text-transform: uppercase;
 	color: #9fc4e2;
 	border: 1px solid rgba(159, 196, 226, 0.35);
+	background: rgba(255, 255, 255, 0.06);
+	backdrop-filter: blur(4px);
 	padding: 0.4em 1em;
 	border-radius: 999px;
 	margin-bottom: 1.25rem;
@@ -1614,15 +1620,16 @@ span.onsale,
 .apex-hero__actions {
 	display: flex;
 	flex-wrap: wrap;
-	gap: 0.75rem;
+	gap: 1rem;
 	margin-bottom: 1.75rem;
 }
 
 .apex-hero__btn {
 	display: inline-block;
-	padding: 0.85em 1.9em;
+	padding: 0.95em 2.2em;
 	border-radius: var(--apx-radius-sm);
 	font-weight: 600;
+	font-size: 1.0625rem;
 	letter-spacing: 0.01em;
 	transition: background-color var(--apx-speed) var(--apx-ease),
 		border-color var(--apx-speed) var(--apx-ease),
@@ -3702,7 +3709,7 @@ html.apex-mode-anim *::after {
 .apex-collections {
 	background: var(--apx-tint);
 	border-bottom: 1px solid var(--apx-line);
-	padding: 3rem 0 3.5rem;
+	padding: clamp(2.75rem, 6vw, 4.5rem) 0;
 }
 
 .apex-collections__inner {
@@ -4234,45 +4241,6 @@ html.apex-mode-anim *::after {
 	}
 }
 
-/* --- Customer reviews strip (homepage, above the CTA band) -------------- */
-
-.apex-reviews {
-	background: var(--apx-tint);
-	border-top: 1px solid var(--apx-line);
-	padding: clamp(2.75rem, 6vw, 4.5rem) 0;
-}
-
-.apex-reviews__inner {
-	max-width: 60rem;
-}
-
-.apex-reviews__heading {
-	font-family: var(--apx-display);
-	font-weight: 700;
-	color: var(--apx-ink);
-	font-size: clamp(1.5rem, 3vw, 2rem);
-	line-height: 1.2;
-	margin: 0 0 1.5rem;
-	text-align: center;
-}
-
-.apex-reviews__feed {
-	margin: 0 0 1.5rem;
-}
-
-.apex-reviews__link {
-	display: inline-block;
-	color: var(--apx-accent);
-	font-weight: 600;
-	text-decoration: none;
-}
-
-.apex-reviews__link:hover,
-.apex-reviews__link:focus-visible {
-	color: var(--apx-ink);
-	text-decoration: underline;
-}
-
 /* ---------------------------------------------------------------------
    WooCommerce blocks (cart / checkout) on the design system.
    Components render client-side; classes verified against WC 10.7 build.
@@ -4349,4 +4317,115 @@ html.apex-mode-anim *::after {
 .wc-block-components-checkbox__input:focus-visible {
 	outline: 2px solid var(--apx-accent);
 	outline-offset: 2px;
+}
+
+/* =====================================================================
+   23. Front page block-content design system (scoped to body.home)
+   Blog posts and other pages keep the clean editorial look above;
+   everything below only restyles the homepage's editor blocks.
+   ===================================================================== */
+
+/* 23a. Full-bleed group sections: consistent vertical rhythm. */
+.home .entry-content .wp-block-group.alignfull {
+	padding: clamp(2.5rem, 6vw, 4rem) 0;
+}
+
+/* 23b. Image service columns become cards. */
+.home .entry-content .wp-block-column:has(img) {
+	background: var(--apx-paper);
+	border: 1px solid var(--apx-line);
+	border-radius: var(--apx-radius-lg);
+	box-shadow: var(--apx-shadow-sm);
+	padding: 1.5rem;
+	overflow: hidden;
+	transition: box-shadow var(--apx-speed) var(--apx-ease),
+		transform var(--apx-speed) var(--apx-ease);
+}
+
+.home .entry-content .wp-block-column:has(img):hover {
+	transform: translateY(-2px);
+	box-shadow: var(--apx-shadow-md);
+}
+
+.home .entry-content .wp-block-column:has(img) img {
+	border-radius: var(--apx-radius-sm);
+}
+
+/* 23c. Media-text: breathing room, vertically centred, elevated image. */
+.home .entry-content .wp-block-media-text {
+	gap: 2.5rem;
+	align-items: center;
+}
+
+.home .entry-content .wp-block-media-text img {
+	border-radius: var(--apx-radius-lg);
+	box-shadow: var(--apx-shadow-md);
+}
+
+/* 23d. Content buttons: pill shape, comfortable hit area (colors untouched). */
+.home .entry-content .wp-block-button__link {
+	border-radius: 999px;
+	padding: 0.85em 2em;
+	font-weight: 700;
+	box-shadow: var(--apx-shadow-sm);
+	transition: box-shadow var(--apx-speed) var(--apx-ease),
+		transform var(--apx-speed) var(--apx-ease);
+}
+
+.home .entry-content .wp-block-button__link:hover {
+	transform: translateY(-1px);
+	box-shadow: var(--apx-shadow-md);
+}
+
+/* 23e. Latest posts: card grid (works with or without .is-grid). */
+.home .entry-content ul.wp-block-latest-posts {
+	display: grid;
+	gap: 1.25rem;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+@media (min-width: 900px) {
+	.home .entry-content ul.wp-block-latest-posts {
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+	}
+}
+
+.home .entry-content ul.wp-block-latest-posts li {
+	background: var(--apx-paper);
+	border: 1px solid var(--apx-line);
+	border-radius: var(--apx-radius-lg);
+	box-shadow: var(--apx-shadow-sm);
+	padding: 1.25rem 1.35rem;
+	margin: 0;
+	overflow: hidden;
+}
+
+.home .entry-content ul.wp-block-latest-posts .wp-block-latest-posts__featured-image img {
+	border-radius: var(--apx-radius-sm);
+}
+
+/* 23f. FAQ rhythm: answers read as muted text under question headings. */
+.home .entry-content h3 + p {
+	color: var(--apx-body);
+	max-width: 46rem;
+}
+
+/* 23g. Product-collection heading: first h2 sits flush, display face kept. */
+.home .entry-content h2:first-child {
+	margin-top: 0;
+}
+
+/* 23h. Reduced motion: no lift on the home cards. */
+@media (prefers-reduced-motion: reduce) {
+	.home .entry-content .wp-block-column:has(img),
+	.home .entry-content .wp-block-button__link {
+		transition: none;
+	}
+
+	.home .entry-content .wp-block-column:has(img):hover,
+	.home .entry-content .wp-block-button__link:hover {
+		transform: none;
+	}
 }
