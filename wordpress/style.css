@@ -4,7 +4,7 @@ Theme URI:    https://www.apexvalue.com
 Description:  Apex Value child theme of Storefront. Modern, refined evolution of the default look: cleaner typography, tighter header, card-based product grids and accessible interactions.
 Author:       Apex Value
 Template:     storefront
-Version:      1.16.0
+Version:      1.17.0
 License:      GNU General Public License v2 or later
 License URI:  http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain:  apexvalue
@@ -489,6 +489,7 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6 {
+	font-family: var(--apx-display);
 	color: var(--apx-ink);
 	font-weight: 700;
 	letter-spacing: -0.01em;
@@ -1078,12 +1079,14 @@ button.menu-toggle { float: right; }
 button.menu-toggle:hover { background: var(--apx-tint); }
 
 .handheld-navigation ul.menu li a {
-	padding: 0.9em 0.25em;
+	padding: 1em 0.25rem;
 	border-bottom: 1px solid var(--apx-line);
 	font-weight: 600;
 	font-size: 1rem;
 	color: var(--apx-ink);
 }
+
+.handheld-navigation ul.menu li a:active { background: var(--apx-tint); }
 
 .handheld-navigation ul.menu li:last-child a { border-bottom: 0; }
 
@@ -1094,6 +1097,43 @@ button.menu-toggle:hover { background: var(--apx-tint); }
 
 .main-navigation.toggled .handheld-navigation {
 	padding-bottom: 0.75rem;
+}
+
+/* Staggered handheld item entrance — hidden start scoped to JS
+   (html.apex-js) so no-JS visitors still see the menu. */
+.handheld-navigation ul.menu > li {
+	transition: opacity 240ms var(--apx-ease), transform 240ms var(--apx-ease);
+}
+
+html.apex-js .handheld-navigation ul.menu > li {
+	opacity: 0;
+	transform: translateY(-6px);
+}
+
+.main-navigation.toggled .handheld-navigation ul.menu > li {
+	opacity: 1;
+	transform: none;
+}
+
+.main-navigation.toggled .handheld-navigation ul.menu > li:nth-child(1) { transition-delay: 30ms; }
+.main-navigation.toggled .handheld-navigation ul.menu > li:nth-child(2) { transition-delay: 60ms; }
+.main-navigation.toggled .handheld-navigation ul.menu > li:nth-child(3) { transition-delay: 90ms; }
+.main-navigation.toggled .handheld-navigation ul.menu > li:nth-child(4) { transition-delay: 120ms; }
+.main-navigation.toggled .handheld-navigation ul.menu > li:nth-child(5) { transition-delay: 150ms; }
+.main-navigation.toggled .handheld-navigation ul.menu > li:nth-child(6) { transition-delay: 180ms; }
+.main-navigation.toggled .handheld-navigation ul.menu > li:nth-child(7) { transition-delay: 210ms; }
+.main-navigation.toggled .handheld-navigation ul.menu > li:nth-child(8) { transition-delay: 240ms; }
+
+@media (prefers-reduced-motion: reduce) {
+	.handheld-navigation ul.menu > li {
+		transition: none;
+	}
+
+	html.apex-js .handheld-navigation ul.menu > li,
+	.main-navigation.toggled .handheld-navigation ul.menu > li {
+		opacity: 1;
+		transform: none;
+	}
 }
 
 /* ---------------------------------------------------------------------
@@ -1146,6 +1186,7 @@ ul.products li.product:hover img,
 
 /* Card padding rhythm (Storefront legacy grids) */
 ul.products li.product .woocommerce-loop-product__title {
+	font-family: var(--apx-display);
 	font-size: 1em;
 	font-weight: 600;
 	color: var(--apx-ink);
@@ -1266,6 +1307,7 @@ span.onsale,
 }
 
 .single-product div.product .product_title {
+	font-family: var(--apx-display);
 	font-size: 1.8em;
 	letter-spacing: -0.015em;
 }
@@ -4190,6 +4232,45 @@ html.apex-mode-anim *::after {
 	.apex-brandspot__card:focus-within {
 		transform: none;
 	}
+}
+
+/* --- Customer reviews strip (homepage, above the CTA band) -------------- */
+
+.apex-reviews {
+	background: var(--apx-tint);
+	border-top: 1px solid var(--apx-line);
+	padding: clamp(2.75rem, 6vw, 4.5rem) 0;
+}
+
+.apex-reviews__inner {
+	max-width: 60rem;
+}
+
+.apex-reviews__heading {
+	font-family: var(--apx-display);
+	font-weight: 700;
+	color: var(--apx-ink);
+	font-size: clamp(1.5rem, 3vw, 2rem);
+	line-height: 1.2;
+	margin: 0 0 1.5rem;
+	text-align: center;
+}
+
+.apex-reviews__feed {
+	margin: 0 0 1.5rem;
+}
+
+.apex-reviews__link {
+	display: inline-block;
+	color: var(--apx-accent);
+	font-weight: 600;
+	text-decoration: none;
+}
+
+.apex-reviews__link:hover,
+.apex-reviews__link:focus-visible {
+	color: var(--apx-ink);
+	text-decoration: underline;
 }
 
 /* ---------------------------------------------------------------------

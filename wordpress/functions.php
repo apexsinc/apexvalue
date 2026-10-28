@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'APEXVALUE_VERSION', '1.16.0' );
+define( 'APEXVALUE_VERSION', '1.17.0' );
 
 /**
  * Image CDN cache epoch.
@@ -51,6 +51,11 @@ require get_stylesheet_directory() . '/inc/cta-band.php';
  * Homepage "How quoting works" explainer (Customizer-editable).
  */
 require get_stylesheet_directory() . '/inc/how-it-works.php';
+
+/**
+ * Homepage reviews strip (reuses Google-reviews feed).
+ */
+require get_stylesheet_directory() . '/inc/reviews.php';
 
 /**
  * Homepage brand spotlight (generated from product_brand terms).
