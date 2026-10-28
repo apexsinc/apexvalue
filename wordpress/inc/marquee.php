@@ -68,6 +68,13 @@ function apexvalue_solutions_marquee() {
 	if ( empty( $solutions ) ) {
 		return;
 	}
+
+	/*
+	 * A ticker is a signpost, not a directory: 240 titles produced a
+	 * 196,000px track that had to race to stay readable. Show a rotating
+	 * sample; the index page links every solution.
+	 */
+	$solutions = array_slice( $solutions, 0, 12 );
 	?>
 	<div class="apex-marquee" role="region" aria-label="<?php esc_attr_e( 'Curated solution kits', 'apexvalue' ); ?>">
 		<div class="apex-marquee__track">
