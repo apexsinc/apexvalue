@@ -173,6 +173,27 @@ function apexvalue_hero_customize_register( $wp_customize ) {
 			)
 		)
 	);
+
+	$wp_customize->add_setting(
+		'apexvalue_hero_image',
+		array(
+			'default'           => 0,
+			'sanitize_callback' => 'absint',
+		)
+	);
+
+	$wp_customize->add_control(
+		new WP_Customize_Media_Control(
+			$wp_customize,
+			'apexvalue_hero_image',
+			array(
+				'label'       => __( 'Side image (optional)', 'apexvalue' ),
+				'description' => __( 'Product or station photo shown beside the headline. Leave empty to use the built-in station photo.', 'apexvalue' ),
+				'section'     => 'apexvalue_hero',
+				'mime_type'   => 'image',
+			)
+		)
+	);
 }
 add_action( 'customize_register', 'apexvalue_hero_customize_register', 20 );
 
@@ -195,6 +216,32 @@ function apexvalue_hero_enabled() {
 }
 
 /**
+ * Hero side-image URL.
+ *
+ * Customizer media selection wins; otherwise fall back to the bundled
+ * station photo when present in the uploads directory.
+ *
+ * @return string Empty when no image is available.
+ */
+function apexvalue_hero_image_url() {
+	$attachment_id = absint( get_theme_mod( 'apexvalue_hero_image', 0 ) );
+	if ( $attachment_id > 0 ) {
+		$url = wp_get_attachment_image_url( $attachment_id, 'large' );
+		if ( is_string( $url ) && '' !== $url ) {
+			return $url;
+		}
+	}
+
+	$uploads = wp_get_upload_dir();
+	$rel     = '2026/03/w_6262_Station_TT_MG_6966_Clipped_2400x1560-1024x666.webp';
+	if ( isset( $uploads['basedir'], $uploads['baseurl'] ) && file_exists( trailingslashit( $uploads['basedir'] ) . $rel ) ) {
+		return trailingslashit( $uploads['baseurl'] ) . $rel;
+	}
+
+	return '';
+}
+
+/**
  * Render the hero on the front page.
  */
 function apexvalue_hero_render() {
@@ -209,9 +256,11 @@ function apexvalue_hero_render() {
 	$cta1_u = get_theme_mod( 'apexvalue_hero_cta_url', home_url( '/inquiry/' ) );
 	$cta2_t = get_theme_mod( 'apexvalue_hero_cta2_text', __( 'Browse products', 'apexvalue' ) );
 	$cta2_u = get_theme_mod( 'apexvalue_hero_cta2_url', home_url( '/products/' ) );
+	$media  = apexvalue_hero_image_url();
 	?>
-	<section class="apex-hero" aria-label="<?php esc_attr_e( 'Introduction', 'apexvalue' ); ?>">
+	<section class="apex-hero<?php echo '' !== $media ? ' apex-hero--media' : ''; ?>" aria-label="<?php esc_attr_e( 'Introduction', 'apexvalue' ); ?>">
 		<div class="col-full apex-hero__inner">
+			<div class="apex-hero__copy">
 			<?php if ( '' !== trim( (string) $kicker ) ) : ?>
 				<p class="apex-hero__kicker"><?php echo esc_html( $kicker ); ?></p>
 			<?php endif; ?>
@@ -236,6 +285,16 @@ function apexvalue_hero_render() {
 				<li><?php esc_html_e( 'Ships from our Philippine warehouse', 'apexvalue' ); ?></li>
 				<li><?php esc_html_e( 'Local expert support', 'apexvalue' ); ?></li>
 			</ul>
+			</div>
+			<?php if ( '' !== $media ) : ?>
+			<figure class="apex-hero__media">
+				<img class="apex-hero__photo" src="<?php echo esc_url( $media ); ?>" alt="<?php esc_attr_e( 'Davis Instruments Vantage Vue wireless weather station', 'apexvalue' ); ?>" loading="eager" fetchpriority="high" width="1024" height="666" />
+				<figcaption class="apex-hero__chips" aria-hidden="true">
+					<span class="apex-hero__chip"><?php esc_html_e( 'Solar-powered wireless sensors', 'apexvalue' ); ?></span>
+					<span class="apex-hero__chip"><?php esc_html_e( 'Genuine Davis hardware', 'apexvalue' ); ?></span>
+				</figcaption>
+			</figure>
+			<?php endif; ?>
 		</div>
 	</section>
 	<?php

@@ -4,7 +4,7 @@ Theme URI:    https://www.apexvalue.com
 Description:  Apex Value child theme of Storefront. Modern, refined evolution of the default look: cleaner typography, tighter header, card-based product grids and accessible interactions.
 Author:       Apex Value
 Template:     storefront
-Version:      1.13.7
+Version:      1.14.0
 License:      GNU General Public License v2 or later
 License URI:  http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain:  apexvalue
@@ -643,6 +643,10 @@ textarea:focus,
 		position: sticky;
 		top: 0;
 		z-index: 50;
+		background: var(--apx-header-bg, var(--apx-paper));
+		background: color-mix(in srgb, var(--apx-header-bg, var(--apx-paper)) 88%, transparent);
+		backdrop-filter: blur(10px);
+		-webkit-backdrop-filter: blur(10px);
 		box-shadow: var(--apx-shadow-sm);
 	}
 
@@ -791,11 +795,34 @@ textarea:focus,
 
 	.main-navigation ul.menu > li > a,
 	.main-navigation ul.nav-menu > li > a {
+		position: relative;
 		padding: 0.9em 1em;
 		font-weight: 600;
 		font-size: 0.9375rem;
 		letter-spacing: 0.01em;
 		color: var(--apx-ink);
+	}
+
+	.main-navigation ul.menu > li > a::after,
+	.main-navigation ul.nav-menu > li > a::after {
+		content: "";
+		position: absolute;
+		left: 1em;
+		right: 1em;
+		bottom: 0.45em;
+		height: 2px;
+		border-radius: 2px;
+		background: var(--apx-accent);
+		transform: scaleX(0);
+		transform-origin: left center;
+		transition: transform var(--apx-speed) var(--apx-ease-out);
+	}
+
+	.main-navigation ul.menu > li > a:hover::after,
+	.main-navigation ul.nav-menu > li > a:hover::after,
+	.main-navigation ul.menu > li > a:focus-visible::after,
+	.main-navigation ul.nav-menu > li > a:focus-visible::after {
+		transform: scaleX(1);
 	}
 
 	.main-navigation ul.menu > li > a:hover,
@@ -811,8 +838,8 @@ textarea:focus,
 	.main-navigation ul.nav-menu ul {
 		background: var(--apx-paper);
 		border: 1px solid var(--apx-line);
-		border-radius: var(--apx-radius);
-		box-shadow: var(--apx-shadow-md);
+		border-radius: var(--apx-radius-lg);
+		box-shadow: var(--apx-shadow-lg);
 		padding: 0.35rem;
 		min-width: 220px;
 	}
@@ -845,6 +872,9 @@ textarea:focus,
 	ul.menu li.current-menu-ancestor > a,
 	ul.menu li.current-menu-parent > a {
 		color: var(--apx-accent);
+		background: var(--apx-accent-tint);
+		background: color-mix(in srgb, var(--apx-accent) 12%, transparent);
+		border-radius: var(--apx-radius-sm);
 	}
 }
 
@@ -1014,6 +1044,13 @@ ul.products li.product img,
 .wc-block-grid__product img,
 .wc-block-product-template .wc-block-product img {
 	border-radius: 0;   /* images flush to card edges */
+	transition: transform 0.45s var(--apx-ease);
+}
+
+ul.products li.product:hover img,
+.wc-block-grid__product:hover img,
+.wc-block-product-template .wc-block-product:hover img {
+	transform: scale(1.045);
 }
 
 /* Card padding rhythm (Storefront legacy grids) */
@@ -1037,7 +1074,7 @@ ul.products li.product .woocommerce-loop-product__title {
 ul.products li.product .price,
 .wc-block-components-product-price {
 	font-weight: 600;
-	color: var(--apx-muted);
+	color: var(--apx-ink);
 }
 
 /* Keep hidden-price custom CSS behavior visually tidy */
@@ -1052,8 +1089,9 @@ ul.products li.product .price,
 span.onsale,
 .wc-block-grid__product-onsale,
 .wc-block-components-product-sale-badge {
-	background-color: var(--apx-green);
-	color: var(--apx-ink);
+	background-color: var(--apx-ink);
+	color: var(--apx-green);
+	border: 1px solid var(--apx-green);
 	border-radius: 999px;
 	font-weight: 700;
 	min-height: auto;
@@ -1271,8 +1309,10 @@ span.onsale,
    --------------------------------------------------------------------- */
 
 .apexvalue-cta {
-	background: var(--apx-brand);
-	color: var(--apx-brand-dark);
+	background:
+		radial-gradient(40rem 20rem at 90% -20%, rgba(127, 84, 179, 0.35), transparent 60%),
+		linear-gradient(120deg, var(--apx-ink), var(--apx-hero-bg));
+	color: #f4f7fa;
 }
 
 .apexvalue-cta__inner {
@@ -1286,15 +1326,16 @@ span.onsale,
 }
 
 .apexvalue-cta__heading {
-	color: var(--apx-brand-dark);
+	color: #ffffff;
 	font-size: 1.6em;
 	font-weight: 700;
 	letter-spacing: -0.015em;
 	margin: 0 0 0.35em;
+	text-wrap: balance;
 }
 
 .apexvalue-cta__text {
-	color: var(--apx-brand-dark);
+	color: rgba(244, 247, 250, 0.8);
 	max-width: 46em;
 	margin: 0;
 }
@@ -1302,11 +1343,11 @@ span.onsale,
 .apexvalue-cta__button {
 	display: inline-block;
 	background: var(--apx-green);
-	color: var(--apx-ink);
+	color: var(--apx-on-green);
 	font-weight: 700;
 	text-decoration: none;
-	padding: 0.8em 1.8em;
-	border-radius: var(--apx-radius-sm);
+	padding: 0.9em 2.2em;
+	border-radius: 999px;
 	box-shadow: var(--apx-shadow-sm);
 	transition: background var(--apx-speed) var(--apx-ease),
 		transform var(--apx-speed) var(--apx-ease),
@@ -1317,7 +1358,7 @@ span.onsale,
 .apexvalue-cta__button:hover,
 .apexvalue-cta__button:focus-visible {
 	background: var(--apx-green-dark);
-	color: var(--apx-ink);
+	color: var(--apx-on-green);
 	transform: translateY(-1px);
 	box-shadow: var(--apx-shadow-md);
 }
@@ -1359,19 +1400,49 @@ span.onsale,
 	}
 }
 
-/* Subtle depth: one soft light pool, no gradient banding */
+/* Layered depth: cool light pool + faint technical grid */
 .apex-hero::before {
 	content: "";
 	position: absolute;
 	inset: 0;
 	background:
+		radial-gradient(55rem 28rem at 88% -12%, rgba(159, 196, 226, 0.22), transparent 60%),
+		radial-gradient(40rem 24rem at -10% 110%, rgba(127, 84, 179, 0.28), transparent 60%),
 		radial-gradient(60rem 30rem at 85% -10%, rgba(255, 255, 255, 0.09), transparent 60%);
+	pointer-events: none;
+}
+
+.apex-hero::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+	background-image:
+		linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+		linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+	background-size: 44px 44px;
+	mask-image: radial-gradient(48rem 26rem at 70% 20%, black 30%, transparent 75%);
 	pointer-events: none;
 }
 
 .apex-hero__inner {
 	position: relative;
 	max-width: 46rem;
+}
+
+/* Two-column layout when the side image is present */
+.apex-hero--media .apex-hero__inner {
+	max-width: none;
+	display: grid;
+	gap: 2.5rem;
+	align-items: center;
+	grid-template-columns: 1fr;
+}
+
+@media (min-width: 900px) {
+	.apex-hero--media .apex-hero__inner {
+		grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+		gap: 3.5rem;
+	}
 }
 
 .apex-hero__kicker {
@@ -1388,11 +1459,12 @@ span.onsale,
 }
 
 .apex-hero__title {
-	font-size: clamp(1.9rem, 4.5vw, 3rem);
-	line-height: 1.12;
-	letter-spacing: -0.02em;
+	font-size: clamp(2.2rem, 5vw, 3.6rem);
+	line-height: 1.08;
+	letter-spacing: -0.025em;
 	margin: 0 0 1rem;
 	color: #ffffff;
+	text-wrap: balance;
 }
 
 .apex-hero__text {
@@ -1447,6 +1519,63 @@ span.onsale,
 	color: #fff;
 }
 
+/* Side media: studio photo in a floating product card */
+.apex-hero__media {
+	position: relative;
+	margin: 0;
+}
+
+.apex-hero__photo {
+	display: block;
+	width: 100%;
+	height: auto;
+	border-radius: var(--apx-radius-lg);
+	box-shadow: 0 30px 60px -18px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.14);
+}
+
+.apex-hero__chips {
+	position: absolute;
+	left: 1rem;
+	right: 1rem;
+	bottom: -1rem;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+	margin: 0;
+	padding: 0;
+}
+
+.apex-hero__chip {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.4rem;
+	background: rgba(16, 20, 26, 0.82);
+	backdrop-filter: blur(6px);
+	color: #f4f7fa;
+	border: 1px solid rgba(255, 255, 255, 0.16);
+	border-radius: 999px;
+	font-size: 0.75rem;
+	font-weight: 600;
+	letter-spacing: 0.02em;
+	padding: 0.45em 0.95em;
+	box-shadow: 0 10px 24px -10px rgba(0, 0, 0, 0.6);
+}
+
+.apex-hero__chip::before {
+	content: "";
+	width: 0.5em;
+	height: 0.5em;
+	border-radius: 999px;
+	background: var(--apx-green);
+	flex: 0 0 auto;
+}
+
+@media (min-width: 900px) {
+	.apex-hero__media {
+		transform: perspective(1200px) rotateY(-4deg);
+	}
+}
+
 /* Trust signals below the CTAs — proof without imagery */
 .apex-hero__trust {
 	display: flex;
@@ -1488,6 +1617,12 @@ span.onsale,
 	}
 
 	.apex-hero__btn--primary:hover {
+		transform: none;
+	}
+
+	.apex-hero,
+	.apex-hero__media {
+		animation: none;
 		transform: none;
 	}
 }
@@ -3492,6 +3627,17 @@ html.apex-mode-anim *::after {
 	gap: 0.4rem;
 	padding: 1.25rem 1.35rem;
 	position: relative;
+	overflow: hidden;
+}
+
+.apex-how__step::before {
+	content: "";
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: 3px;
+	background: linear-gradient(90deg, var(--apx-accent), var(--apx-green));
 }
 
 .apex-how__num {
@@ -3693,6 +3839,7 @@ html.apex-mode-anim *::after {
 	height: 3.5rem;
 	justify-content: center;
 	width: 3.5rem;
+	box-shadow: 0 0 0 2px var(--apx-paper), 0 0 0 4px var(--apx-accent-tint);
 }
 
 .apex-brandspot__name {
